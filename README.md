@@ -8,6 +8,26 @@ Since version 4.0.0 of SeedDMS installation has been simplified.
 ADOdb is no longer needed because the database access is done by
 PDO.
 
+NOTE FOR GIT EXTENSION
+======================
+Create a www-data writable folder named git in your content directory.
+Create a git repository in "git" using www-data as owner.
+Copy files to corresponding folders:
+ - SeedDMS_Core/Core/inc.ClassDMS.php
+ - SeedDMS_Core/Core/inc.ClassDocument.php
+ - SeedDMS_Core/Core/inc.ClassFolder.php
+ - SeedDMS_Core/Core/inc.ClassGitExport.php
+ - utils/filldir.php (for filling the git repository with all existing files)
+ - utils/seeddms-filldir
+ - utils/keeppath.php
+ - utils/seeddms-git (filling the git repository and deleting before)
+
+Changes not directly related to git export:
+ - utils/adddoc.php (setDate of Document manually, corrected some errors)
+ - utils/seeddms-xmldump
+ - utils/xmldump.php (option to not export content of documents)
+ 
+
 IMPORTANT NOTE ABOUT TRANSLATIONS
 =================================
 

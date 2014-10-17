@@ -25,6 +25,7 @@ require_once("inc.ClassUser.php");
 require_once("inc.ClassKeywords.php");
 require_once("inc.ClassNotification.php");
 require_once("inc.ClassAttribute.php");
+require_once("inc.ClassGitExport.php");
 
 /**
  * Class to represent the complete document management system.
@@ -125,6 +126,12 @@ class SeedDMS_Core_DMS {
 	 * @access public
 	 */
 	public $version;
+	
+	/**
+	 * @var object $git contains connection to a git folder to store all files human readable
+	 * @access public
+	 */
+	private $_git;
 
 	/**
 	 * @var array $callbacks list of methods called when certain operations,
@@ -2146,5 +2153,15 @@ class SeedDMS_Core_DMS {
 			$this->callbacks[$name] = array($func, $params);
 	} /* }}} */
 
+	/**
+	 * Get the Git Object
+	 */
+	function getGit(){
+		if (!isset($this->_git)){
+			$this->_git = new SeedDMS_Core_Git_Export('/var/local/seeddms/'.'git');
+			$this->_git->setDMS($this);
+		}
+		return $this->_git;
+	}
 }
 ?>

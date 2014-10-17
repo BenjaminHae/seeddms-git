@@ -1,5 +1,5 @@
 <?php
-include("../inc/inc.ClassSettings.php");
+include("/var/www/seeddms/inc/inc.ClassSettings.php");
 
 function usage() { /* {{{ */
 	echo "Usage:\n";
@@ -15,6 +15,7 @@ function usage() { /* {{{ */
 	echo "  -F <folder id>: id of folder the file is uploaded to\n";
 	echo "  -c <comment>: set comment for document\n";
 	echo "  -C <comment>: set comment for version\n";
+	echo "  -d <date>: set insert-date for document\n";
 	echo "  -k <keywords>: set keywords for file\n";
 	echo "  -K <categories>: set categories for file\n";
 	echo "  -s <number>: set sequence for file (used for ordering files within a folder\n";
@@ -27,7 +28,7 @@ function usage() { /* {{{ */
 } /* }}} */
 
 $version = "0.0.1";
-$shortoptions = "F:c:C:k:K:s:V:f:n:t:hv";
+$shortoptions = "F:c:C:d:k:K:s:V:f:n:t:hv";
 $longoptions = array('help', 'version', 'config:');
 if(false === ($options = getopt($shortoptions, $longoptions))) {
 	usage();
@@ -58,6 +59,24 @@ if(isset($settings->_extraPath))
 
 require_once("SeedDMS/Core.php");
 
+$reqversion = 0;
+if(isset($options['V'])) {
+	$reqversion = $options['V'];
+}
+if($reqversion<1)
+	$reqversion=1;
+
+$db = new SeedDMS_Core_DatabaseAccess($settings->_dbDriver, $settings->_dbHostname, $settings->_dbUser, $settings->_dbPass, $settings->_dbDatabase);
+$db->connect() or die ("Could not connect to db-server \"" . $settings->_dbHostname . "\"");
+//$db->_conn->debug = 1;
+
+
+$dms = new SeedDMS_Core_DMS($db, $settings->_contentDir.$settings->_contentOffsetDir);
+if(!$dms->checkVersion()) {
+	echo "Database update needed.";
+	exit;
+}
+
 if(isset($options['F'])) {
 	$folderid = (int) $options['F'];
 } else {
@@ -69,6 +88,11 @@ if(isset($options['F'])) {
 $comment = '';
 if(isset($options['c'])) {
 	$comment = $options['c'];
+}
+
+$date = '';
+if (isset($options['d'])){
+	$date = $options['d'];
 }
 
 $version_comment = '';
@@ -86,8 +110,8 @@ if(isset($options['K'])) {
 	$categorynames = explode(',', $options['K']);
 	foreach($categorynames as $categoryname) {
 		$cat = $dms->getDocumentCategoryByName($categoryname);
-		if($cat) {
-			$categories[] = $cat->getID();
+		if(is_object($cat)) {
+			$categories[] = $cat;
 		} else {
 			echo "Category '".$categoryname."' not found\n";
 		}
@@ -108,6 +132,7 @@ $filename = '';
 if(isset($options['f'])) {
 	$filename = $options['f'];
 } else {
+	echo "Missing filename\n";
 	usage();
 	exit(1);
 }
@@ -115,24 +140,6 @@ if(isset($options['f'])) {
 $mimetype = '';
 if(isset($options['t'])) {
 	$mimetype = $options['t'];
-}
-
-$reqversion = 0;
-if(isset($options['V'])) {
-	$reqversion = $options['V'];
-}
-if($reqversion<1)
-	$reqversion=1;
-
-$db = new SeedDMS_Core_DatabaseAccess($settings->_dbDriver, $settings->_dbHostname, $settings->_dbUser, $settings->_dbPass, $settings->_dbDatabase);
-$db->connect() or die ("Could not connect to db-server \"" . $settings->_dbHostname . "\"");
-//$db->_conn->debug = 1;
-
-
-$dms = new SeedDMS_Core_DMS($db, $settings->_contentDir.$settings->_contentOffsetDir);
-if(!$dms->checkVersion()) {
-	echo "Database update needed.";
-	exit;
 }
 
 $dms->setRootFolderID($settings->_rootFolderID);
@@ -149,7 +156,9 @@ if(is_readable($filename)) {
 		if(!$mimetype) {
 			$mimetype = $finfo->file($filename);
 		}
-		$filetype = "." . pathinfo($filename, PATHINFO_EXTENSION);
+		$lastDotIndex = strrpos(basename($filename), ".");
+		if (is_bool($lastDotIndex) && !$lastDotIndex) $filetype = ".";
+		else $filetype = substr($filename, $lastDotIndex);
 	} else {
 		echo "File has zero size\n";
 		exit(1);
@@ -190,9 +199,14 @@ $res = $folder->addDocument($name, $comment, $expires, $user, $keywords,
                             $categories, $filetmp, basename($filename),
                             $filetype, $mimetype, $sequence, $reviewers,
                             $approvers, $reqversion, $version_comment);
-
+					
 if (is_bool($res) && !$res) {
 	echo "Could not add document to folder\n";
 	exit(1);
+}
+else{
+	if($date!=''){
+		$res[0]->setDate(strtotime($date));
+	}
 }
 ?>

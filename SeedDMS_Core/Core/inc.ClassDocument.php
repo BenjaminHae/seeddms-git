@@ -195,13 +195,29 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 	 * @param $newName string new name of document
 	 */
 	function setName($newName) { /* {{{ */
+		$oldname = $this->_name;
 		$db = $this->_dms->getDB();
 
 		$queryStr = "UPDATE tblDocuments SET name = ".$db->qstr($newName)." WHERE id = ". $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
-
 		$this->_name = $newName;
+		$this->_dms->getGit()->renameDocument($this, $oldname, $newName);
+		return true;
+	} /* }}} */
+	
+	/*
+	 * Set the date of the document
+	 *
+	 * @param $newName timestamp new date of document
+	 */
+	function setDate($newDate) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE tblDocuments SET date = ".$newDate." WHERE id = ". $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+		$this->_date = $newDate;
 		return true;
 	} /* }}} */
 
@@ -324,6 +340,7 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 	 * @return boolean false in case of an error, otherwise true
 	 */
 	function setFolder($newFolder) { /* {{{ */
+		$oldFolderID = $this->_folderID;
 		$db = $this->_dms->getDB();
 
 		$queryStr = "UPDATE tblDocuments SET folder = " . $newFolder->getID() . " WHERE id = ". $this->_id;
@@ -344,7 +361,8 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		$queryStr = "UPDATE tblDocuments SET folderList = '" . $flist . "' WHERE id = ". $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
-
+			
+		$this->_dms->getGit()->moveDocument($this, $oldFolderID, $newFolder->getID());
 		return true;
 	} /* }}} */
 
@@ -1244,6 +1262,8 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		$docResultSet->setStatus($status,$comment,$user);
 
 		$db->commitTransaction();
+		
+		$this->_dms->getGit()->addDocumentContent($this);
 		return $docResultSet;
 	} /* }}} */
 
@@ -1642,7 +1662,7 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		if (is_bool($res) && !$res) return false;
 
 		$db->startTransaction();
-
+		$gitLatestContent = $this->getLatestContent();
 		// FIXME: call a new function removeContent instead
 		foreach ($this->_content as $version) {
 			if (!$this->removeContent($version)) {
@@ -1716,6 +1736,8 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$db->commitTransaction();
+		
+		$this->_dms->getGit()->removeDocument($this, $gitLatestContent);
 
 		/* Check if 'onPostRemoveDocument' callback is set */
 		if(isset($this->_dms->callbacks['onPostRemoveDocument'])) {

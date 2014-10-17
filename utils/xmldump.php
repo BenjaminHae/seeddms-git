@@ -11,6 +11,7 @@ function usage() { /* {{{ */
 	echo "Options:\n";
 	echo "  -h, --help: print usage information and exit.\n";
 	echo "  -v, --version: print version and exit.\n";
+	echo "  -n, --nocontent: don't dump file contents.\n";
 	echo "  --config: set alternative config file.\n";
 	echo "  --folder: set start folder.\n";
 	echo "  --maxsize: maximum size of files to be include in output.\n";
@@ -24,8 +25,8 @@ function wrapWithCData($text) { /* {{{ */
 } /* }}} */
 
 $version = "0.0.1";
-$shortoptions = "hv";
-$longoptions = array('help', 'version', 'config:', 'folder:', 'maxsize:');
+$shortoptions = "hvn";
+$longoptions = array('help', 'version', 'nodata', 'config:', 'folder:', 'maxsize:');
 if(false === ($options = getopt($shortoptions, $longoptions))) {
 	usage();
 	exit(0);
@@ -41,6 +42,14 @@ if(isset($options['h']) || isset($options['help'])) {
 if(isset($options['v']) || isset($options['verѕion'])) {
 	echo $version."\n";
 	exit(0);
+}
+
+/* Set wether to output data*/
+if(isset($options['n']) || isset($options['nocontent'])){
+	$outputContent = false;
+}
+else{
+	$outputContent = true;
 }
 
 /* Set alternative config file */
@@ -231,14 +240,16 @@ function tree($folder, $parent=null, $indent='') { /* {{{ */
 						}
 						echo $indent."   </reviews>\n";
 					}
-					if(file_exists($dms->contentDir . $version->getPath())) {
-						echo $indent."   <data length=\"".filesize($dms->contentDir . $version->getPath())."\">\n";
-						if(filesize($dms->contentDir . $version->getPath()) < 1000000) {
-							echo chunk_split(base64_encode(file_get_contents($dms->contentDir . $version->getPath())), 76, "\n");
+					if($outputContent){
+						if(file_exists($dms->contentDir . $version->getPath())) {
+							echo $indent."   <data length=\"".filesize($dms->contentDir . $version->getPath())."\">\n";
+							if(filesize($dms->contentDir . $version->getPath()) < 1000000) {
+								echo chunk_split(base64_encode(file_get_contents($dms->contentDir . $version->getPath())), 76, "\n");
+							}
+							echo $indent."   </data>\n";
+						} else {
+							echo $indent."   <!-- ".$dms->contentDir . $version->getPath()." not found -->\n";
 						}
-						echo $indent."   </data>\n";
-					} else {
-						echo $indent."   <!-- ".$dms->contentDir . $version->getPath()." not found -->\n";
 					}
 					echo $indent."  </version>\n";
 				}

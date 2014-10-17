@@ -1,0 +1,7 @@
+#!/bin/sh
+rm -r /var/local/seeddms/git/*
+/usr/bin/php -f ../utils/filldir.php -- $*
+cd /var/local/seeddms/git
+git add -u .
+git add .
+git commit

@@ -106,8 +106,11 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		if (!$db->getResult($queryStr))
 			return false;
 
+		$oldname = $this->_name;
 		$this->_name = $newName;
 
+		$this->_dms->getGit()->renameFolder($this, $oldname, $newName);
+		
 		return true;
 	} /* }}} */
 
