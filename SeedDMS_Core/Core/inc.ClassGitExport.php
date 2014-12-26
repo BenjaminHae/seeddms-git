@@ -131,6 +131,22 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		return $path;
 	}
 	
+	function belongsFileToRepository($document){
+	  if ($document->getAttributeValue("ignoreInGit") == "true")
+	    return false;
+	  $curr = $document->getFolder();
+	  while (true){
+	    if (!$curr)
+	      break;
+	    if ($curr->getAttributeValue("ignoreInGit") == "true")
+	      return false;
+	    if (!isset($curr->_parentID) || ($curr->_parentID == "") || ($curr->_parentID == 0) || ($curr->_id == $curr->_dms->rootFolderID)) 
+	      break;
+	    $curr = $curr->getParent();
+	  }
+	  return true;
+	}
+	
 	function addDocument($document){
 		//datei speichern und xml informationen schreiben
 		return $this->addDocumentContent($document);
