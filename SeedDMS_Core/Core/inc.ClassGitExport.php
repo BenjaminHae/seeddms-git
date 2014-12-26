@@ -13,6 +13,7 @@
 
 //ToDo: alle Bewegungen innerhalb des git-repos mit git machen!
 //ToDo: Logging in eigene Datei
+//ToDo: Attribute Objekt bekommen!
  
 /**
  * Class to represent an workflow in the document management system
@@ -31,6 +32,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	 * @const bool if true in the git directory every file from the DMS is inside another folder
 	 */
 	const _ROOTCONTAINSMAINFOLDER = false;
+	/**
+	 * @const string name of attribute which decides whether a file should be in repo 
+	 */
+	 const _REPOATTRIBUTE = "ignoreInGit";
 	/**
 	 * @var string path of git directory, including trailing path delimiter
 	 *
@@ -132,7 +137,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function belongsFileToRepository($document){
-	  if ($document->getAttributeValue("ignoreInGit") == "true")
+	  if ($document->getAttributeValue(self::_REPOATTRIBUTE) == "true")
 	    return false;
 	  $curr = $document->getFolder();
 	  return $this->belongsFolderToRepository($curr);
@@ -143,7 +148,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	  while (true){
 	    if (!$curr)
 	      break;
-	    if ($curr->getAttributeValue("ignoreInGit") == "true")
+	    if ($curr->getAttributeValue(self::_REPOATTRIBUTE) == "true")
 	      return false;
 	    if (!isset($curr->_parentID) || ($curr->_parentID == "") || ($curr->_parentID == 0) || ($curr->_id == $curr->_dms->rootFolderID)) 
 	      break;
@@ -292,7 +297,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		//xml setzen auch für alle child elemente
 	}
 	
-	
+	function setAttribute($object, $attribName, $attribValue){
+		
+	}
+		
 	private function log($msg, $priority = null){
 		global $logger;
 		if(trim($msg)!=""){
