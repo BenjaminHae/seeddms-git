@@ -312,7 +312,16 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function setAttribute($object, $attribName, $attribValue){
-		
+		return false;
+		if ($attribName!=self::_REPOATTRIBUTE)
+		  return false;
+		if ($attribValue=="true"){
+		  $this->gitRemove($path, true);
+		}
+		else
+		{
+		  //ToDo: Git Add Folder/File if belongs
+		}
 	}
 		
 	private function log($msg, $priority = null){
