@@ -75,6 +75,13 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	var $_gitCommitMessage;
 	
 	/**
+	 *@var object reference to attribute containing ignore information
+	 *
+	 *@access protected
+	 */
+	var $_attributObject = NULL;
+	
+	/**
 	 * @var string path path of git directory, including trailingPathDelimiter
 	*/
 	function SeedDMS_Core_Git_Export($path) { /* {{{ */
@@ -137,7 +144,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function belongsFileToRepository($document){
-	  if ($document->getAttributeValue(self::_REPOATTRIBUTE) == "true")
+	  if ($document->getAttributeValue($this->Attribute()) == "true")
 	    return false;
 	  $curr = $document->getFolder();
 	  return $this->belongsFolderToRepository($curr);
@@ -148,13 +155,20 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	  while (true){
 	    if (!$curr)
 	      break;
-	    if ($curr->getAttributeValue(self::_REPOATTRIBUTE) == "true")
+	    if ($curr->getAttributeValue($this->Attribute()) == "true")
 	      return false;
 	    if (!isset($curr->_parentID) || ($curr->_parentID == "") || ($curr->_parentID == 0) || ($curr->_id == $curr->_dms->rootFolderID)) 
 	      break;
 	    $curr = $curr->getParent();
 	  }
 	  return true;
+	}	
+	
+	function Attribute(){
+	  if ($this->_attributObject == NULL){
+	    $this->_attributObject = $this->_dms->getAttributeDefinitionByName(self::_REPOATTRIBUTE):
+	  }
+	  return $this->_attributObject;
 	}
 	
 	function addDocument($document){
