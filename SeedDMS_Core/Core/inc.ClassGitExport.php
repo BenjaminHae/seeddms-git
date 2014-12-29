@@ -16,12 +16,12 @@
 //ToDo: Attribute Objekt bekommen!
  
 /**
- * Class to represent an workflow in the document management system
+ * Class to save documents to a git repository
  *
  * @category   DMS
  * @package    SeedDMS_Core
- * @author     Markus Westphal, Malcolm Cowe, Uwe Steinmann <uwe@steinmann.cx>
- * @copyright  Copyright (C) 2012 Uwe Steinmann
+ * @author     Benjamin Häublein <benjaminhaeublein@gmail.com>
+ * @copyright  Copyright (C) 2014 Benjamin Häublein
  * @version    Release: @package_version@
  */
  
@@ -316,10 +316,11 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		if ($attribName!=self::_REPOATTRIBUTE)
 		  return false;
 		if ($attribValue=="true"){
+		  $path = "TODO";
 		  $this->gitRemove($path, true);
 		}
-		else
-		{
+		else{
+		  
 		  //ToDo: Git Add Folder/File if belongs
 		}
 	}
