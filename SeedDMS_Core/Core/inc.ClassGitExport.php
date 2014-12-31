@@ -166,7 +166,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	
 	function Attribute(){
 	  if ($this->_attributObject == NULL){
-	    $this->_attributObject = $this->_dms->getAttributeDefinitionByName(self::_REPOATTRIBUTE):
+	    $this->_attributObject = $this->_dms->getAttributeDefinitionByName(self::_REPOATTRIBUTE);
 	  }
 	  return $this->_attributObject;
 	}
