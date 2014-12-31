@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (541), fengjohn (5)
+//    Translators: Admin (544), fengjohn (5)
 
 $text = array(
 'accept' => '接受',
@@ -113,10 +113,13 @@ URL: [url]',
 'attribute_changed_email_subject' => '',
 'attribute_count' => '使用次数',
 'attribute_value' => '属性值',
+'attr_max_values' => '',
+'attr_min_values' => '',
 'attr_no_regex_match' => '',
 'at_least_n_users_of_group' => '',
 'august' => '八 月',
 'authentication' => '',
+'author' => '',
 'automatic_status_update' => '自动状态变化',
 'back' => '返回',
 'backup_list' => '备份列表',
@@ -124,7 +127,7 @@ URL: [url]',
 'backup_remove' => '删除备份',
 'backup_tools' => '备份工具',
 'between' => '时间段',
-'browse' => '',
+'browse' => '浏览',
 'calendar' => '日历',
 'calendar_week' => '',
 'cancel' => '取消',
@@ -188,7 +191,9 @@ URL: [url]',
 'content' => '内容',
 'continue' => '继续',
 'create_fulltext_index' => '创建全文索引',
-'create_fulltext_index_warning' => '',
+'create_fulltext_index_warning' => '你将重新创建全
+文索引。这将花费一定的时间但是会提升系统的整体表现。如果你想要重新创建索引，请确
+认你的操作',
 'creation_date' => '创建日期',
 'cs_CZ' => '捷克语',
 'current_password' => '',
@@ -461,6 +466,7 @@ URL: [url]',
 'my_documents' => '我的文档',
 'name' => '名称',
 'needs_workflow_action' => '',
+'never' => '',
 'new' => 'New',
 'new_attrdef' => '添加属性',
 'new_default_keywords' => '添加关键字',

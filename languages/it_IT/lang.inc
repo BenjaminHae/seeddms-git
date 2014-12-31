@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (764)
+//    Translators: Admin (766)
 
 $text = array(
 'accept' => 'Accetta',
@@ -109,10 +109,13 @@ $text = array(
 'attribute_changed_email_subject' => '',
 'attribute_count' => 'Numero di utenti',
 'attribute_value' => 'Valore dell\'attributo',
+'attr_max_values' => '',
+'attr_min_values' => '',
 'attr_no_regex_match' => '',
 'at_least_n_users_of_group' => '',
 'august' => 'Agosto',
 'authentication' => '',
+'author' => '',
 'automatic_status_update' => 'Modifica automatica dello stato',
 'back' => 'Ritorna',
 'backup_list' => 'Lista dei backup presenti',
@@ -300,8 +303,8 @@ $text = array(
 'files_deletion' => 'Cancellazione file',
 'files_deletion_warning' => 'Con questa operazione è possible cancellare i file di intere cartelle. Dopo la cancellazione le informazioni di versionamento resteranno disponibili.',
 'file_size' => 'Grandezza',
-'filter_for_documents' => '',
-'filter_for_folders' => '',
+'filter_for_documents' => 'Filtro aggiuntivo per i documenti',
+'filter_for_folders' => 'Filtro aggiuntivo per le cartelle',
 'folder' => 'Cartella',
 'folders' => 'Cartelle',
 'folders_and_documents_statistic' => 'Visualizzazione generale',
@@ -457,6 +460,7 @@ $text = array(
 'my_documents' => 'Documenti personali',
 'name' => 'Nome',
 'needs_workflow_action' => '',
+'never' => '',
 'new' => 'Nuovo',
 'new_attrdef' => 'Nuovo attributo',
 'new_default_keywords' => 'Aggiungi parole chiave',

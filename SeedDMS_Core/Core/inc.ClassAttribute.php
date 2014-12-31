@@ -89,9 +89,39 @@ class SeedDMS_Core_Attribute { /* {{{ */
 		$this->_dms = $dms;
 	} /* }}} */
 
+	/**
+	 * Get internal id of attribute
+	 *
+	 * @return integer id
+	 */
 	function getID() { return $this->_id; }
 
+	/**
+	 * Return attribute value as stored in database
+	 *
+	 * This function will return the value of multi value attributes
+	 * including the separator char.
+	 *
+	 * @return string the attribute value as it is stored in the database.
+	 */
 	function getValue() { return $this->_value; }
+
+	/**
+	 * Return attribute values as an array
+	 *
+	 * This function returns the attribute value as an array. Such an array
+	 * has one element for non multi value attributes and n elements for
+	 * multi value attributes.
+	 *
+	 * @return array the attribute values
+	 */
+	function getValueAsArray() { /* {{{ */
+		if($this->_attrdef->getMultipleValues()) {
+			return explode($this->_value[0], substr($this->_value, 1));
+		} else {
+			return array($this->_value);
+		}
+	} /* }}} */
 
 	/**
 	 * Set a value of an attribute
@@ -133,6 +163,11 @@ class SeedDMS_Core_Attribute { /* {{{ */
 		return true;
 	} /* }}} */
 
+	/**
+	 * Get definition of attribute
+	 *
+	 * @return object attribute definition
+	 */
 	function getAttributeDefinition() { return $this->_attrdef; }
 
 } /* }}} */
@@ -288,8 +323,18 @@ class SeedDMS_Core_AttributeDefinition { /* {{{ */
 		$this->_dms = $dms;
 	} /* }}} */
 
+	/**
+	 * Get internal id of attribute definition
+	 *
+	 * @return integer id
+	 */
 	function getID() { return $this->_id; }
 
+	/**
+	 * Get name of attribute definition
+	 *
+	 * @return string name
+	 */
 	function getName() { return $this->_name; }
 
 	function setName($name) { /* {{{ */
@@ -304,8 +349,24 @@ class SeedDMS_Core_AttributeDefinition { /* {{{ */
 		return true;
 	} /* }}} */
 
+	/**
+	 * Get object type of attribute definition
+	 * 
+	 * This can be one of objtype_all,
+	 * objtype_folder, objtype_document, or objtype_documentcontent.
+	 *
+	 * @return integer type
+	 */
 	function getObjType() { return $this->_objtype; }
 
+	/**
+	 * Set object type of attribute definition
+	 * 
+	 * This can be one of objtype_all,
+	 * objtype_folder, objtype_document, or objtype_documentcontent.
+	 *
+	 * @param integer $objtype type
+	 */
 	function setObjType($objtype) { /* {{{ */
 		$db = $this->_dms->getDB();
 
@@ -318,8 +379,22 @@ class SeedDMS_Core_AttributeDefinition { /* {{{ */
 		return true;
 	} /* }}} */
 
+	/**
+	 * Get type of attribute definition
+	 * 
+	 * This can be one of type_int, type_float, type_string, type_boolean.
+	 *
+	 * @return integer type
+	 */
 	function getType() { return $this->_type; }
 
+	/**
+	 * Set type of attribute definition
+	 * 
+	 * This can be one of type_int, type_float, type_string, type_boolean.
+	 *
+	 * @param integer $type type
+	 */
 	function setType($type) { /* {{{ */
 		$db = $this->_dms->getDB();
 
@@ -332,8 +407,19 @@ class SeedDMS_Core_AttributeDefinition { /* {{{ */
 		return true;
 	} /* }}} */
 
+	/**
+	 * Check if attribute definition allows multi values for attribute
+	 * 
+	 * @return boolean true if attribute may have multiple values
+	 */
 	function getMultipleValues() { return $this->_multiple; }
 
+	/**
+	 * Set if attribute definition allows multi values for attribute
+	 * 
+	 * @param boolean $mv true if attribute may have multiple values, otherwise
+	 * false
+	 */
 	function setMultipleValues($mv) { /* {{{ */
 		$db = $this->_dms->getDB();
 
@@ -346,6 +432,14 @@ class SeedDMS_Core_AttributeDefinition { /* {{{ */
 		return true;
 	} /* }}} */
 
+	/**
+	 * Return minimum number of values for attributes
+	 * 
+	 * Attributes with multiple values may be limited to a range
+	 * of values. This functions returns the minimum number of values.
+	 *
+	 * @return integer minimum number of values
+	 */
 	function getMinValues() { return $this->_minvalues; }
 
 	function setMinValues($minvalues) { /* {{{ */
@@ -360,6 +454,14 @@ class SeedDMS_Core_AttributeDefinition { /* {{{ */
 		return true;
 	} /* }}} */
 
+	/**
+	 * Return maximum number of values for attributes
+	 * 
+	 * Attributes with multiple values may be limited to a range
+	 * of values. This functions returns the maximum number of values.
+	 *
+	 * @return integer maximum number of values
+	 */
 	function getMaxValues() { return $this->_maxvalues; }
 
 	function setMaxValues($maxvalues) { /* {{{ */

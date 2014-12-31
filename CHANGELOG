@@ -1,4 +1,41 @@
 --------------------------------------------------------------------------------
+                     Changes in version 4.3.13
+--------------------------------------------------------------------------------
+- more error fixes when searching for attributes
+- fix saving multi value attributes without a maximum number of values
+- webdav sets propper modification time
+- add button to select all log files for removal
+- deleted folders and documents on the clipboard don't crash seeddms anymore
+  when moving into a different folder (Bug #186)
+- Download of documents whose content is gone will not be possible anymore
+  (Bug #185)
+- allow user to access a locked document via webdav if he/she is the owner
+  of that document
+- saving a document via webdav will not in any case create a new version
+  anymore. If the user and mimetype hasn't changed the content is just
+  replaced.
+
+--------------------------------------------------------------------------------
+                     Changes in version 4.3.12
+--------------------------------------------------------------------------------
+- log each operation in op/op.Ajax.php
+- fix another error when search for multi value attributes of folders
+- do not use strptime anymore (Bug #129)
+- fix specfying port for database in hostname (Bug #173)
+- propperly check for min/max values of attributes
+
+--------------------------------------------------------------------------------
+                     Changes in version 4.3.11
+--------------------------------------------------------------------------------
+- translation updates
+- password expiration can be set to 'never'
+- fixed saving multi value attributes
+- do not close browser window anymore when keywords are chosen (Bug #141)
+- fix almost unrestricted fast upload (Bug #175)
+- no more php warning on Workflow summary page (Bug #177)
+- various bug fixes in saving and searching for multi value attributes
+
+--------------------------------------------------------------------------------
                      Changes in version 4.3.10
 --------------------------------------------------------------------------------
 - various bug fixes (e.g. Bug #171, #165)

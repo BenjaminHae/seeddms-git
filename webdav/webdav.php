@@ -276,12 +276,11 @@ class HTTP_WebDAV_Server_SeedDMS extends HTTP_WebDAV_Server
 		$info = array();
 		$info["props"] = array();
 
-		// modification time
-		$info["props"][] = $this->mkprop("getlastmodified", time());
-
 		// type and size (caller already made sure that path exists)
 		if (get_class($obj) == 'SeedDMS_Core_Folder') {
+			// modification time
 			/* folders do not have a modification time */
+			$info["props"][] = $this->mkprop("getlastmodified", time());
 			$info["props"][] = $this->mkprop("creationdate",	time());
 
 			// directory (WebDAV collection)
@@ -301,6 +300,8 @@ class HTTP_WebDAV_Server_SeedDMS extends HTTP_WebDAV_Server
 			$info["props"][] = $this->mkprop("resourcetype", "collection");
 			$info["props"][] = $this->mkprop("getcontenttype", "httpd/unix-directory");
 		} else {
+			// modification time
+			$info["props"][] = $this->mkprop("getlastmodified",$obj->getLatestContent()->getDate());
 			$info["props"][] = $this->mkprop("creationdate",	$obj->getDate());
 
 			// plain file (WebDAV resource)
@@ -541,9 +542,21 @@ class HTTP_WebDAV_Server_SeedDMS extends HTTP_WebDAV_Server
 				$lc = $document->getLatestContent();
 				if($lc->getChecksum() == SeedDMS_Core_File::checksum($tmpFile)) {
 					$lc->setDate();
-				} elseif(!$document->addContent('', $this->user, $tmpFile, $name, $fileType, $mimetype, array(), array(), 0)) {
-					unlink($tmpFile);
-					return "409 Conflict";
+				} else {
+					if($this->user->getID() == $lc->getUser()->getID() &&
+						 $name == $lc->getOriginalFileName() &&
+						 $fileType == $lc->getFileType() &&
+						 $mimetype == $lc->getMimeType()) {
+						if(!$document->replaceContent($lc->getVersion(), $this->user, $tmpFile, $name, $fileType, $mimetype)) {
+							unlink($tmpFile);
+							return "403 Forbidden";
+						}
+					} else {
+						if(!$document->addContent('', $this->user, $tmpFile, $name, $fileType, $mimetype, array(), array(), 0)) {
+							unlink($tmpFile);
+							return "409 Conflict";
+						}
+					}
 				}
 			}
 
@@ -1002,7 +1015,7 @@ class HTTP_WebDAV_Server_SeedDMS extends HTTP_WebDAV_Server
 			return false;
 		}
 
-		if($obj->isLocked()) {
+		if($obj->isLocked() && $this->user->getLogin() != $obj->getLockingUser()->getLogin()) {
 			$lockuser = $obj->getLockingUser();
 			if($this->logger)
 				$this->logger->log('checkLock: object is locked by '.$lockuser->getLogin(), PEAR_LOG_INFO);

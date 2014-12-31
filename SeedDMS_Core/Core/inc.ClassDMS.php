@@ -162,8 +162,8 @@ class SeedDMS_Core_DMS {
 	 * two objects, which isn't required. The method will first check
 	 * if the objects are instances of the same class.
 	 *
-	 * @param object $object1
-	 * @param object $object2
+	 * @param object $object1 first object to be compared
+	 * @param object $object2 second object to be compared
 	 * @return boolean true if objects are equal, otherwise false
 	 */
 	static function checkIfEqual($object1, $object2) { /* {{{ */
@@ -250,9 +250,17 @@ class SeedDMS_Core_DMS {
 		$this->convertFileTypes = array();
 		$this->version = '@package_version@';
 		if($this->version[0] == '@')
-			$this->version = '4.3.10';
+			$this->version = '4.3.13';
 	} /* }}} */
 
+	/**
+	 * Return database where meta data is stored
+	 *
+	 * This method returns the database object as it was set by the first
+	 * parameter of the constructor.
+	 *
+	 * @return object database
+	 */
 	function getDB() { /* {{{ */
 		return $this->db;
 	} /* }}} */
@@ -316,13 +324,19 @@ class SeedDMS_Core_DMS {
 	/**
 	 * Set maximum number of subdirectories per directory
 	 *
-	 * The value of maxDirID is quite crucial because, all documents are
-	 * associated with a directory in the filesystem. Consequently, there is
-	 * maximum number of documents, because depending on the file system
+	 * The value of maxDirID is quite crucial, because each document is
+	 * stored within a directory in the filesystem. Consequently, there can be
+	 * a maximum number of documents, because depending on the file system
 	 * the maximum number of subdirectories is limited. Since version 3.3.0 of
-	 * SeedDMS an additional directory level has been introduced. All documents
+	 * SeedDMS an additional directory level has been introduced, which
+	 * will be created when maxDirID is not 0. All documents
 	 * from 1 to maxDirID-1 will be saved in 1/<docid>, documents from maxDirID
 	 * to 2*maxDirID-1 are stored in 2/<docid> and so on.
+	 *
+	 * Modern file systems like ext4 do not have any restrictions on the number
+	 * of subdirectories anymore. Therefore it is best if this parameter is
+	 * set to 0. Never change this parameter if documents has already been
+	 * created.
 	 *
 	 * This function must be called right after creating an instance of
 	 * {@link SeedDMS_Core_DMS}
@@ -557,7 +571,9 @@ class SeedDMS_Core_DMS {
 	 * @param modificationstartdate array search for documents modified after this date
 	 * @param modificationenddate array search for documents modified before this date
 	 * @param categories array list of categories the documents must have assigned
-	 * @param attributes array list of attributes
+	 * @param attributes array list of attributes. The key of this array is the
+	 * attribute definition id. The value of the array is the value of the
+	 * attribute. If the attribute may have multiple values it must be an array.
 	 * @param mode int decide whether to search for documents/folders
 	 *        0x1 = documents only
 	 *        0x2 = folders only
@@ -630,11 +646,14 @@ class SeedDMS_Core_DMS {
 				foreach($attributes as $attrdefid=>$attribute) {
 					if($attribute) {
 						$attrdef = $this->getAttributeDefinition($attrdefid);
-						if($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_folder) {
-							if($attrdef->getValueSet())
-								$searchAttributes[] = "`tblFolderAttributes`.`attrdef`=".$attrdefid." AND `tblFolderAttributes`.`value`='".$attribute."'";
-							else
-								$searchAttributes[] = "`tblFolderAttributes`.`attrdef`=".$attrdefid." AND `tblFolderAttributes`.`value` like '%".$attribute."%'";
+						if($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_folder || $attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_all) {
+							if($valueset = $attrdef->getValueSet()) {
+								if($attrdef->getMultipleValues()) {
+									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblFolderAttributes` WHERE `tblFolderAttributes`.`attrdef`=".$attrdefid." AND (`tblFolderAttributes`.`value` like '%".$valueset[0].implode("%' OR `tblFolderAttributes`.`value` like '%".$valueset[0], $attribute)."%') AND `tblFolderAttributes`.`folder`=`tblFolders`.`id`)";
+								} else
+									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblFolderAttributes` WHERE `tblFolderAttributes`.`attrdef`=".$attrdefid." AND `tblFolderAttributes`.`value`='".$attribute."' AND `tblFolderAttributes`.`folder`=`tblFolders`.`id`)";
+							} else
+								$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblFolderAttributes` WHERE `tblFolderAttributes`.`attrdef`=".$attrdefid." AND `tblFolderAttributes`.`value` like '%".$attribute."%' AND `tblFolderAttributes`.`folder`=`tblFolders`.`id`)";
 						}
 					}
 				}
@@ -790,16 +809,23 @@ class SeedDMS_Core_DMS {
 				foreach($attributes as $attrdefid=>$attribute) {
 					if($attribute) {
 						$attrdef = $this->getAttributeDefinition($attrdefid);
-						if($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_document) {
-							if($attrdef->getValueSet())
-								$searchAttributes[] = "`tblDocumentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentAttributes`.`value`='".$attribute."'";
-							else
-								$searchAttributes[] = "`tblDocumentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentAttributes`.`value` like '%".$attribute."%'";
+						if($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_document || $attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_all) {
+							if($valueset = $attrdef->getValueSet()) {
+								if($attrdef->getMultipleValues()) {
+									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentAttributes` WHERE `tblDocumentAttributes`.`attrdef`=".$attrdefid." AND (`tblDocumentAttributes`.`value` like '%".$valueset[0].implode("%' OR `tblDocumentAttributes`.`value` like '%".$valueset[0], $attribute)."%') AND `tblDocumentAttributes`.`document` = `tblDocuments`.`id`)";
+								} else
+									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentAttributes` WHERE `tblDocumentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentAttributes`.`value`='".$attribute."' AND `tblDocumentAttributes`.`document` = `tblDocuments`.`id`)";
+							} else
+								$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentAttributes` WHERE `tblDocumentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentAttributes`.`value` like '%".$attribute."%') AND `tblDocumentAttributes`.`document` = `tblDocuments`.`id`";
 						} elseif($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_documentcontent) {
-							if($attrdef->getValueSet())
-								$searchAttributes[] = "`tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentContentAttributes`.`value`='".$attribute."'";
-							else
-								$searchAttributes[] = "`tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentContentAttributes`.`value` like '%".$attribute."%'";
+							if($attrdef->getValueSet()) {
+								if($attrdef->getMultipleValues()) {
+									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentContentAttributes` WHERE `tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND (`tblDocumentContentAttributes`.`value` like '%".$valueset[0].implode("%' OR `tblDocumentContentAttributes`.`value` like '%".$valueset[0], $attribute)."%') AND `tblDocumentContentAttributes`.`document` = `tblDocumentContent`.`id`)";
+								} else {
+									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentContentAttributes` WHERE `tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentContentAttributes`.`value`='".$attribute."' AND `tblDocumentContentAttributes`.content = `tblDocumentContent`.id";
+								}
+							} else
+								$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentContentAttributes` WHERE `tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentContentAttributes`.`value` like '%".$attribute."%' AND `tblDocumentContentAttributes`.content = `tblDocumentContent`.id";
 						}
 					}
 				}
@@ -1427,7 +1453,7 @@ class SeedDMS_Core_DMS {
 	} /* }}} */
 
 	function getDocumentCategories() { /* {{{ */
-		$queryStr = "SELECT * FROM tblCategory";
+		$queryStr = "SELECT * FROM tblCategory order by name";
 
 		$resArr = $this->db->getResultArray($queryStr);
 		if (is_bool($resArr) && !$resArr)
@@ -1725,6 +1751,7 @@ class SeedDMS_Core_DMS {
 	/**
 	 * Return workflow by its Id
 	 *
+	 * @param integer $id internal id of workflow
 	 * @return object of instances of {@link SeedDMS_Core_Workflow} or false
 	 */
 	function getWorkflow($id) { /* {{{ */
@@ -1748,6 +1775,7 @@ class SeedDMS_Core_DMS {
 	/**
 	 * Return workflow by its name
 	 *
+	 * @param string $name name of workflow
 	 * @return object of instances of {@link SeedDMS_Core_Workflow} or false
 	 */
 	function getWorkflowByName($name) { /* {{{ */
@@ -1770,6 +1798,12 @@ class SeedDMS_Core_DMS {
 		return $workflow;
 	} /* }}} */
 
+	/**
+	 * Add a new workflow
+	 *
+	 * @param string $name name of workflow
+	 * @param string $initstate initial state of workflow
+	 */
 	function addWorkflow($name, $initstate) { /* {{{ */
 		$db = $this->db;
 		if (is_object($this->getWorkflowByName($name))) {
