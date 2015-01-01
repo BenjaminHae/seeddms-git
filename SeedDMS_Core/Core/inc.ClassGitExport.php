@@ -177,8 +177,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function addDocumentContent($document){//todo: alter content bleibt beibehalten, wenn sich Dateityp ändert
-		if (!$this->belongsFileToRepository($document))
-		  return false;
+		if (!$this->belongsFileToRepository($document)){
+			$this->log($this->DocumentGetCorePath($document)." is set to ignoreInGit");
+			return false;
+		}
 		$destinationPath = $this->DocumentGetGitPath($document);
 		$this->forceDirectories($destinationPath);
 		$this->log("Adding Document ".$document->getName());
@@ -193,12 +195,17 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 				$this->log(print_r(error_get_last(), true), PEAR_LOG_ERR);
 			}
 		}
+		else{
+				$this->log("addDocumentContent: destinationPath doesn't exist", PEAR_LOG_ERR);
+		}
 		return false;
 	}
 	
 	function renameDocument($document, $oldname, $newname){
-		if (!$this->belongsFileToRepository($document))
-		  return false;
+		if (!$this->belongsFileToRepository($document)){
+			$this->log($this->DocumentGetCorePath($document)." is set to ignoreInGit");
+			return false;
+		}
 		//$this->log($this->getGitStatus());
 		$documentPath = $this->DocumentGetGitPath($document);
 		$oldGitFile = $documentPath.'/'.$oldname.$document->getLatestContent()->getFileType();
@@ -214,14 +221,17 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 			}
 		}
 		else{
+			$this->log("renameDocument failed, source file doesn't exist. Now adding document fresh.");
 			return $this->addDocumentContent($document);
 		}
 		return false;
 	}
 	
 	function renameFolder($folder, $oldname, $newname){
-		if (!$this->belongsFolderToRepository($folder))
-		  return false;
+		if (!$this->belongsFolderToRepository($folder)){
+			$this->log($this->DocumentGetCorePath($folder)." is set to ignoreInGit");
+			return false;
+		}
 		$newpath = $this->FolderGetRelativePath($folder);//ist das inklusive ordnernamen selbst?
 		$oldpath = dirname($newpath)."/".$newname;
 		$this->log("Renaming Folder ".$oldpath." to ".$newpath);
@@ -243,8 +253,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function removeDocument($document, $latestContent){
-		if (!$this->belongsFileToRepository($document))
-		  return false;
+		if (!$this->belongsFileToRepository($document)){
+			$this->log($this->DocumentGetCorePath($document)." is set to ignoreInGit");
+			return false;
+		}
 		if(unlink($this->DocumentGetGitFullPath($document,$latestContent))){
 			$this->gitRemove($this->DocumentGetGitFullPath($document,$latestContent));
 			$this->_gitCommitMessage .= "removed File ".$document->getName()."\r\n";
@@ -257,8 +269,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function removeFolder($folder){
-		if (!$this->belongsFolderToRepository($folder))
-		  return false;
+		if (!$this->belongsFolderToRepository($folder)){
+			$this->log($this->DocumentGetCorePath($folder)." is set to ignoreInGit");
+			return false;
+		}
 		if(unlink($this->FolderGetGitFullPath($folder))){
 			$this->gitRemove($this->FolderGetGitFullPath($folder), true);
 			$this->_gitCommitMessage .= "removed Folder".$folder->getName()."\r\n";
@@ -276,8 +290,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	 * @var integer newparent id of new parent folder
 	*/
 	function moveDocument($document, $oldparent, $newparent){
-		if (!$this->belongsFileToRepository($document))
-		  return false;
+		if (!$this->belongsFileToRepository($document)){
+			$this->log($this->DocumentGetCorePath($document)." is set to ignoreInGit");
+			return false;
+		}
 		$oldFolder = $this->_dms->getFolder($oldparent);
 		$newFolder = $this->_dms->getFolder($newparent);
 		$destinationPath = $this->FolderGetGitFullPath($newFolder);
@@ -297,8 +313,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 				$this->log(print_r(error_get_last(), true), PEAR_LOG_ERR);
 			}
 		}
-		else
+		else{
+			$this->log("moveDocument failed, source file doesn't exist. Now adding document fresh.");
 			return $this->addDocumentContent($document);
+		}
 		return false;
 	}
 	
