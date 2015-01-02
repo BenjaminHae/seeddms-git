@@ -356,7 +356,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function gitAdd($path){
-		$this->log(system($this->gitCommand()."add ".escapeshellarg($path)));
+		$this->log(shell_exec($this->gitCommand()."add ".escapeshellarg($path)));
 		$this->_gitChanged = true;
 	}
 	
@@ -366,18 +366,18 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		}
 		else
 			$res = "-r ";
-		$this->log(system($this->gitCommand()."rm ".$rec.escapeshellarg($path)));
+		$this->log(shell_exec($this->gitCommand()."rm ".$rec.escapeshellarg($path)));
 		$this->_gitChanged = true;
 	}
 	
 	function gitCommit($commitMessage){
 		// git commit
-		$this->log(system($this->gitCommand()."commit -m ".escapeshellarg($commitMessage)));
+		$this->log(shell_exec($this->gitCommand()."commit -m ".escapeshellarg($commitMessage)));
 		$this->_gitChanged = false;
 	}
 	
 	function gitAbort(){
-		system($this->gitCommand()."rm -r --cached ".escapeshellarg($this->_path."/."));
+		$this->log(shell_exec($this->gitCommand()."rm -r --cached ".escapeshellarg($this->_path."/.")));
 		$this->_gitCommitMessage = date("Y-m-d\r\n");
 		$this->_gitChanged = false;
 	}
