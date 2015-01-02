@@ -11,7 +11,11 @@ PDO.
 NOTE FOR GIT EXTENSION
 ======================
 Create a www-data writable folder named git in your content directory.
-Create a git repository in "git" using www-data as owner.
+Create a git repository in "git"(normally in /var/local/seeddms) using www-data:www-data as owner. 
+ - sudo -u www-data git init
+ - permissions of all files in the repo should be rwxr-sr-x
+In special cases, first run filldir/seeddms-git then create repositories in every subfolder.
+Add an attribute "ignoreInGit" to folders/files in SeedDMS Administration.
 Copy files to corresponding folders:
  - SeedDMS_Core/Core/inc.ClassDMS.php
  - SeedDMS_Core/Core/inc.ClassDocument.php
@@ -21,6 +25,7 @@ Copy files to corresponding folders:
  - utils/seeddms-filldir
  - utils/keeppath.php
  - utils/seeddms-git (filling the git repository and deleting before)
+ 
 
 Changes not directly related to git export:
  - utils/adddoc.php (setDate of Document manually, corrected some errors)
