@@ -14,6 +14,7 @@
 //ToDo: alle Bewegungen innerhalb des git-repos mit git machen!
 //ToDo: Logging in eigene Datei
 //ToDo: Attribute Objekt bekommen!
+//ToDo: dateinamen einheitlich erzeugen(insbes. mit erweiterung!)
  
 /**
  * Class to save documents to a git repository
@@ -45,9 +46,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	 */
 	const _GITINSUB = true;
 	/**
-	 * @const bool be verbose in log
+	 * @const bool be verbose in log for debugging
 	 */
 	const _VERBOSE = true;
+	
 	/**
 	 * @var string path of git directory, including trailing path delimiter
 	 *
@@ -108,6 +110,8 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		$this->_dms = null;
 		$this->_gitChanged = false;
 		$this->_gitCommitMessage = date("Y-m-d\r\n");
+		if (!self::_GITINSUB)
+			$this->_paths[] = "";
 	} /* }}} */
 
 	function setDMS($dms) { /* {{{ */
@@ -117,7 +121,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	function setGitChanged($value){
 		$this->_gitChanged = $value;
 		if ($this->_gitChanged)
-			$this->gitCommit();
+			$this->gitCommit($this->_gitCommitMessage);
 	}
 	
 	function endsWith($haystack, $needle){
@@ -129,11 +133,15 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function DocumentGetGitFileName($document, $latestContent=NULL){
+		return DocumentGetGitFileNameX($document->getName(),$document,$latestContent);
+	}
+	function DocumentGetGitFileNameX($name, $document, $latestContent=NULL){
 		if($latestContent==NULL)
 			$latestContent = $document->getLatestContent();
-		if ($this->endsWith($document->getName(), $latestContent->getFileType()))
-			return $document->getName();
-		return $document->getName().$latestContent->getFileType();
+		//Independent of case
+		if ($this->endsWith(strtolower($name), strtolower($latestContent->getFileType())))
+			return $name;
+		return $name.$latestContent->getFileType();
 	}
 	
 	function DocumentGetGitFullPath($document, $latestContent=NULL){
@@ -189,7 +197,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	  return true;
 	}	
 	
-	function Attribute(){
+	private function Attribute(){
 	  if ($this->_attributObject == NULL){
 	    $this->_attributObject = $this->_dms->getAttributeDefinitionByName(self::_REPOATTRIBUTE);
 	  }
@@ -372,13 +380,17 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		$sub = "";
 		if(self::_GITINSUB){
 			$p_len = strlen($this->_path);
-			$sub = '/'.substr($path,$p_len,strpos($path,"/",$p_len)-$p_len);
+			$sub = substr($path,$p_len,strpos($path,"/",$p_len)-$p_len);
 			if(!in_array($sub,$this->_paths)){
 				$this->_paths[] = $sub;
 				if (self::_VERBOSE)
 					$this->log("added ".$sub." to _paths");
 			}
 		}
+		return $this->gitCommandAbs($sub);
+	}
+	
+	private function gitCommandAbs($sub){
 		return "git --git-dir=".escapeshellarg($this->_path.$sub."/.git")." --work-tree=".escapeshellarg($this->_path.$sub)." ";
 	}
 	
@@ -401,7 +413,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		// git commit
 		$this->log(print_r($this->_paths));
 		foreach($this->_paths as $path){
-			$gc = $this->gitCommand($path);
+			$gc = $this->gitCommandAbs($path);
 			if(self::_VERBOSE){
 				$this->log("committing ".$path);
 				$this->log($gc);
