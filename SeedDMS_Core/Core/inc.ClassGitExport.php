@@ -35,7 +35,19 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	/**
 	 * @const string name of attribute which decides whether a file should be in repo 
 	 */
-	 const _REPOATTRIBUTE = "ignoreInGit";
+	const _REPOATTRIBUTE = "ignoreInGit";
+	/**
+	 * @const string pipe for shell_exec
+	 */
+	const _PIPE = " 2>&1";
+	/**
+	 * @const bool are git repositorys setup in the main directory (e.g. /var/local/seeddms/git/) = false or for every subdirectory individually = true
+	 */
+	const _GITINSUB = true;
+	/**
+	 * @const bool be verbose in log
+	 */
+	const _VERBOSE = true;
 	/**
 	 * @var string path of git directory, including trailing path delimiter
 	 *
@@ -80,6 +92,13 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	 *@access protected
 	 */
 	var $_attributObject = NULL;
+	
+	/**
+	 *@var array of string array of paths used for git commands
+	 *
+	 *@access protected
+	 */
+	var $_paths = array();
 	
 	/**
 	 * @var string path path of git directory, including trailingPathDelimiter
@@ -208,7 +227,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		}
 		//$this->log($this->getGitStatus());
 		$documentPath = $this->DocumentGetGitPath($document);
-		$oldGitFile = $documentPath.'/'.$oldname.$document->getLatestContent()->getFileType();
+		$oldGitFile = $documentPath.'/'.$oldname.$document->getLatestContent()->getFileType();//ToDo Name mit Dateityp könnte Problem sein!
 		if (file_exists($oldGitFile)){
 			if(rename($oldGitFile, $this->DocumentGetGitFullPath($document))){
 				$this->_gitCommitMessage .= "renamed File ".$document->getName()."\r\n";
@@ -257,15 +276,9 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 			$this->log($this->DocumentGetCorePath($document)." is set to ignoreInGit");
 			return false;
 		}
-		if(unlink($this->DocumentGetGitFullPath($document,$latestContent))){
-			$this->gitRemove($this->DocumentGetGitFullPath($document,$latestContent));
-			$this->_gitCommitMessage .= "removed File ".$document->getName()."\r\n";
-			return true;
-		}
-		else{
-			$this->log(print_r(error_get_last(), true), PEAR_LOG_ERR);
-		}
-		return false;
+		$this->gitRemove($this->DocumentGetGitFullPath($document,$latestContent));
+		$this->_gitCommitMessage .= "removed File ".$document->getName()."\r\n";
+		return true;
 	}
 	
 	function removeFolder($folder){
@@ -326,7 +339,6 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		if (!$this->belongsFolderToRepository($folder))
 		  return false;
 		//rename();
-		//xml setzen auch für alle child elemente
 	}
 	
 	function setAttribute($object, $attribName, $attribValue){
@@ -338,7 +350,6 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		  $this->gitRemove($path, true);
 		}
 		else{
-		  
 		  //ToDo: Git Add Folder/File if belongs
 		}
 	}
@@ -351,12 +362,22 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		}
 	}
 	
-	private function gitCommand(){
-		return "git --git-dir=".escapeshellarg($this->_path."/.git")." --work-tree=".escapeshellarg($this->_path)." ";
+	private function gitCommand($path){
+		$sub = "";
+		if(self::_GITINSUB){
+			$p_len = strlen($this->_path);
+			$sub = '/'.substr($path,$p_len,strpos($path,"/",$p_len)-$p_len);
+			if(!in_array($sub,$this->_paths)){
+				$this->_paths[] = $sub;
+				if (self::_VERBOSE)
+					$this->log("added ".$sub." to _paths");
+			}
+		}
+		return "git --git-dir=".escapeshellarg($this->_path.$sub."/.git")." --work-tree=".escapeshellarg($this->_path.$sub)." ";
 	}
 	
 	function gitAdd($path){
-		$this->log(shell_exec($this->gitCommand()."add ".escapeshellarg($path)));
+		$this->log(shell_exec($this->gitCommand($path)."add ".escapeshellarg($path).self::_PIPE));
 		$this->_gitChanged = true;
 	}
 	
@@ -366,18 +387,26 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		}
 		else
 			$res = "-r ";
-		$this->log(shell_exec($this->gitCommand()."rm ".$rec.escapeshellarg($path)));
+		$this->log(shell_exec($this->gitCommand($path)."rm ".$rec.escapeshellarg($path).self::_PIPE));
 		$this->_gitChanged = true;
 	}
 	
 	function gitCommit($commitMessage){
 		// git commit
-		$this->log(shell_exec($this->gitCommand()."commit -m ".escapeshellarg($commitMessage)));
+		$this->log(print_r($this->_paths));
+		foreach($this->_paths as $path){
+			$gc = $this->gitCommand($path);
+			if(self::_VERBOSE){
+				$this->log("committing ".$path);
+				$this->log($gc);
+			}
+			$this->log(shell_exec($gc."commit -m ".escapeshellarg($commitMessage).self::_PIPE));
+		}
 		$this->_gitChanged = false;
 	}
 	
 	function gitAbort(){
-		$this->log(shell_exec($this->gitCommand()."rm -r --cached ".escapeshellarg($this->_path."/.")));
+		$this->log(shell_exec($this->gitCommand()."rm -r --cached ".escapeshellarg($this->_path."/.").self::_PIPE));
 		$this->_gitCommitMessage = date("Y-m-d\r\n");
 		$this->_gitChanged = false;
 	}
@@ -389,6 +418,8 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function __destruct() {
+		if (self::_VERBOSE)
+			$this->log("desctruct");
 		if ($this->_gitChanged){
 			$this->gitCommit($this->_gitCommitMessage);
 		}
