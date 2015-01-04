@@ -13,8 +13,7 @@
 
 //ToDo: alle Bewegungen innerhalb des git-repos mit git machen!
 //ToDo: Logging in eigene Datei
-//ToDo: Attribute Objekt bekommen!
-//ToDo: dateinamen einheitlich erzeugen(insbes. mit erweiterung!)
+//ToDo: Setzen des IgnoreInGit Attributes bearbeiten
  
 /**
  * Class to save documents to a git repository
@@ -396,7 +395,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function gitAdd($path){
-		$this->log(shell_exec($this->gitCommand($path)."add ".escapeshellarg($path).self::_PIPE));
+		$this->log("git add: ".shell_exec($this->gitCommand($path)."add ".escapeshellarg($path).self::_PIPE));
 		$this->setGitChanged(true);
 	}
 	
