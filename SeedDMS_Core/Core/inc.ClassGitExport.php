@@ -133,7 +133,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	function DocumentGetGitFileName($document, $latestContent=NULL){
-		return DocumentGetGitFileNameX($document->getName(),$document,$latestContent);
+		return $this->DocumentGetGitFileNameX($document->getName(),$document,$latestContent);
 	}
 	
 	function DocumentGetGitFileNameX($name, $document, $latestContent=NULL){
