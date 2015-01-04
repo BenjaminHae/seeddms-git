@@ -135,6 +135,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	function DocumentGetGitFileName($document, $latestContent=NULL){
 		return DocumentGetGitFileNameX($document->getName(),$document,$latestContent);
 	}
+	
 	function DocumentGetGitFileNameX($name, $document, $latestContent=NULL){
 		if($latestContent==NULL)
 			$latestContent = $document->getLatestContent();
@@ -241,7 +242,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		}
 		//$this->log($this->getGitStatus());
 		$documentPath = $this->DocumentGetGitPath($document);
-		$oldGitFile = $documentPath.'/'.$oldname.$document->getLatestContent()->getFileType();//ToDo Name mit Dateityp könnte Problem sein!
+		$oldGitFile = $documentPath.'/'.$this->DocumentGetGitFileNameX($oldname, $document);
 		if (file_exists($oldGitFile)){
 			if(rename($oldGitFile, $this->DocumentGetGitFullPath($document))){
 				$this->_gitCommitMessage .= "renamed File ".$document->getName()."\r\n";
