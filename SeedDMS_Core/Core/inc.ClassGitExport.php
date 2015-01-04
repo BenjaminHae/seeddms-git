@@ -114,6 +114,12 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		$this->_dms = $dms;
 	} /* }}} */
 	
+	function setGitChanged($value){
+		$this->_gitChanged = $value;
+		if ($this->_gitChanged)
+			$this->gitCommit();
+	}
+	
 	function endsWith($haystack, $needle){
 		return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
 	}
@@ -378,7 +384,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	
 	function gitAdd($path){
 		$this->log(shell_exec($this->gitCommand($path)."add ".escapeshellarg($path).self::_PIPE));
-		$this->_gitChanged = true;
+		$this->setGitChanged(true);
 	}
 	
 	function gitRemove($path, $recurse=false){
@@ -388,7 +394,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		else
 			$res = "-r ";
 		$this->log(shell_exec($this->gitCommand($path)."rm ".$rec.escapeshellarg($path).self::_PIPE));
-		$this->_gitChanged = true;
+		$this->setGitChanged(true);
 	}
 	
 	function gitCommit($commitMessage){
@@ -402,13 +408,13 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 			}
 			$this->log(shell_exec($gc."commit -m ".escapeshellarg($commitMessage).self::_PIPE));
 		}
-		$this->_gitChanged = false;
+		$this->setGitChanged(false);
 	}
 	
 	function gitAbort(){
 		$this->log(shell_exec($this->gitCommand()."rm -r --cached ".escapeshellarg($this->_path."/.").self::_PIPE));
 		$this->_gitCommitMessage = date("Y-m-d\r\n");
-		$this->_gitChanged = false;
+		$this->setGitChanged(false);
 	}
 	
 	function forceDirectories($path){
