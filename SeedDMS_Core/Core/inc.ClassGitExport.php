@@ -26,6 +26,7 @@
  */
  
 setlocale(LC_CTYPE, "en_US.UTF-8");
+putenv('LC_ALL=en_US.UTF-8');
  
 class SeedDMS_Core_Git_Export { /* {{{ */
 	/**
@@ -172,7 +173,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 				$path .= "/";
 			}
 		}
-		printf($folderPath);
+		//printf($folderPath);
 		return $path;
 	}
 	
@@ -376,6 +377,10 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		}
 	}
 	
+	private function shell_encode_escape($arg){
+		return escapeshellarg(mb_convert_encoding($arg, "ISO-8859-1"));
+	}
+	
 	private function gitCommand($path){
 		$sub = "";
 		if(self::_GITINSUB){
@@ -391,11 +396,11 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	private function gitCommandAbs($sub){
-		return "git --git-dir=".escapeshellarg($this->_path.$sub."/.git")." --work-tree=".escapeshellarg($this->_path.$sub)." ";
+		return "git --git-dir=".$this->shell_encode_escape($this->_path.$sub."/.git")." --work-tree=".$this->shell_encode_escape($this->_path.$sub)." ";
 	}
 	
 	function gitAdd($path){
-		$this->log("git add: ".shell_exec($this->gitCommand($path)."add ".escapeshellarg($path).self::_PIPE));
+		$this->log("git add: ".shell_exec($this->gitCommand($path)."add ".$this->shell_encode_escape($path).self::_PIPE));
 		$this->setGitChanged(true);
 	}
 	
@@ -405,7 +410,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		}
 		else
 			$res = "-r ";
-		$this->log(shell_exec($this->gitCommand($path)."rm ".$rec.escapeshellarg($path).self::_PIPE));
+		$this->log(shell_exec($this->gitCommand($path)."rm ".$rec.$this->shell_encode_escape($path).self::_PIPE));
 		$this->setGitChanged(true);
 	}
 	
@@ -418,13 +423,13 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 				$this->log("committing ".$path);
 				$this->log($gc);
 			}
-			$this->log(shell_exec($gc."commit -m ".escapeshellarg($commitMessage).self::_PIPE));
+			$this->log(shell_exec($gc."commit -m ".$this->shell_encode_escape($commitMessage).self::_PIPE));
 		}
 		$this->setGitChanged(false);
 	}
 	
 	function gitAbort(){
-		$this->log(shell_exec($this->gitCommand()."rm -r --cached ".escapeshellarg($this->_path."/.").self::_PIPE));
+		$this->log(shell_exec($this->gitCommand()."rm -r --cached ".$this->shell_encode_escape($this->_path."/.").self::_PIPE));
 		$this->_gitCommitMessage = date("Y-m-d\r\n");
 		$this->setGitChanged(false);
 	}
