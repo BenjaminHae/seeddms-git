@@ -12,11 +12,11 @@
   <email>uwe@steinmann.cx</email>
   <active>yes</active>
  </lead>
- <date>2014-11-27</date>
- <time>11:56:35</time>
+ <date>2015-01-29</date>
+ <time>18:23:24</time>
  <version>
-  <release>4.3.13</release>
-  <api>4.3.13</api>
+  <release>4.3.14</release>
+  <api>4.3.14</api>
  </version>
  <stability>
   <release>stable</release>
@@ -24,10 +24,8 @@
  </stability>
  <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
  <notes>
-- fix searching for attributes
-- add some more documentation
-- SeedDMS_Core_DMS::getDocumentCategories() returns categories sorted by name (Bug #181)
-- new methode SeedDMS_Core_Document::replaceContent() which replaces the content of a version.
+- add missing start transaction in SeedDMD_Core_Folder::remove()
+- SeedDMD_Core_Folder::isSubFolder() doesn't compare object instances anymore (Bug #194)
  </notes>
  <contents>
   <dir baseinstalldir="SeedDMS" name="/">
@@ -750,6 +748,25 @@ new release
    <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
    <notes>
 - fix searching folders with multivalue attributes
+   </notes>
+  </release>
+  <release>
+   <date>2014-11-27</date>
+   <time>11:56:35</time>
+   <version>
+    <release>4.3.13</release>
+    <api>4.3.13</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
+   <notes>
+- fix searching for attributes
+- add some more documentation
+- SeedDMS_Core_DMS::getDocumentCategories() returns categories sorted by name (Bug #181)
+- new methode SeedDMS_Core_Document::replaceContent() which replaces the content of a version.
    </notes>
   </release>
  </changelog>

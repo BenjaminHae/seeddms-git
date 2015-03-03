@@ -42,6 +42,7 @@ class SeedDMS_View_AddDocument extends SeedDMS_Bootstrap_Style {
 		$strictformcheck = $this->params['strictformcheck'];
 		$dropfolderdir = $this->params['dropfolderdir'];
 		$workflowmode = $this->params['workflowmode'];
+		$presetexpiration = $this->params['presetexpiration'];
 		$folderid = $folder->getId();
 
 		$this->htmlStartPage(getMLText("folder_title", array("foldername" => htmlspecialchars($folder->getName()))));
@@ -101,13 +102,17 @@ $(document).ready(function() {
 		// Retrieve a list of all users and groups that have review / approve
 		// privileges.
 		$docAccess = $folder->getReadAccessList($enableadminrevapp, $enableownerrevapp);
-		$this->contentSubHeading(getMLText("document_infos"));
 ?>
 		<form action="../op/op.AddDocument.php" enctype="multipart/form-data" method="post" name="form1" onsubmit="return checkForm();">
 		<?php echo createHiddenFieldWithKey('adddocument'); ?>
 		<input type="hidden" name="folderid" value="<?php print $folderid; ?>">
 		<input type="hidden" name="showtree" value="<?php echo showtree();?>">
 		<table class="table-condensed">
+		<tr>
+			<td>
+		<?php $this->contentSubHeading(getMLText("document_infos")); ?>
+			</td>
+		</tr>
 		<tr>
 			<td><?php printMLText("name");?>:</td>
 			<td><input type="text" name="name" size="60"></td>
@@ -150,16 +155,22 @@ $(document).ready(function() {
 <?php
 				}
 			}
+			if($presetexpiration) {
+				if(!($expts = strtotime($presetexpiration)))
+					$expts = time();
+			} else {
+				$expts = time();
+			}
 ?>
 		<tr>
 			<td><?php printMLText("expires");?>:</td>
 			<td>
-        <span class="input-append date span12" id="expirationdate" data-date="<?php echo date('d-m-Y'); ?>" data-date-format="dd-mm-yyyy" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
-          <input class="span3" size="16" name="expdate" type="text" value="<?php echo date('d-m-Y'); ?>">
+        <span class="input-append date span12" id="expirationdate" data-date="<?php echo date('d-m-Y', $expts); ?>" data-date-format="dd-mm-yyyy" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
+          <input class="span3" size="16" name="expdate" type="text" value="<?php echo date('d-m-Y', $expts); ?>">
           <span class="add-on"><i class="icon-calendar"></i></span>
         </span>&nbsp;
         <label class="checkbox inline">
-				  <input type="checkbox" name="expires" value="false" checked><?php printMLText("does_not_expire");?>
+					<input type="checkbox" name="expires" value="false" <?php echo  ($presetexpiration ? "" : "checked");?>><?php printMLText("does_not_expire");?>
         </label>
 			</td>
 		</tr>
