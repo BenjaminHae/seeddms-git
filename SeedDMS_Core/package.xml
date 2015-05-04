@@ -24,7 +24,7 @@
  </stability>
  <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
  <notes>
--
+- add optional paramter $msg to SeedDMS_Core_DocumentContent::verifyStatus()
  </notes>
  <contents>
   <dir baseinstalldir="SeedDMS" name="/">
