@@ -133,7 +133,7 @@ class SeedDMS_View_ApprovalSummary extends SeedDMS_Bootstrap_Style {
 		if (!$printheader) {
 			echo "</tbody>\n</table>\n";
 		}else{
-			printMLText("empty_notify_list");
+			printMLText("no_approval_needed");
 		}
 
 		$this->contentContainerEnd();
