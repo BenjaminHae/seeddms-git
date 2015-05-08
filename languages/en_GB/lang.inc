@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1142), dgrutsch (3), netixw (14)
+//    Translators: Admin (1145), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -63,6 +63,7 @@ URL: [url]',
 'add_review' => 'Add review',
 'add_subfolder' => 'Add subfolder',
 'add_to_clipboard' => 'Add to clipboard',
+'add_transmittal' => 'Add transmittal',
 'add_user' => 'Add new user',
 'add_user_to_group' => 'Add user to group',
 'add_workflow' => 'Add new workflow',
@@ -269,6 +270,7 @@ URL: [url]',
 'documents_locked_by_you' => 'Documents locked by you',
 'documents_only' => 'Documents only',
 'documents_to_approve' => 'Documents awaiting your approval',
+'documents_to_receipt' => 'Documents awaiting to confirm the receipt',
 'documents_to_review' => 'Documents awaiting your review',
 'documents_user_requiring_attention' => 'Documents owned by you that require attention',
 'document_already_checkedout' => 'This document is already checked out',
@@ -632,6 +634,7 @@ URL: [url]',
 'no_attached_files' => 'No attached files',
 'no_current_version' => 'You are running an old version of SeedDMS. The latest available version is [latestversion].',
 'no_default_keywords' => 'No keywords available',
+'no_docs_checked_out' => 'No documents checked out',
 'no_docs_locked' => 'No documents locked.',
 'no_docs_to_approve' => 'There are currently no documents that require approval.',
 'no_docs_to_look_at' => 'No documents that need attention.',
@@ -699,6 +702,7 @@ If you have still problems to login, then please contact your administrator.',
 'quota_exceeded' => 'Your disk quota is exceeded by [bytes].',
 'quota_is_disabled' => 'Quota support is currently disabled in the settings. Setting a user quota will have no effect until it is enabled again.',
 'quota_warning' => 'Your maximum disc usage is exceeded by [bytes]. Please remove documents or previous versions.',
+'receipt_summary' => '',
 'recipients' => 'Recipients',
 'refresh' => 'Refresh',
 'rejected' => 'Rejected',
