@@ -2112,6 +2112,34 @@ class SeedDMS_Core_DMS {
 	} /* }}} */
 
 	/**
+	 * Returns document content which is duplicated
+	 *
+	 * This method is for finding document content which is available twice
+	 * in the database. The checksum of a document content was introduced
+	 * in version 4.0.0 of SeedDMS for finding duplicates.
+	 */
+	function getDuplicateDocumentContent() { /* {{{ */
+		$queryStr = "SELECT a.*, b.id as dupid FROM tblDocumentContent a LEFT JOIN tblDocumentContent b ON a.checksum=b.checksum where a.id!=b.id ORDER by a.id";
+		$resArr = $this->db->getResultArray($queryStr);
+		if (!$resArr)
+			return false;
+
+		$versions = array();
+		foreach($resArr as $row) {
+			$document = new $this->classnames['document']($row['document'], '', '', '', '', '', '', '', '', '', '', '');
+			$document->setDMS($this);
+			$version = new $this->classnames['documentcontent']($row['id'], $document, $row['version'], $row['comment'], $row['date'], $row['createdBy'], $row['dir'], $row['orgFileName'], $row['fileType'], $row['mimeType'], $row['fileSize'], $row['checksum']);
+			if(!isset($versions[$row['dupid']])) {
+				$versions[$row['id']]['content'] = $version;
+				$versions[$row['id']]['duplicates'] = array();
+			} else
+				$versions[$row['dupid']]['duplicates'][] = $version;
+		}
+		return $versions;
+		
+	} /* }}} */
+
+	/**
 	 * Returns statitical information
 	 *
 	 * This method returns all kind of statistical information like

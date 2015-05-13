@@ -172,6 +172,7 @@ class SeedDMS_View_ObjectCheck extends SeedDMS_Bootstrap_Style {
 		$unlinkeddocuments = $this->params['unlinkeddocuments'];
 		$nofilesizeversions = $this->params['nofilesizeversions'];
 		$nochecksumversions = $this->params['nochecksumversions'];
+		$duplicateversions = $this->params['duplicateversions'];
 		$repair = $this->params['repair'];
 		$unlink = $this->params['unlink'];
 		$setfilesize = $this->params['setfilesize'];
@@ -338,6 +339,34 @@ class SeedDMS_View_ObjectCheck extends SeedDMS_Bootstrap_Style {
 			if($setchecksum == 0) {
 				echo '<p><a href="out.ObjectCheck.php?setchecksum=1">'.getMLText('do_object_setchecksum').'</a></p>';
 			}
+		}
+
+		$this->contentContainerEnd();
+
+		$this->contentHeading(getMLText("duplicate_content"));
+		$this->contentContainerStart();
+
+		if($duplicateversions) {
+			print "<table class=\"table-condensed\">";
+			print "<thead>\n<tr>\n";
+			print "<th>".getMLText("document")."</th>\n";
+			print "<th>".getMLText("version")."</th>\n";
+			print "<th>".getMLText("original_filename")."</th>\n";
+			print "<th>".getMLText("mimetype")."</th>\n";
+			print "</tr>\n</thead>\n<tbody>\n";
+			foreach($duplicateversions as $rec) {
+				$version = $rec['content'];
+				$doc = $version->getDocument();
+				print "<tr>";
+				print "<td>".$doc->getId()."</td><td>".$version->getVersion()."</td><td>".$version->getOriginalFileName()."</td><td>".$version->getMimeType()."</td>";
+				print "<td>";
+				foreach($rec['duplicates'] as $duplicate) {
+					print $duplicate->getVersion();
+				}
+				print "</td>";
+				print "</tr>\n";
+			}
+			print "</tbody></table>\n";
 		}
 
 		$this->contentContainerEnd();
