@@ -197,7 +197,7 @@ class SeedDMS_View_UsrMgr extends SeedDMS_Bootstrap_Style {
 				<div class="cbSelectTitle"><?php printMLText("individuals");?>:</div>
 			</td>
 			<td>
-        <select class="chzn-select" name="usrReviewers[]" multiple="multiple">
+        <select class="chzn-select" name="usrReviewers[]" multiple="multiple" data-placeholder="<?php printMLText('select_users'); ?>">
 <?php
 
 				if($currUser)
