@@ -2405,6 +2405,8 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		if (is_bool($res) && !$res)
 			return false;
 
+		unset($this->_status);
+
 		return true;
 	} /* }}} */
 
