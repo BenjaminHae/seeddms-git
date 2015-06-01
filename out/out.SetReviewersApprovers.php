@@ -48,7 +48,7 @@ if (!is_object($content)) {
 	UI::exitError(getMLText("document_title", array("documentname" => htmlspecialchars($document->getName()))),getMLText("invalid_version"));
 }
 
-if(!$this->settings->_enableVersionModification) {
+if(!$settings->_enableVersionModification) {
 	UI::exitError(getMLText("document_title", array("documentname" => htmlspecialchars($document->getName()))),getMLText("no_version_modification"));
 }
 
