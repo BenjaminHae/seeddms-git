@@ -463,7 +463,11 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		$this->contentContainerstart();
 		print "<table class=\"table-condensed\">\n";
 
-		if ($workflowmode != 'traditional_only_approval' && is_array($reviewStatus) && count($reviewStatus)>0) {
+		/* Just check fo an exting reviewStatus, even workflow mode is set
+		 * to traditional_only_approval. There may be old documents which
+		 * are still in S_DRAFT_REV.
+		 */
+		if (/* $workflowmode != 'traditional_only_approval' && */ is_array($reviewStatus) && count($reviewStatus)>0) {
 
 			print "<tr><td colspan=5>\n";
 			$this->contentSubHeading(getMLText("reviewers"));
@@ -598,7 +602,12 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 ?>
 			<div class="row-fluid">
 <?php
-			if($workflowmode != 'traditional_only_approval') {
+			/* Check for an existing review log, even if the workflowmode
+			 * is set to traditional_only_approval. There may be old documents
+			 * that still have a review log if the workflow mode has been
+			 * changed afterwards.
+			 */
+			if($latestContent->getReviewStatus(10) /*$workflowmode != 'traditional_only_approval'*/) {
 ?>
 				<div class="span6">
 				<legend><?php printMLText('review_log'); ?></legend>
