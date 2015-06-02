@@ -2,6 +2,9 @@
                      Changes in version 4.3.18
 --------------------------------------------------------------------------------
 - utils/indexer.php uses propper converter settings
+- search result can be restricted to folders or documents only
+- documents still in review can still be reviewed even if the workflow
+  mode changes to traditional_only_approval
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.17
