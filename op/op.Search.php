@@ -193,6 +193,9 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 	 * are found
 	 */
 	$resultmode = 0x03;
+	if (isset($_GET["resultmode"]) && is_numeric($_GET["resultmode"])) {
+			$resultmode = $_GET['resultmode'];
+	}
 
 	$mode = "AND";
 	if (isset($_GET["mode"]) && is_numeric($_GET["mode"]) && $_GET["mode"]==0) {

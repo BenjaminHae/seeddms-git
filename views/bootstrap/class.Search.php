@@ -142,6 +142,16 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 </td>
 </tr>
 <tr>
+<td><?php printMLText("search_resultmode");?>:</td>
+<td>
+<select name="resultmode">
+<option value="3" <?php echo ($resultmode=='3') ? "selected" : ""; ?>><?php printMLText("search_resultmode_both");?>
+<option value="2"<?php echo ($resultmode=='2') ? "selected" : ""; ?>><?php printMLText("search_mode_folders");?>
+<option value="1"<?php echo ($resultmode=='1') ? "selected" : ""; ?>><?php printMLText("search_mode_documents");?>
+</select>
+</td>
+</tr>
+<tr>
 <td><?php printMLText("under_folder")?>:</td>
 <td><?php $this->printFolderChooser("form1", M_READ, -1, $startfolder);?></td>
 </tr>
