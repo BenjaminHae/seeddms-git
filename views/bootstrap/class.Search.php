@@ -57,6 +57,7 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 		$allCats = $this->params['allcategories'];
 		$allUsers = $this->params['allusers'];
 		$mode = $this->params['mode'];
+		$resultmode = $this->params['resultmode'];
 		$workflowmode = $this->params['workflowmode'];
 		$enablefullsearch = $this->params['enablefullsearch'];
 		$enableclipboard = $this->params['enableclipboard'];

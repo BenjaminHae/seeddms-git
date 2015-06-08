@@ -436,6 +436,7 @@ if(count($entries) == 1) {
 		$view->setParam('totalfolders', $fcount /*resArr['totalFolders']*/);
 		$view->setParam('fullsearch', (isset($_GET["fullsearch"]) && $_GET["fullsearch"]) ? true : false);
 		$view->setParam('mode', isset($mode) ? $mode : '');
+		$view->setParam('resultmode', $resultmode);
 		$view->setParam('searchin', isset($searchin) ? $searchin : array());
 		$view->setParam('startfolder', isset($startFolder) ? $startFolder : null);
 		$view->setParam('owner', $owner);
