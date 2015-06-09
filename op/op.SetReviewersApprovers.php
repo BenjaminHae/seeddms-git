@@ -446,6 +446,7 @@ foreach ($pGrpApp as $p) {
 								$params['version'] = $content->_version;
 								$params['comment'] = $content->getComment();
 								$params['username'] = $user->getFullName();
+								$params['url'] = "http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'].$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
 								$params['sitename'] = $settings->_siteName;
 								$params['http_root'] = $settings->_httpRoot;
 
