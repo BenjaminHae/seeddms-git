@@ -189,6 +189,6 @@ else {
 
 add_log_line("?documentid=".$documentid."&version".$version_num);
 
-header("Location:../out/out.ViewDocument.php?documentid=".$documentid);
+header("Location:../out/out.ViewDocument.php?documentid=".$documentid."&currenttab=previous");
 
 ?>

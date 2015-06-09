@@ -106,7 +106,7 @@ if (is_bool($res) && !$res) {
 
 add_log_line("?name=".$name."&documentid=".$documentid);
 
-header("Location:../out/out.ViewDocument.php?documentid=".$documentid);
+header("Location:../out/out.ViewDocument.php?documentid=".$documentid."&currenttab=attachments");
 
 
 ?>

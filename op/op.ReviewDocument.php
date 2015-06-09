@@ -344,6 +344,6 @@ if ($_POST["reviewStatus"]==-1){
 	}
 }
 
-header("Location:../out/out.ViewDocument.php?documentid=".$documentid);
+header("Location:../out/out.ViewDocument.php?documentid=".$documentid."&currenttab=revapp");
 
 ?>
