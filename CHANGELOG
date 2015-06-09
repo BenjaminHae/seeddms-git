@@ -7,6 +7,7 @@
   mode changes to traditional_only_approval
 - approvals can be submitted, even if document was released/rejected
 - check for duplicate content on document/folder check page
+- open tab on ViewDocument page as specified in URL
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.17
