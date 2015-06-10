@@ -272,7 +272,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 	}
 	if(isset($_GET["createend"])) {
 		$tmp = explode("-", $_GET["createend"]);
-		$stopdate = array('year'=>(int)$tmp[2], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[0], 'hour'=>0, 'minute'=>0, 'second'=>0);
+		$stopdate = array('year'=>(int)$tmp[2], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[0], 'hour'=>23, 'minute'=>59, 'second'=>59);
 	} else {
 		if(isset($_GET["createendyear"]))
 			$stopdate = array('year'=>$_GET["createendyear"], 'month'=>$_GET["createendmonth"], 'day'=>$_GET["createendday"], 'hour'=>23, 'minute'=>59, 'second'=>59);
