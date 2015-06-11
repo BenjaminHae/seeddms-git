@@ -515,7 +515,12 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 				/* $updateUser is the user who has done the review */
 				$updateUser = $dms->getUser($r["userID"]);
 				print "<li>".(is_object($updateUser) ? htmlspecialchars($updateUser->getFullName()." (".$updateUser->getLogin().")") : "unknown user id '".$r["userID"]."'")."</li></ul></td>";
-				print "<td>".htmlspecialchars($r["comment"])."</td>\n";
+				print "<td>".htmlspecialchars($r["comment"]);
+				if($r['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$r['reviewLogID']."\">".getMLText('download')."</a>";
+				}
+				print "</td>\n";
 				print "<td>".getReviewStatusText($r["status"])."</td>\n";
 				print "<td><ul class=\"unstyled\">";
 
@@ -579,7 +584,12 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 				/* $updateUser is the user who has done the approval */
 				$updateUser = $dms->getUser($a["userID"]);
 				print "<li>".(is_object($updateUser) ? htmlspecialchars($updateUser->getFullName()." (".$updateUser->getLogin().")") : "unknown user id '".$a["userID"]."'")."</li></ul></td>";	
-				print "<td>".htmlspecialchars($a["comment"])."</td>\n";
+				print "<td>".htmlspecialchars($a["comment"]);
+				if($a['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$a['approveLogId']."\">".getMLText('download')."</a>";
+				}
+				echo "</td>\n";
 				print "<td>".getApprovalStatusText($a["status"])."</td>\n";
 				print "<td><ul class=\"unstyled\">";
 
