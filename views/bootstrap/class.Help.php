@@ -34,15 +34,20 @@ class SeedDMS_View_Help extends SeedDMS_Bootstrap_Style {
 	function show() { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
+		$context = $this->params['context'];
 
 		$this->htmlStartPage(getMLText("help"));
 		$this->globalNavigation();
 		$this->contentStart();
-		$this->pageNavigation(getMLText("help"), "");
+		$this->pageNavigation(getMLText("help").": ".getMLText('help_'.strtolower($context), array(), $context), "");
 
 		$this->contentContainerStart();
 
-		readfile("../languages/".$this->params['session']->getLanguage()."/help.htm");
+		$helpfile = "../languages/".$this->params['session']->getLanguage()."/help/".$context.".html";
+		if(file_exists($helpfile))
+			readfile($helpfile);
+		else
+			readfile("../languages/".$this->params['session']->getLanguage()."/help.htm");
 
 		$this->contentContainerEnd();
 		$this->htmlEndPage();

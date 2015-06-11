@@ -296,7 +296,8 @@ $(document).ready(function () {
 	//		echo "    <li><a href=\"../out/out.SearchForm.php?folderid=".$this->params['rootfolderid']."\">".getMLText("search")."</a></li>\n";
 			if ($this->params['enablecalendar']) echo "    <li><a href=\"../out/out.Calendar.php?mode=".$this->params['calendardefaultview']."\">".getMLText("calendar")."</a></li>\n";
 			if ($this->params['user']->isAdmin()) echo "    <li><a href=\"../out/out.AdminTools.php\">".getMLText("admin_tools")."</a></li>\n";
-			echo "    <li><a href=\"../out/out.Help.php\">".getMLText("help")."</a></li>\n";
+			$tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
+			echo "    <li><a href=\"../out/out.Help.php?context=".$tmp[1]."\">".getMLText("help")."</a></li>\n";
 			echo "   </ul>\n";
 			echo "     <form action=\"../op/op.Search.php\" class=\"form-inline navbar-search pull-left\" autocomplete=\"off\">";
 			if ($folder!=null && is_object($folder) && !strcasecmp(get_class($folder), "SeedDMS_Core_Folder")) {
