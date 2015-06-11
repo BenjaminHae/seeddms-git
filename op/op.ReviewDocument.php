@@ -73,10 +73,20 @@ if (!isset($_POST["reviewStatus"]) || !is_numeric($_POST["reviewStatus"]) ||
 	UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("invalid_review_status"));
 }
 
+if($_FILES["reviewfile"]["tmp_name"]) {
+	if (is_uploaded_file($_FILES["reviewfile"]["tmp_name"]) && $_FILES['reviewfile']['error']!=0){
+		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("uploading_failed"));
+	}
+}
+
 if ($_POST["reviewType"] == "ind") {
 
 	$comment = $_POST["comment"];
-	$reviewLogID = $latestContent->setReviewByInd($user, $user, $_POST["reviewStatus"], $comment);
+	if($_FILES["reviewfile"]["tmp_name"])
+		$file = $_FILES["reviewfile"]["tmp_name"];
+	else
+		$file = '';
+	$reviewLogID = $latestContent->setReviewByInd($user, $user, $_POST["reviewStatus"], $comment, $file);
 	if(0 > $reviewLogID) {
 		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("review_update_failed"));
 	}
@@ -128,7 +138,11 @@ if ($_POST["reviewType"] == "ind") {
 else if ($_POST["reviewType"] == "grp") {
 	$comment = $_POST["comment"];
 	$group = $dms->getGroup($_POST['reviewGroup']);
-	$reviewLogID = $latestContent->setReviewByGrp($group, $user, $_POST["reviewStatus"], $comment);
+	if($_FILES["reviewfile"]["tmp_name"])
+		$file = $_FILES["reviewfile"]["tmp_name"];
+	else
+		$file = '';
+	$reviewLogID = $latestContent->setReviewByGrp($group, $user, $_POST["reviewStatus"], $comment, $file);
 	if(0 > $reviewLogID) {
 		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("review_update_failed"));
 	}

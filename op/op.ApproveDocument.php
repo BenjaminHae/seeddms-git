@@ -77,10 +77,21 @@ if (!isset($_POST["approvalStatus"]) || !is_numeric($_POST["approvalStatus"]) ||
 	UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("invalid_approval_status"));
 }
 
+if($_FILES["approvalfile"]["tmp_name"]) {
+	if (is_uploaded_file($_FILES["approvalfile"]["tmp_name"]) && $_FILES['approvalfile']['error']!=0){
+		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("uploading_failed"));
+	}
+}
+
 if ($_POST["approvalType"] == "ind") {
 
 	$comment = $_POST["comment"];
-	if(0 > $latestContent->setApprovalByInd($user, $user, $_POST["approvalStatus"], $comment)) {
+	if($_FILES["approvalfile"]["tmp_name"])
+		$file = $_FILES["approvalfile"]["tmp_name"];
+	else
+		$file = '';
+	$approvalLogID = $latestContent->setApprovalByInd($user, $user, $_POST["approvalStatus"], $comment, $file);
+	if(0 > $approvalLogID) {
 		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("approval_update_failed"));
 	}
 	else {
@@ -125,7 +136,12 @@ if ($_POST["approvalType"] == "ind") {
 else if ($_POST["approvalType"] == "grp") {
 	$comment = $_POST["comment"];
 	$group = $dms->getGroup($_POST['approvalGroup']);
-	if(0 > $latestContent->setApprovalByGrp($group, $user, $_POST["approvalStatus"], $comment)) {
+	if($_FILES["approvalfile"]["tmp_name"])
+		$file = $_FILES["approvalfile"]["tmp_name"];
+	else
+		$file = '';
+	$approvalLogID = $latestContent->setApprovalByGrp($group, $user, $_POST["approvalStatus"], $comment, $file);
+	if(0 > $approvalLogID) {
 		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("approval_update_failed"));
 	}
 	else {
