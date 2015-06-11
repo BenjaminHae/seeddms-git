@@ -2,6 +2,7 @@
                      Changes in version 4.3.19
 --------------------------------------------------------------------------------
 - end date in search form actually ends at the end of the day
+- allow context sensitive help
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.18
