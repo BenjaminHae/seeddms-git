@@ -1177,6 +1177,14 @@ function clearFilename<?php print $formName ?>() {
 				$node['children'] = array();
 			} else {
 				$node['children'] = jqtree($path, $folder, $this->params['user'], $accessmode, $showdocs, $expandtree, $orderby);
+				if($showdocs) {
+					$documents = $folder->getDocuments($orderby);
+					$documents = SeedDMS_Core_DMS::filterAccess($documents, $this->params['user'], $accessmode);
+					foreach($documents as $document) {
+						$node2 = array('label'=>$document->getName(), 'id'=>$document->getID(), 'load_on_demand'=>false, 'is_folder'=>false);
+						$node['children'][] = $node2;
+					}
+				}
 			}
 			$tree[] = $node;
 			
