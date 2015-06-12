@@ -667,7 +667,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 						}
 						echo "</td>";
 						echo "<td>";
-						echo getApprovalStatusText($rec["status"]);
+						echo getReviewStatusText($rec["status"]);
 						echo "</td>";
 						echo "</tr>";
 					}
@@ -720,7 +720,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 							echo "<br />".htmlspecialchars($rec['comment']);
 						if($rec['file']) {
 							echo "<br />";
-							echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+							echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogId']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 						}
 						echo "</td>";
 						echo "<td>";
