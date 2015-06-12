@@ -587,7 +587,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 				print "<td>".htmlspecialchars($a["comment"]);
 				if($a['file']) {
 					echo "<br />";
-					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$a['approveLogId']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$a['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 				}
 				echo "</td>\n";
 				print "<td>".getApprovalStatusText($a["status"])."</td>\n";
@@ -720,7 +720,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 							echo "<br />".htmlspecialchars($rec['comment']);
 						if($rec['file']) {
 							echo "<br />";
-							echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogId']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+							echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 						}
 						echo "</td>";
 						echo "<td>";
