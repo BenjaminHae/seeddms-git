@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2071), dgrutsch (18)
+//    Translators: Admin (2078), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -89,6 +89,7 @@ Elternordner: [folder_path]
 Benutzer: [username]
 URL: [url]',
 'approval_deletion_email_subject' => '[sitename]: [name] - Freigabeaufforderung gelöscht',
+'approval_file' => 'Datei',
 'approval_group' => 'Berechtigungsgruppe',
 'approval_log' => 'Freigabeprotokoll',
 'approval_request_email' => 'Aufforderung zur Freigabe',
@@ -346,6 +347,7 @@ URL: [url]',
 'do_object_setchecksum' => 'Setze Check-Summe',
 'do_object_setfilesize' => 'Setze Dateigröße',
 'do_object_unlink' => 'Lösche Dokumentenversion',
+'draft' => 'Entwurf',
 'draft_pending_approval' => 'Entwurf - bevorstehende Freigabe',
 'draft_pending_review' => 'Entwurf - bevorstehende Prüfung',
 'drag_icon_here' => 'Icon eines Ordners oder Dokuments hier hin ziehen!',
@@ -768,6 +770,7 @@ Elternordner: [folder_path]
 Benutzer: [username]
 URL: [url]',
 'review_deletion_email_subject' => '[sitename]: [name] - Prüfungsaufforderung gelöscht',
+'review_file' => 'Datei',
 'review_group' => 'Gruppe: prüfen',
 'review_log' => 'Prüfungsprotokoll',
 'review_request_email' => 'Aufforderung zur Prüfung',
@@ -1002,6 +1005,10 @@ URL: [url]',
 'settings_guestID_desc' => 'Id des Gast-Benutzers, wenn man sich als \'guest\' anmeldet.',
 'settings_httpRoot' => 'HTTP Wurzelverzeichnis',
 'settings_httpRoot_desc' => 'Der relative Pfad in der URL nach der Domain, also ohne http:// und den hostnamen. z.B. wenn die komplette URL http://www.example.com/seeddms/ ist, dann setzen Sie diesen Wert auf \'/seeddms/\'. Wenn die URL http://www.example.com/ ist, tragen Sie \'/\' ein.',
+'settings_initialDocumentStatus' => 'Initialer Dokumentenstatus',
+'settings_initialDocumentStatus_desc' => 'Dieser STatus wird bei Dokumenten gesetzt, die neu hinzugefügt wurden.',
+'settings_initialDocumentStatus_draft' => 'Entwurf',
+'settings_initialDocumentStatus_released' => 'freigegeben',
 'settings_installADOdb' => 'Installieren Sie ADOdb',
 'settings_install_disabled' => 'Datei ENABLE_INSTALL_TOOL wurde gelöscht. Sie können sich nun bei SeedDMS anmeldung und mit der Konfiguration fortfahren.',
 'settings_install_pear_package_log' => 'Installiere Pear package \'Log\'',

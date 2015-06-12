@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1199), dgrutsch (3), netixw (14)
+//    Translators: Admin (1206), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -89,6 +89,7 @@ Elternordner: [folder_path]
 Benutzer: [username]
 URL: [url]',
 'approval_deletion_email_subject' => '[sitename]: [name] - Approval request deleted',
+'approval_file' => 'File',
 'approval_group' => 'Approval Group',
 'approval_log' => 'Approval Log',
 'approval_request_email' => 'Approval request',
@@ -346,6 +347,7 @@ URL: [url]',
 'do_object_setchecksum' => 'Set checksum',
 'do_object_setfilesize' => 'Set file size',
 'do_object_unlink' => 'Delete document version',
+'draft' => 'Draft',
 'draft_pending_approval' => 'Draft - pending approval',
 'draft_pending_review' => 'Draft - pending review',
 'drag_icon_here' => 'Drag icon of folder or document here!',
@@ -775,6 +777,7 @@ Elternordner: [folder_path]
 Benutzer: [username]
 URL: [url]',
 'review_deletion_email_subject' => '[sitename]: [name] - Review request deleted',
+'review_file' => 'File',
 'review_group' => 'Review group',
 'review_log' => 'Review log',
 'review_request_email' => 'Review request',
@@ -1009,6 +1012,10 @@ URL: [url]',
 'settings_guestID_desc' => 'ID of guest-user used when logged in as guest (mostly no need to change)',
 'settings_httpRoot' => 'Http Root',
 'settings_httpRoot_desc' => 'The relative path in the URL, after the domain part. Do not include the http:// prefix or the web host name. e.g. If the full URL is http://www.example.com/seeddms/, set \'/seeddms/\'. If the URL is http://www.example.com/, set \'/\'',
+'settings_initialDocumentStatus' => 'Initial document status',
+'settings_initialDocumentStatus_desc' => 'This status will be set when a document is added.',
+'settings_initialDocumentStatus_draft' => 'Draft',
+'settings_initialDocumentStatus_released' => 'released',
 'settings_installADOdb' => 'Install ADOdb',
 'settings_install_disabled' => 'File ENABLE_INSTALL_TOOL was deleted. You can now log into SeedDMS and do further configuration.',
 'settings_install_pear_package_log' => 'Install Pear package \'Log\'',
