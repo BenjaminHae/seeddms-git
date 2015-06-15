@@ -418,7 +418,7 @@ $(document).ready(function () {
 			}
 			echo "<li><a href=\"../out/out.FolderNotify.php?folderid=". $folderID ."&showtree=".showtree()."\">".getMLText("edit_existing_notify")."</a></li>\n";
 		}
-		if ($this->params['user']->isAdmin()) {
+		if ($this->params['user']->isAdmin() && $this->params['enablefullsearch']) {
 			echo "<li><a href=\"../out/out.Indexer.php?folderid=". $folderID ."\">".getMLText("index_folder")."</a></li>\n";
 		}
 		echo "</ul>\n";
