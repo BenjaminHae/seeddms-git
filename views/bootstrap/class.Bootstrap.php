@@ -680,10 +680,8 @@ $(document).ready(function () {
 		return;
 	} /* }}} */
 
-	function contentContainerStart($type='info') { /* {{{ */
-
-		//echo "<div class=\"alert alert-".$type."\">\n";
-		echo "<div class=\"well\">\n";
+	function contentContainerStart($class='') { /* {{{ */
+		echo "<div class=\"well".($class ? " ".$class : "")."\">\n";
 		return;
 	} /* }}} */
 
