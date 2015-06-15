@@ -211,14 +211,15 @@ class SeedDMS_AccessOperation {
 	 * Check if document content may be approved
 	 *
 	 * Approving a document content is only allowed if the document was not
-	 * obsoleted. There are other requirements which are not taken into
+	 * obsoleted and the document is not in review status.
+	 * There are other requirements which are not taken into
 	 * account here.
 	 */
 	function mayApprove() { /* {{{ */
 		if(get_class($this->obj) == 'SeedDMS_Core_Document') {
 			$latestContent = $this->obj->getLatestContent();
 			$status = $latestContent->getStatus();
-			if ($status["status"]!=S_OBSOLETE) {
+			if ($status["status"]!=S_OBSOLETE && $status["status"]!=S_DRAFT_REV) {
 				return true;
 			}
 		}
