@@ -41,7 +41,7 @@ class SeedDMS_View_Help extends SeedDMS_Bootstrap_Style {
 		$this->contentStart();
 		$this->pageNavigation(getMLText("help").": ".getMLText('help_'.strtolower($context), array(), $context), "");
 
-		$this->contentContainerStart();
+		$this->contentContainerStart('help');
 
 		$helpfile = "../languages/".$this->params['session']->getLanguage()."/help/".$context.".html";
 		if(file_exists($helpfile))
