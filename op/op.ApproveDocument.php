@@ -72,7 +72,7 @@ if ($latestContent->getVersion()!=$version) {
 $accessop = new SeedDMS_AccessOperation($document, $user, $settings);
 
 // verify if document may be approved
-if ($accessop->mayApprove()){
+if (!$accessop->mayApprove()){
 	UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("access_denied"));
 }
 

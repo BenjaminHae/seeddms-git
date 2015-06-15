@@ -61,7 +61,7 @@ if ($latestContent->getVersion()!=$version) {
 $accessop = new SeedDMS_AccessOperation($document, $user, $settings);
 
 // verify if document may be reviewed
-if ($accessop->mayReview()){
+if (!$accessop->mayReview()){
 	UI::exitError(getMLText("document_title", array("documentname" => htmlspecialchars($document->getName()))),getMLText("access_denied"));
 }
 

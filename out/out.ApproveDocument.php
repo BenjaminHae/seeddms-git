@@ -61,7 +61,7 @@ if ($latestContent->getVersion()!=$version) {
 }
 
 // verify if document may be approved
-if ($accessop->mayApprove()){
+if (!$accessop->mayApprove()){
 	UI::exitError(getMLText("document_title", array("documentname" => htmlspecialchars($document->getName()))),getMLText("access_denied"));
 }
 
