@@ -383,9 +383,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	 *
 	 * @param string $orderby if set to 'n' the list is ordered by name, otherwise
 	 *        it will be ordered by sequence
+	 * @param string $dir direction of sorting (asc or desc)
 	 * @return array list of folder objects or false in case of an error
 	 */
-	function getSubFolders($orderby="") { /* {{{ */
+	function getSubFolders($orderby="", $dir="asc") { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		if (!isset($this->_subFolders)) {
@@ -393,6 +394,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 			if ($orderby=="n") $queryStr .= " ORDER BY name";
 			elseif ($orderby=="s") $queryStr .= " ORDER BY sequence";
+			elseif ($orderby=="d") $queryStr .= " ORDER BY date";
+			if($dir == 'desc')
+				$queryStr .= " DESC";
+
 			$resArr = $db->getResultArray($queryStr);
 			if (is_bool($resArr) && $resArr == false)
 				return false;
@@ -564,15 +569,19 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	 *
 	 * @param string $orderby if set to 'n' the list is ordered by name, otherwise
 	 *        it will be ordered by sequence
+	 * @param string $dir direction of sorting (asc or desc)
 	 * @return array list of documents or false in case of an error
 	 */
-	function getDocuments($orderby="") { /* {{{ */
+	function getDocuments($orderby="", $dir="asc") { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		if (!isset($this->_documents)) {
 			$queryStr = "SELECT * FROM tblDocuments WHERE folder = " . $this->_id;
 			if ($orderby=="n") $queryStr .= " ORDER BY name";
 			elseif($orderby=="s") $queryStr .= " ORDER BY sequence";
+			elseif($orderby=="d") $queryStr .= " ORDER BY date";
+			if($dir == 'desc')
+				$queryStr .= " DESC";
 
 			$resArr = $db->getResultArray($queryStr);
 			if (is_bool($resArr) && !$resArr)
