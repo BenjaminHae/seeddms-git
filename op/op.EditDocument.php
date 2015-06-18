@@ -61,7 +61,7 @@ if(isset($_POST['categoryidform1'])) {
 } else {
 	$categories = array();
 }
-$sequence = $_POST["sequence"];
+$sequence = isset($_POST["sequence"]) ? $_POST["sequence"] : "keep";
 $sequence = str_replace(',', '.', $_POST["sequence"]);
 if (!is_numeric($sequence)) {
 	$sequence="keep";
@@ -178,7 +178,7 @@ if (($oldcomment = $document->getComment()) != $comment) {
 }
 
 $expires = false;
-if ($_POST["expires"] != "false") {
+if (isset($_POST["expires"]) && $_POST["expires"] != "false") {
 	if($_POST["expdate"]) {
 		$tmp = explode('-', $_POST["expdate"]);
 		$expires = mktime(0,0,0, $tmp[1], $tmp[0], $tmp[2]);
