@@ -284,6 +284,14 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		return $this->_defaultAccess;
 	} /* }}} */
 
+	/**
+	 * Set default access mode
+	 *
+	 * This method sets the default access mode and also removes all notifiers which
+	 * will not have read access anymore.
+	 *
+	 * @param integer $mode access mode
+	 */
 	function setDefaultAccess($mode) { /* {{{ */
 		$db = $this->_dms->getDB();
 
@@ -297,12 +305,18 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		// remove their subscription.
 		if (empty($this->_notifyList))
 			$this->getNotifyList();
-		foreach ($this->_notifyList["users"] as $u) {
+
+		/* Make a copy of both notifier lists because removeNotify will empty
+		 * $this->_notifyList and the second foreach will not work anymore.
+		 */
+		$nusers = $this->_notifyList["users"];
+		$ngroups = $this->_notifyList["groups"];
+		foreach ($nusers as $u) {
 			if ($this->getAccessMode($u) < M_READ) {
 				$this->removeNotify($u->getID(), true);
 			}
 		}
-		foreach ($this->_notifyList["groups"] as $g) {
+		foreach ($ngroups as $g) {
 			if ($this->getGroupAccessMode($g) < M_READ) {
 				$this->removeNotify($g->getID(), false);
 			}
