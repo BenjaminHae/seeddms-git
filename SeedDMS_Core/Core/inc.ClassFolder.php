@@ -882,9 +882,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	/**
 	 * Delete all entries for this folder from the access control list
 	 *
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
 	 * @return boolean true if operation was successful otherwise false
 	 */
-	function clearAccessList() { /* {{{ */
+	function clearAccessList($noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$queryStr = "DELETE FROM tblACLs WHERE targetType = " . T_FOLDER . " AND target = " . $this->_id;
@@ -892,6 +893,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 			return false;
 
 		unset($this->_accessList);
+
+		if(!$noclean)
+			self::cleanNotifyList();
+
 		return true;
 	} /* }}} */
 
