@@ -291,8 +291,9 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	 * will not have read access anymore.
 	 *
 	 * @param integer $mode access mode
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
 	 */
-	function setDefaultAccess($mode) { /* {{{ */
+	function setDefaultAccess($mode, $noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$queryStr = "UPDATE tblFolders set defaultAccess = " . (int) $mode . " WHERE id = " . $this->_id;
@@ -301,33 +302,29 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		$this->_defaultAccess = $mode;
 
-		// If any of the notification subscribers no longer have read access,
-		// remove their subscription.
-		if (empty($this->_notifyList))
-			$this->getNotifyList();
-
-		/* Make a copy of both notifier lists because removeNotify will empty
-		 * $this->_notifyList and the second foreach will not work anymore.
-		 */
-		$nusers = $this->_notifyList["users"];
-		$ngroups = $this->_notifyList["groups"];
-		foreach ($nusers as $u) {
-			if ($this->getAccessMode($u) < M_READ) {
-				$this->removeNotify($u->getID(), true);
-			}
-		}
-		foreach ($ngroups as $g) {
-			if ($this->getGroupAccessMode($g) < M_READ) {
-				$this->removeNotify($g->getID(), false);
-			}
-		}
+		if(!$noclean)
+			self::cleanNotifyList();
 
 		return true;
 	} /* }}} */
 
 	function inheritsAccess() { return $this->_inheritAccess; }
 
-	function setInheritAccess($inheritAccess) { /* {{{ */
+	/**
+	 * Set inherited access mode
+	 * Setting inherited access mode will set or unset the internal flag which
+	 * controls if the access mode is inherited from the parent folder or not.
+	 * It will not modify the
+	 * access control list for the current object. It will remove all
+	 * notifications of users which do not even have read access anymore
+	 * after setting or unsetting inherited access.
+	 *
+	 * @param boolean $inheritAccess set to true for setting and false for
+	 *        unsetting inherited access mode
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
+	 * @return boolean true if operation was successful otherwise false
+	 */
+	function setInheritAccess($inheritAccess, $noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$inheritAccess = ($inheritAccess) ? "1" : "0";
@@ -338,20 +335,8 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		$this->_inheritAccess = $inheritAccess;
 
-		// If any of the notification subscribers no longer have read access,
-		// remove their subscription.
-		if (empty($this->_notifyList))
-			$this->getNotifyList();
-		foreach ($this->_notifyList["users"] as $u) {
-			if ($this->getAccessMode($u) < M_READ) {
-				$this->removeNotify($u->getID(), true);
-			}
-		}
-		foreach ($this->_notifyList["groups"] as $g) {
-			if ($this->getGroupAccessMode($g) < M_READ) {
-				$this->removeNotify($g->getID(), false);
-			}
-		}
+		if(!$noclean)
+			self::cleanNotifyList();
 
 		return true;
 	} /* }}} */
@@ -1112,6 +1097,33 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 			}
 		}
 		return $this->_notifyList;
+	} /* }}} */
+
+	/**
+	 * Make sure only users/groups with read access are in the notify list
+	 *
+	 */
+	function cleanNotifyList() { /* {{{ */
+		// If any of the notification subscribers no longer have read access,
+		// remove their subscription.
+		if (empty($this->_notifyList))
+			$this->getNotifyList();
+
+		/* Make a copy of both notifier lists because removeNotify will empty
+		 * $this->_notifyList and the second foreach will not work anymore.
+		 */
+		$nusers = $this->_notifyList["users"];
+		$ngroups = $this->_notifyList["groups"];
+		foreach ($nusers as $u) {
+			if ($this->getAccessMode($u) < M_READ) {
+				$this->removeNotify($u->getID(), true);
+			}
+		}
+		foreach ($ngroups as $g) {
+			if ($this->getGroupAccessMode($g) < M_READ) {
+				$this->removeNotify($g->getID(), false);
+			}
+		}
 	} /* }}} */
 
 	/*
