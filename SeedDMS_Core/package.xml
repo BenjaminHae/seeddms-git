@@ -16,7 +16,7 @@
  <time>11:26:18</time>
  <version>
   <release>4.3.18</release>
-  <api>4.3.18</api>
+  <api>4.3.19</api>
  </version>
  <stability>
   <release>stable</release>
@@ -24,8 +24,9 @@
  </stability>
  <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
  <notes>
-- add optional paramter $msg to SeedDMS_Core_DocumentContent::verifyStatus()
-- add method SeedDMS_Core_DMS::getDuplicateDocumentContent()
+- add optional paramter $noclean to clearAccessList(), setDefaultAccess(), setInheritAccess()
+- clearAccessList() will clean up the notifier list
+- new method cleanNotifyList()
  </notes>
  <contents>
   <dir baseinstalldir="SeedDMS" name="/">
@@ -830,6 +831,23 @@ no changes
    <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
    <notes>
 clean workflow log when a document version was deleted
+   </notes>
+  </release>
+  <release>
+   <date>2015-06-09</date>
+   <time>11:26:18</time>
+   <version>
+    <release>4.3.18</release>
+    <api>4.3.18</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
+   <notes>
+- add optional paramter $msg to SeedDMS_Core_DocumentContent::verifyStatus()
+- add method SeedDMS_Core_DMS::getDuplicateDocumentContent()
    </notes>
   </release>
  </changelog>
