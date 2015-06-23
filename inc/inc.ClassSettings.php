@@ -121,6 +121,8 @@ class Settings { /* {{{ */
 	var $_enableVersionModification = false;
 	// enable/disable duplicate names of a document in a folder
 	var $_enableDuplicateDocNames = true;
+	// override mimetype set by browser when uploading a file
+	var $_overrideMimeType = false;
 	// enable/disable notification when added as a reviewer/approver
 	var $_enableNotificationAppRev = true;
 	// enable/disable notification of users/group who need to take action for
@@ -483,6 +485,7 @@ class Settings { /* {{{ */
 		$this->_enableVersionDeletion = Settings::boolval($tab["enableVersionDeletion"]);
 		$this->_enableVersionModification = Settings::boolval($tab["enableVersionModification"]);
 		$this->_enableDuplicateDocNames = Settings::boolval($tab["enableDuplicateDocNames"]);
+		$this->_overrideMimeType = Settings::boolval($tab["overrideMimeType"]);
 
 		// XML Path: /configuration/advanced/notification
 		$node = $xml->xpath('/configuration/advanced/notification');
@@ -739,6 +742,7 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "enableVersionDeletion", $this->_enableVersionDeletion);
     $this->setXMLAttributValue($node, "enableVersionModification", $this->_enableVersionModification);
     $this->setXMLAttributValue($node, "enableDuplicateDocNames", $this->_enableDuplicateDocNames);
+    $this->setXMLAttributValue($node, "overrideMimeType", $this->_overrideMimeType);
 
     // XML Path: /configuration/advanced/notification
     $node = $this->getXMLNode($xml, '/configuration/advanced', 'notification');
