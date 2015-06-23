@@ -6,6 +6,8 @@
 - document chooser shows docs in root folder again
 - fixed regression from 4.3.18. Documents can not be approved if
   review is still pending
+- polish page for document version details, add review/approval log
+- take out remaining link to old version info file
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.18
