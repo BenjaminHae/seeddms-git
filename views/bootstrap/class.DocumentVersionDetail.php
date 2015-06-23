@@ -299,6 +299,34 @@ class SeedDMS_View_DocumentVersionDetail extends SeedDMS_Bootstrap_Style {
 		print "</table>\n";
 
 		$this->contentContainerEnd();
+
+		if($user->isAdmin()) {
+?>
+			<div class="row-fluid">
+<?php
+			/* Check for an existing review log, even if the workflowmode
+			 * is set to traditional_only_approval. There may be old documents
+			 * that still have a review log if the workflow mode has been
+			 * changed afterwards.
+			 */
+			if($version->getReviewStatus(10)) {
+?>
+				<div class="span6">
+				<?php $this->printProtocol($version, 'review'); ?>
+				</div>
+<?php
+			}
+			if($version->getApprovalStatus(10)) {
+?>
+				<div class="span6">
+				<?php $this->printProtocol($version, 'approval'); ?>
+				</div>
+<?php
+			}
+?>
+			</div>
+<?php
+		}
 		$this->htmlEndPage();
 	} /* }}} */
 }
