@@ -8,6 +8,8 @@
   review is still pending
 - polish page for document version details, add review/approval log
 - take out remaining link to old version info file
+- new configuration parameter for overriding the mimetype delivered
+  by the browser (Closes #195)
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.18
