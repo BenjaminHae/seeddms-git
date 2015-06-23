@@ -252,6 +252,11 @@ for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
 	
 	$fileType = ".".pathinfo($userfilename, PATHINFO_EXTENSION);
 
+	if($settings->_overrideMimeType) {
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$userfiletype = finfo_file($finfo, $userfiletmp);
+	}
+
 	if ((count($_FILES["userfile"]["tmp_name"])==1)&&($_POST["name"]!=""))
 		$name = $_POST["name"];
 	else $name = basename($userfilename);

@@ -71,6 +71,11 @@ if ($_FILES['userfile']['error'] == 0) {
 	$userfiletmp = $_FILES["userfile"]["tmp_name"];
 	$userfiletype = $_FILES["userfile"]["type"];
 	$userfilename = $_FILES["userfile"]["name"];
+
+	if($settings->_overrideMimeType) {
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$userfiletype = finfo_file($finfo, $userfiletmp);
+	}
 } elseif($settings->_dropFolderDir) {
 	if($_POST['dropfolderfileform1']) {
 		$fullfile = $settings->_dropFolderDir.'/'.$user->getLogin().'/'.$_POST["dropfolderfileform1"];
