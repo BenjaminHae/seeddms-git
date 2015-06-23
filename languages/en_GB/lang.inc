@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1206), dgrutsch (3), netixw (14)
+//    Translators: Admin (1211), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -358,6 +358,7 @@ URL: [url]',
 'dump_creation_warning' => 'With this operation you can create a dump file of your database content. After the creation the dump file will be saved in the data folder of your server.',
 'dump_list' => 'Existings dump files',
 'dump_remove' => 'Remove dump file',
+'duplicate_content' => 'Duplicate Content',
 'edit' => 'Edit',
 'edit_attributes' => 'Edit attributes',
 'edit_comment' => 'Edit comment',
@@ -399,6 +400,7 @@ Parent folder: [folder_path]
 User: [username]
 URL: [url]',
 'expiry_changed_email_subject' => '[sitename]: [name] - Expiry date changed',
+'export' => 'Export',
 'extension_manager' => 'Manage extensions',
 'february' => 'February',
 'file' => 'File',
@@ -477,6 +479,7 @@ URL: [url]',
 'hu_HU' => 'Hungarian',
 'id' => 'ID',
 'identical_version' => 'New version is identical to current version.',
+'include_content' => 'Include content',
 'include_documents' => 'Include documents',
 'include_subdirectories' => 'Include subdirectories',
 'index_converters' => 'Index document conversion',
@@ -1049,6 +1052,8 @@ URL: [url]',
 'settings_Notification' => 'Notification settings',
 'settings_notwritable' => 'The configuration cannot be saved because the configuration file is not writable.',
 'settings_no_content_dir' => 'Content directory',
+'settings_overrideMimeType' => 'Override MimeType',
+'settings_overrideMimeType_desc' => 'Override the MimeType delivered by the browser, if a file is uploaded. The new MimeType is determined by SeedDMS itself.',
 'settings_partitionSize' => 'Partial filesize',
 'settings_partitionSize_desc' => 'Size of partial files in bytes, uploaded by jumploader. Do not set a value larger than the maximum upload size set by the server.',
 'settings_passwordExpiration' => 'Password expiration',

@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2078), dgrutsch (18)
+//    Translators: Admin (2083), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -358,6 +358,7 @@ URL: [url]',
 'dump_creation_warning' => 'Mit dieser Operation können Sie einen Dump der Datenbank erzeugen. Nach der Erstellung wird der Dump im Datenordner Ihres Servers gespeichert.',
 'dump_list' => 'Vorhandene DB dumps',
 'dump_remove' => 'DB dump löschen',
+'duplicate_content' => 'Doppelte Dateien',
 'edit' => 'Bearbeiten',
 'edit_attributes' => 'Edit attributes',
 'edit_comment' => 'Kommentar bearbeiten',
@@ -399,6 +400,7 @@ Elternordner: [folder_path]
 Benutzer: [username]
 URL: [url]',
 'expiry_changed_email_subject' => '[sitename]: [name] - Ablaufdatum geändert',
+'export' => 'Export',
 'extension_manager' => 'Erweiterungen verwalten',
 'february' => 'Februar',
 'file' => 'Datei',
@@ -477,6 +479,7 @@ URL: [url]',
 'hu_HU' => 'Ungarisch',
 'id' => 'ID',
 'identical_version' => 'Neue Version ist identisch zu aktueller Version.',
+'include_content' => 'Inhalte mit exportieren',
 'include_documents' => 'Dokumente miteinbeziehen',
 'include_subdirectories' => 'Unterverzeichnisse miteinbeziehen',
 'index_converters' => 'Index Dokumentenumwandlung',
@@ -1042,6 +1045,8 @@ URL: [url]',
 'settings_Notification' => 'Benachrichtigungen-Einstellungen',
 'settings_notwritable' => 'Die Konfiguration kann nicht gespeichert werden, weil die Konfigurationsdatei nicht schreibbar ist.',
 'settings_no_content_dir' => 'Content directory',
+'settings_overrideMimeType' => 'Überschreibe MimeType',
+'settings_overrideMimeType_desc' => 'Überschreibe den MimeType, der vom Browser beim Hochladen einer Datei übertragen wird. Der neue MimeType wird von SeedDMS selbst ermittelt.',
 'settings_partitionSize' => 'Partitionsgröße',
 'settings_partitionSize_desc' => 'Größe der partiellen Uploads in Bytes durch den Jumploader. Wählen Sie diesen Wert nicht größer als maximale Upload-Größe, die durch den Server vorgegeben ist.',
 'settings_passwordExpiration' => 'Passwortverfall',
