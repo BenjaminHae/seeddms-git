@@ -71,6 +71,95 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		}
 	} /* }}} */
 
+	/**
+	 * Output a protocol
+	 *
+	 * @param object $attribute attribute
+	 */
+	protected function printProtocol($latestContent, $type="") { /* {{{ */
+		$dms = $this->params['dms'];
+?>
+		<legend><?php printMLText($type.'_log'); ?></legend>
+		<table class="table condensed">
+			<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('last_update'); ?>, <?php printMLText('comment'); ?></th><th><?php printMLText('status'); ?></th></tr>
+<?php
+		switch($type) {
+		case "review":
+			$statusList = $latestContent->getReviewStatus(10);
+			break;
+		case "approval":
+			$statusList = $latestContent->getApprovalStatus(10);
+			break;
+		default:
+			$statusList = array();
+		}
+		foreach($statusList as $rec) {
+			echo "<tr>";
+			echo "<td>";
+			switch ($rec["type"]) {
+				case 0: // individual.
+					$required = $dms->getUser($rec["required"]);
+					if (!is_object($required)) {
+						$reqName = getMLText("unknown_user")." '".$rec["required"]."'";
+					} else {
+						$reqName = htmlspecialchars($required->getFullName()." (".$required->getLogin().")");
+					}
+					break;
+				case 1: // Approver is a group.
+					$required = $dms->getGroup($rec["required"]);
+					if (!is_object($required)) {
+						$reqName = getMLText("unknown_group")." '".$rec["required"]."'";
+					}
+					else {
+						$reqName = "<i>".htmlspecialchars($required->getName())."</i>";
+					}
+					break;
+			}
+			echo $reqName;
+			echo "</td>";
+			echo "<td>";
+			echo "<i style=\"font-size: 80%;\">".$rec['date']." - ";
+			$updateuser = $dms->getUser($rec["userID"]);
+			if(!is_object($required))
+				echo getMLText("unknown_user");
+			else
+				echo htmlspecialchars($updateuser->getFullName()." (".$updateuser->getLogin().")");
+			echo "</i>";
+			if($rec['comment'])
+				echo "<br />".htmlspecialchars($rec['comment']);
+			switch($type) {
+			case "review":
+				if($rec['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+				}
+				break;
+			case "approval":
+				if($rec['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+				}
+				break;
+			}
+			echo "</td>";
+			echo "<td>";
+			switch($type) {
+			case "review":
+				echo getReviewStatusText($rec["status"]);
+				break;
+			case "approval":
+				echo getApprovalStatusText($rec["status"]);
+				break;
+			default:
+			}
+			echo "</td>";
+			echo "</tr>";
+		}
+?>
+				</table>
+<?php
+	} /* }}} */
+
 	function show() { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
@@ -468,7 +557,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		 * to traditional_only_approval. There may be old documents which
 		 * are still in S_DRAFT_REV.
 		 */
-		if (/* $workflowmode != 'traditional_only_approval' && */ is_array($reviewStatus) && count($reviewStatus)>0) {
+		if (/*$workflowmode != 'traditional_only_approval' &&*/ is_array($reviewStatus) && count($reviewStatus)>0) {
 
 			print "<tr><td colspan=5>\n";
 			$this->contentSubHeading(getMLText("reviewers"));
@@ -608,8 +697,9 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		}
 
 		print "</table>\n";
+		$this->contentContainerEnd();
+
 		if($user->isAdmin()) {
-			$this->contentContainerEnd();
 ?>
 			<div class="row-fluid">
 <?php
@@ -621,120 +711,18 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 			if($latestContent->getReviewStatus(10) /*$workflowmode != 'traditional_only_approval'*/) {
 ?>
 				<div class="span6">
-				<legend><?php printMLText('review_log'); ?></legend>
-				<table class="table condensed">
-					<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('last_update'); ?>, <?php printMLText('comment'); ?></th><th><?php printMLText('status'); ?></th></tr>
-<?php
-					$reviewStatusList = $latestContent->getReviewStatus(10);
-					foreach($reviewStatusList as $rec) {
-						echo "<tr>";
-						echo "<td>";
-						switch ($rec["type"]) {
-							case 0: // Approver is an individual.
-								$required = $dms->getUser($rec["required"]);
-								if (!is_object($required)) {
-									$reqName = getMLText("unknown_user")." '".$rec["required"]."'";
-								}
-								else {
-									$reqName = htmlspecialchars($required->getFullName()." (".$required->getLogin().")");
-								}
-								break;
-							case 1: // Approver is a group.
-								$required = $dms->getGroup($rec["required"]);
-								if (!is_object($required)) {
-									$reqName = getMLText("unknown_group")." '".$rec["required"]."'";
-								}
-								else {
-									$reqName = "<i>".htmlspecialchars($required->getName())."</i>";
-								}
-								break;
-						}
-						echo $reqName;
-						echo "</td>";
-						echo "<td>";
-						echo "<i style=\"font-size: 80%;\">".$rec['date']." - ";
-						$updateuser = $dms->getUser($rec["userID"]);
-						if(!is_object($required))
-							echo getMLText("unknown_user");
-						else
-							echo htmlspecialchars($updateuser->getFullName()." (".$updateuser->getLogin().")");
-						echo "</i>";
-						if($rec['comment'])
-							echo "<br />".htmlspecialchars($rec['comment']);
-						if($rec['file']) {
-							echo "<br />";
-							echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
-						}
-						echo "</td>";
-						echo "<td>";
-						echo getReviewStatusText($rec["status"]);
-						echo "</td>";
-						echo "</tr>";
-					}
-?>
-					</table>
-				</div>
-<?php
-				}
-?>
-				<div class="span6">
-				<legend><?php printMLText('approval_log'); ?></legend>
-				<table class="table condensed">
-					<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('last_update'); ?>, <?php printMLText('comment'); ?></th><th><?php printMLText('status'); ?></th></tr>
-<?php
-					$approvalStatusList = $latestContent->getApprovalStatus(10);
-					foreach($approvalStatusList as $rec) {
-						echo "<tr>";
-						echo "<td>";
-						switch ($rec["type"]) {
-							case 0: // Approver is an individual.
-								$required = $dms->getUser($rec["required"]);
-								if (!is_object($required)) {
-									$reqName = getMLText("unknown_user")." '".$rec["required"]."'";
-								}
-								else {
-									$reqName = htmlspecialchars($required->getFullName()." (".$required->getLogin().")");
-								}
-								break;
-							case 1: // Approver is a group.
-								$required = $dms->getGroup($rec["required"]);
-								if (!is_object($required)) {
-									$reqName = getMLText("unknown_group")." '".$rec["required"]."'";
-								}
-								else {
-									$reqName = "<i>".htmlspecialchars($required->getName())."</i>";
-								}
-								break;
-						}
-						echo $reqName;
-						echo "</td>";
-						echo "<td>";
-						echo "<i style=\"font-size: 80%;\">".$rec['date']." - ";
-						$updateuser = $dms->getUser($rec["userID"]);
-						if(!is_object($required))
-							echo getMLText("unknown_user");
-						else
-							echo htmlspecialchars($updateuser->getFullName()." (".$updateuser->getLogin().")");
-						echo "</i>";
-						if($rec['comment'])
-							echo "<br />".htmlspecialchars($rec['comment']);
-						if($rec['file']) {
-							echo "<br />";
-							echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
-						}
-						echo "</td>";
-						echo "<td>";
-						echo getApprovalStatusText($rec["status"]);
-						echo "</td>";
-						echo "</tr>";
-					}
-?>
-				</table>
+				<?php $this->printProtocol($latestContent, 'review'); ?>
 				</div>
 <?php
 			}
 ?>
+				<div class="span6">
+				<?php $this->printProtocol($latestContent, 'approval'); ?>
+				</div>
 			</div>
+<?php
+		}
+?>
 		  </div>
 <?php
 		}
