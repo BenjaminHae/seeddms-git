@@ -1896,5 +1896,94 @@ mayscript>
 <p id="fileList"></p>
 <?php
 	} /* }}} */
+
+	/**
+	 * Output a protocol
+	 *
+	 * @param object $attribute attribute
+	 */
+	protected function printProtocol($latestContent, $type="") { /* {{{ */
+		$dms = $this->params['dms'];
+?>
+		<legend><?php printMLText($type.'_log'); ?></legend>
+		<table class="table condensed">
+			<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('last_update'); ?>, <?php printMLText('comment'); ?></th><th><?php printMLText('status'); ?></th></tr>
+<?php
+		switch($type) {
+		case "review":
+			$statusList = $latestContent->getReviewStatus(10);
+			break;
+		case "approval":
+			$statusList = $latestContent->getApprovalStatus(10);
+			break;
+		default:
+			$statusList = array();
+		}
+		foreach($statusList as $rec) {
+			echo "<tr>";
+			echo "<td>";
+			switch ($rec["type"]) {
+				case 0: // individual.
+					$required = $dms->getUser($rec["required"]);
+					if (!is_object($required)) {
+						$reqName = getMLText("unknown_user")." '".$rec["required"]."'";
+					} else {
+						$reqName = htmlspecialchars($required->getFullName()." (".$required->getLogin().")");
+					}
+					break;
+				case 1: // Approver is a group.
+					$required = $dms->getGroup($rec["required"]);
+					if (!is_object($required)) {
+						$reqName = getMLText("unknown_group")." '".$rec["required"]."'";
+					}
+					else {
+						$reqName = "<i>".htmlspecialchars($required->getName())."</i>";
+					}
+					break;
+			}
+			echo $reqName;
+			echo "</td>";
+			echo "<td>";
+			echo "<i style=\"font-size: 80%;\">".$rec['date']." - ";
+			$updateuser = $dms->getUser($rec["userID"]);
+			if(!is_object($required))
+				echo getMLText("unknown_user");
+			else
+				echo htmlspecialchars($updateuser->getFullName()." (".$updateuser->getLogin().")");
+			echo "</i>";
+			if($rec['comment'])
+				echo "<br />".htmlspecialchars($rec['comment']);
+			switch($type) {
+			case "review":
+				if($rec['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+				}
+				break;
+			case "approval":
+				if($rec['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+				}
+				break;
+			}
+			echo "</td>";
+			echo "<td>";
+			switch($type) {
+			case "review":
+				echo getReviewStatusText($rec["status"]);
+				break;
+			case "approval":
+				echo getApprovalStatusText($rec["status"]);
+				break;
+			default:
+			}
+			echo "</td>";
+			echo "</tr>";
+		}
+?>
+				</table>
+<?php
+	} /* }}} */
 }
 ?>
