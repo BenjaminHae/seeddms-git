@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1211), dgrutsch (3), netixw (14)
+//    Translators: Admin (1216), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -246,6 +246,8 @@ URL: [url]',
 'confirm_update_transmittalitem' => 'Confirm update',
 'content' => 'Content',
 'continue' => 'Continue',
+'converter_new_cmd' => 'Command',
+'converter_new_mimetype' => 'New mimetype',
 'copied_to_checkout_as' => 'File copied to checkout space as \'[filename]\'',
 'create_fulltext_index' => 'Create fulltext index',
 'create_fulltext_index_warning' => 'You are about to recreate the fulltext index. This can take a considerable amount of time and reduce your overall system performance. If you really want to recreate the index, please confirm your operation.',
@@ -713,6 +715,7 @@ If you have still problems to login, then please contact your administrator.',
 'personal_default_keywords' => 'Personal keywordlists',
 'pl_PL' => 'Polish',
 'possible_substitutes' => 'Substitutes',
+'preview_converters' => 'Preview document conversion',
 'previous_state' => 'Previous state',
 'previous_versions' => 'Previous versions',
 'pt_BR' => 'Portugese (BR)',
@@ -721,7 +724,7 @@ If you have still problems to login, then please contact your administrator.',
 'quota_is_disabled' => 'Quota support is currently disabled in the settings. Setting a user quota will have no effect until it is enabled again.',
 'quota_warning' => 'Your maximum disc usage is exceeded by [bytes]. Please remove documents or previous versions.',
 'receipt_log' => 'Reception Log',
-'receipt_summary' => '',
+'receipt_summary' => 'Receipt summary',
 'recipients' => 'Recipients',
 'refresh' => 'Refresh',
 'rejected' => 'Rejected',
@@ -1258,6 +1261,7 @@ URL: [url]',
 'tuesday' => 'Tuesday',
 'tuesday_abbr' => 'Tu',
 'type_to_search' => 'Type to search',
+'uk_UA' => 'Ukrainian',
 'under_folder' => 'In Folder',
 'unknown_attrdef' => 'Unknown attribute definition',
 'unknown_command' => 'Command not recognized.',

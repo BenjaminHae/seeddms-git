@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2083), dgrutsch (18)
+//    Translators: Admin (2087), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -246,6 +246,8 @@ URL: [url]',
 'confirm_update_transmittalitem' => 'Aktualisierung bestätigen',
 'content' => 'Inhalt',
 'continue' => 'fortführen',
+'converter_new_cmd' => 'Kommando',
+'converter_new_mimetype' => 'Neuer Mime-Type',
 'copied_to_checkout_as' => 'Datei in den Checkout-Space als \'[filename]\' kopiert.',
 'create_fulltext_index' => 'Erzeuge Volltextindex',
 'create_fulltext_index_warning' => 'Sie möchten den Volltextindex neu erzeugen. Dies kann beträchtlich Zeit in Anspruch nehmen und Gesamtleistung Ihres System beeinträchtigen. Bestätigen Sie bitte diese Operation.',
@@ -713,6 +715,7 @@ Sollen Sie danach immer noch Problem bei der Anmeldung haben, dann kontaktieren 
 'personal_default_keywords' => 'Persönliche Stichwortlisten',
 'pl_PL' => 'Polnisch',
 'possible_substitutes' => 'Vertreter',
+'preview_converters' => 'Vorschau Dokumentenumwandlung',
 'previous_state' => 'Voriger Status',
 'previous_versions' => 'Vorhergehende Versionen',
 'pt_BR' => 'Portugiesisch (BR)',
@@ -1251,6 +1254,7 @@ URL: [url]',
 'tuesday' => 'Dienstag',
 'tuesday_abbr' => 'Di',
 'type_to_search' => 'Hier tippen zum Suchen',
+'uk_UA' => 'Ukrainisch',
 'under_folder' => 'In Ordner',
 'unknown_attrdef' => 'Unbekannte Attributdefinition',
 'unknown_command' => 'unbekannter Befehl',
