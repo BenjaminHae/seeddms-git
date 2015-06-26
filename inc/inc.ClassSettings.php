@@ -511,7 +511,9 @@ class Settings { /* {{{ */
 			$this->_maxExecutionTime = ini_get("max_execution_time");
 
 		// XML Path: /configuration/system/advanced/converters
-		$converters = $xml->xpath('/configuration/advanced/converters/converter');
+		$converters = $xml->xpath('/configuration/advanced/converters[@target="fulltext"]/converter');
+		if(!$converters)
+			$converters = $xml->xpath('/configuration/advanced/converters/converter');
 		$this->_converters = array();
 		foreach($converters as $converter) {
 			$tab = $converter->attributes();
