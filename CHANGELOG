@@ -11,6 +11,7 @@
 - new configuration parameter for overriding the mimetype delivered
   by the browser (Closes #195)
 - new option -c to force recreation of index (Closes #219)
+- username can be passed to utils/adddoc.php (Closes #214)
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.18
