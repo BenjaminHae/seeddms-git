@@ -147,9 +147,12 @@ $dms->setEnableConverting($settings->_enableConverting);
 $dms->setViewOnlineFileTypes($settings->_viewOnlineFileTypes);
 
 /* Create a global user object */
-if($username)
-	$user = $dms->getUserByLogin();
-else
+if($username) {
+	if(!($user = $dms->getUserByLogin($username))) {
+		echo "No such user '".$username."'.";
+		exit;
+	}
+} else
 	$user = $dms->getUser(1);
 
 if(is_readable($filename)) {

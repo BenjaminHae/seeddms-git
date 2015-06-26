@@ -59,8 +59,9 @@ $latestContent = $document->getLatestContent();
 if ($latestContent->getVersion()!=$version) {
 	UI::exitError(getMLText("document_title", array("documentname" => htmlspecialchars($document->getName()))),getMLText("invalid_version"));
 }
-// verify if document has expired
-if ($document->hasExpired()){
+
+// verify if document may be approved
+if (!$accessop->mayApprove()){
 	UI::exitError(getMLText("document_title", array("documentname" => htmlspecialchars($document->getName()))),getMLText("access_denied"));
 }
 

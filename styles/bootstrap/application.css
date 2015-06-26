@@ -103,6 +103,18 @@ div.statusbar a.btn {
 	height: 20px;
 }
 
+div.help h1 {
+	font-size: 24px;
+}
+
+div.help h2 {
+	font-size: 18px;
+}
+
+div.help h3 {
+	font-size: 16px;
+}
+
 @media (max-width: 480px) { 
     .nav-tabs > li {
         float:none;

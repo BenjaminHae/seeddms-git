@@ -66,6 +66,8 @@ if($settings->_enableGuestLogin && (int) $settings->_guestID) {
 	}
 }
 
+$user = false;
+
 //
 // LDAP Sign In
 //
@@ -74,8 +76,7 @@ if($settings->_enableGuestLogin && (int) $settings->_guestID) {
  * if authentication against ldap succeeds.
  * _ldapHost will only have a value if the ldap connector has been enabled
  */
-$user = false;
-if (isset($settings->_ldapHost) && strlen($settings->_ldapHost)>0) {
+if (!$user && isset($settings->_ldapHost) && strlen($settings->_ldapHost)>0) {
 	if (isset($settings->_ldapPort) && is_int($settings->_ldapPort)) {
 		$ds = ldap_connect($settings->_ldapHost, $settings->_ldapPort);
 	} else {
@@ -298,7 +299,7 @@ if (isset($referuri) && strlen($referuri)>0) {
 	header("Location: http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'] . $referuri);
 }
 else {
-	header("Location: ../".(isset($settings->_siteDefaultPage) && strlen($settings->_siteDefaultPage)>0 ? $settings->_siteDefaultPage : "out/out.ViewFolder.php?folderid=".$settings->_rootFolderID));
+	header("Location: ".$settings->_httpRoot.(isset($settings->_siteDefaultPage) && strlen($settings->_siteDefaultPage)>0 ? $settings->_siteDefaultPage : "out/out.ViewFolder.php?folderid=".$settings->_rootFolderID));
 }
 
 //_printMessage(getMLText("login_ok"),

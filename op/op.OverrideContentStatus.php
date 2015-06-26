@@ -63,8 +63,6 @@ if ($overallStatus["status"] == S_REJECTED || $overallStatus["status"] == S_EXPI
 	UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("cannot_change_final_states"));
 }
 
-$reviewStatus = $content->getReviewStatus();
-$approvalStatus = $content->getApprovalStatus();
 $overrideStatus = $_POST["overrideStatus"];
 $comment = $_POST["comment"];
 

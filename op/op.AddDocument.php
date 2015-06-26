@@ -224,10 +224,10 @@ if($settings->_dropFolderDir) {
 				if($_FILES["userfile"]['error'][0] != 0)
 					$_FILES["userfile"] = array();
 			}
-			$finfo = finfo_open(FILEINFO_MIME);
-			$mimetype = explode(';', finfo_file($finfo, $fullfile));
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$mimetype = finfo_file($finfo, $fullfile);
 			$_FILES["userfile"]['tmp_name'][] = $fullfile;
-			$_FILES["userfile"]['type'][] = $mimetype[0];
+			$_FILES["userfile"]['type'][] = $mimetype;
 			$_FILES["userfile"]['name'][] = $_POST["dropfolderfileform1"];
 			$_FILES["userfile"]['size'][] = filesize($fullfile);
 			$_FILES["userfile"]['error'][] = 0;
@@ -251,6 +251,11 @@ for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
 	$userfilename = $_FILES["userfile"]["name"][$file_num];
 	
 	$fileType = ".".pathinfo($userfilename, PATHINFO_EXTENSION);
+
+	if($settings->_overrideMimeType) {
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$userfiletype = finfo_file($finfo, $userfiletmp);
+	}
 
 	if ((count($_FILES["userfile"]["tmp_name"])==1)&&($_POST["name"]!=""))
 		$name = $_POST["name"];

@@ -71,14 +71,19 @@ if ($_FILES['userfile']['error'] == 0) {
 	$userfiletmp = $_FILES["userfile"]["tmp_name"];
 	$userfiletype = $_FILES["userfile"]["type"];
 	$userfilename = $_FILES["userfile"]["name"];
+
+	if($settings->_overrideMimeType) {
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$userfiletype = finfo_file($finfo, $userfiletmp);
+	}
 } elseif($settings->_dropFolderDir) {
 	if($_POST['dropfolderfileform1']) {
 		$fullfile = $settings->_dropFolderDir.'/'.$user->getLogin().'/'.$_POST["dropfolderfileform1"];
 		if(file_exists($fullfile)) {
-			$finfo = finfo_open(FILEINFO_MIME);
-			$mimetype = explode(';', finfo_file($finfo, $fullfile));
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$mimetype = finfo_file($finfo, $fullfile);
 			$userfiletmp = $fullfile;
-			$userfiletype = $mimetype[0];
+			$userfiletype = $mimetype;
 			$userfilename= $_POST["dropfolderfileform1"];
 		} else {
 			UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("error_occured"));

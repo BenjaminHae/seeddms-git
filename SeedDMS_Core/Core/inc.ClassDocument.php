@@ -386,7 +386,16 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		return $this->_defaultAccess;
 	} /* }}} */
 
-	function setDefaultAccess($mode) { /* {{{ */
+	/**
+	 * Set default access mode
+	 *
+	 * This method sets the default access mode and also removes all notifiers which
+	 * will not have read access anymore.
+	 *
+	 * @param integer $mode access mode
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
+	 */
+	function setDefaultAccess($mode, $noclean="false") { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$queryStr = "UPDATE tblDocuments set defaultAccess = " . (int) $mode . " WHERE id = " . $this->_id;
@@ -395,22 +404,8 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 
 		$this->_defaultAccess = $mode;
 
-		// If any of the notification subscribers no longer have read access,
-		// remove their subscription.
-		if(isset($this->_notifyList["users"])) {
-			foreach ($this->_notifyList["users"] as $u) {
-				if ($this->getAccessMode($u) < M_READ) {
-					$this->removeNotify($u->getID(), true);
-				}
-			}
-		}
-		if(isset($this->_notifyList["groups"])) {
-			foreach ($this->_notifyList["groups"] as $g) {
-				if ($this->getGroupAccessMode($g) < M_READ) {
-					$this->removeNotify($g->getID(), false);
-				}
-			}
-		}
+		if(!$noclean)
+			self::cleanNotifyList();
 
 		return true;
 	} /* }}} */
@@ -428,9 +423,10 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 	 *
 	 * @param boolean $inheritAccess set to true for setting and false for
 	 *        unsetting inherited access mode
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
 	 * @return boolean true if operation was successful otherwise false
 	 */
-	function setInheritAccess($inheritAccess) { /* {{{ */
+	function setInheritAccess($inheritAccess, $noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$queryStr = "UPDATE tblDocuments SET inheritAccess = " . ($inheritAccess ? "1" : "0") . " WHERE id = " . $this->_id;
@@ -439,22 +435,8 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 
 		$this->_inheritAccess = ($inheritAccess ? "1" : "0");
 
-		// If any of the notification subscribers no longer have read access,
-		// remove their subscription.
-		if(isset($this->_notifyList["users"])) {
-			foreach ($this->_notifyList["users"] as $u) {
-				if ($this->getAccessMode($u) < M_READ) {
-					$this->removeNotify($u->getID(), true);
-				}
-			}
-		}
-		if(isset($this->_notifyList["groups"])) {
-			foreach ($this->_notifyList["groups"] as $g) {
-				if ($this->getGroupAccessMode($g) < M_READ) {
-					$this->removeNotify($g->getID(), false);
-				}
-			}
-		}
+		if(!$noclean)
+			self::cleanNotifyList();
 
 		return true;
 	} /* }}} */
@@ -610,9 +592,10 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 	/**
 	 * Delete all entries for this document from the access control list
 	 *
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
 	 * @return boolean true if operation was successful otherwise false
 	 */
-	function clearAccessList() { /* {{{ */
+	function clearAccessList($noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$queryStr = "DELETE FROM tblACLs WHERE targetType = " . T_DOCUMENT . " AND target = " . $this->_id;
@@ -620,6 +603,10 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 			return false;
 
 		unset($this->_accessList);
+
+		if(!$noclean)
+			self::cleanNotifyList();
+
 		return true;
 	} /* }}} */
 
@@ -894,6 +881,33 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 			}
 		}
 		return $this->_notifyList;
+	} /* }}} */
+
+	/**
+	 * Make sure only users/groups with read access are in the notify list
+	 *
+	 */
+	function cleanNotifyList() { /* {{{ */
+		// If any of the notification subscribers no longer have read access,
+		// remove their subscription.
+		if (empty($this->_notifyList))
+			$this->getNotifyList();
+
+		/* Make a copy of both notifier lists because removeNotify will empty
+		 * $this->_notifyList and the second foreach will not work anymore.
+		 */
+		$nusers = $this->_notifyList["users"];
+		$ngroups = $this->_notifyList["groups"];
+		foreach ($nusers as $u) {
+			if ($this->getAccessMode($u) < M_READ) {
+				$this->removeNotify($u->getID(), true);
+			}
+		}
+		foreach ($ngroups as $g) {
+			if ($this->getGroupAccessMode($g) < M_READ) {
+				$this->removeNotify($g->getID(), false);
+			}
+		}
 	} /* }}} */
 
 	/**
@@ -1442,6 +1456,17 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		$stList = "";
 		foreach ($status as $st) {
 			$stList .= (strlen($stList)==0 ? "" : ", "). "'".$st["reviewID"]."'";
+			$queryStr = "SELECT * FROM tblDocumentReviewLog WHERE reviewID = " . $st['reviewID'];
+			$resArr = $db->getResultArray($queryStr);
+			if ((is_bool($resArr) && !$resArr)) {
+				$db->rollbackTransaction();
+				return false;
+			}
+			foreach($resArr as $res) {
+				$file = $this->_dms->contentDir . $this->getDir().'r'.$res['reviewLogID'];
+				if(file_exists($file))
+					SeedDMS_Core_File::removeFile($file);
+			}
 			if ($st["status"]==0 && !in_array($st["required"], $emailList)) {
 				$emailList[] = $st["required"];
 			}
@@ -1463,10 +1488,22 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		$stList = "";
 		foreach ($status as $st) {
 			$stList .= (strlen($stList)==0 ? "" : ", "). "'".$st["approveID"]."'";
+			$queryStr = "SELECT * FROM tblDocumentApproveLog WHERE approveID = " . $st['approveID'];
+			$resArr = $db->getResultArray($queryStr);
+			if ((is_bool($resArr) && !$resArr)) {
+				$db->rollbackTransaction();
+				return false;
+			}
+			foreach($resArr as $res) {
+				$file = $this->_dms->contentDir . $this->getDir().'a'.$res['approveLogID'];
+				if(file_exists($file))
+					SeedDMS_Core_File::removeFile($file);
+			}
 			if ($st["status"]==0 && !in_array($st["required"], $emailList)) {
 				$emailList[] = $st["required"];
 			}
 		}
+
 		if (strlen($stList)>0) {
 			$queryStr = "DELETE FROM `tblDocumentApproveLog` WHERE `tblDocumentApproveLog`.`approveID` IN (".$stList.")";
 			if (!$db->getResult($queryStr)) {
@@ -2487,6 +2524,13 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 						unset($this->_reviewStatus);
 						return false;
 					}
+					foreach($res as &$t) {
+						$filename = $this->_dms->contentDir . $this->_document->getDir().'r'.$t['reviewLogID'];
+						if(file_exists($filename))
+							$t['file'] = $filename;
+						else
+							$t['file'] = '';
+					}
 					$this->_reviewStatus = array_merge($this->_reviewStatus, $res);
 				}
 			}
@@ -2522,7 +2566,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 			if($recs) {
 				foreach($recs as $rec) {
 					$queryStr=
-						"SELECT `tblDocumentApprovers`.*, `tblDocumentApproveLog`.`status`, ".
+						"SELECT `tblDocumentApprovers`.*, `tblDocumentApproveLog`.`approveLogID`, `tblDocumentApproveLog`.`status`, ".
 						"`tblDocumentApproveLog`.`comment`, `tblDocumentApproveLog`.`date`, ".
 						"`tblDocumentApproveLog`.`userID`, `tblUsers`.`fullName`, `tblGroups`.`name` AS `groupName` ".
 						"FROM `tblDocumentApprovers` ".
@@ -2530,12 +2574,19 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 						"LEFT JOIN `tblUsers` on `tblUsers`.`id` = `tblDocumentApprovers`.`required` ".
 						"LEFT JOIN `tblGroups` on `tblGroups`.`id` = `tblDocumentApprovers`.`required`".
 						"WHERE `tblDocumentApprovers`.`approveID` = '". $rec['approveID'] ."' ".
-						"ORDER BY `tblDocumentApproveLog`.`approveLogId` DESC LIMIT ".(int) $limit;
+						"ORDER BY `tblDocumentApproveLog`.`approveLogID` DESC LIMIT ".(int) $limit;
 
 					$res = $db->getResultArray($queryStr);
 					if (is_bool($res) && !$res) {
 						unset($this->_approvalStatus);
 						return false;
+					}
+					foreach($res as &$t) {
+						$filename = $this->_dms->contentDir . $this->_document->getDir().'a'.$t['approveLogID'];
+						if(file_exists($filename))
+							$t['file'] = $filename;
+						else
+							$t['file'] = '';
 					}
 					$this->_approvalStatus = array_merge($this->_approvalStatus, $res);
 				}
@@ -2688,7 +2739,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 	 * @param string $comment comment for review
 	 * @return integer new review log id
 	 */
-	function setReviewByInd($user, $requestUser, $status, $comment) { /* {{{ */
+	function setReviewByInd($user, $requestUser, $status, $comment, $file='') { /* {{{ */
 		$db = $this->_document->_dms->getDB();
 
 		// Check to see if the user can be removed from the review list.
@@ -2718,10 +2769,12 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		$res=$db->getResult($queryStr);
 		if (is_bool($res) && !$res)
 			return -1;
-		else {
-			$reviewLogID = $db->getInsertID();
-			return $reviewLogID;
+
+		$reviewLogID = $db->getInsertID();
+		if($file) {
+			SeedDMS_Core_File::copyFile($file, $this->_dms->contentDir . $this->_document->getDir() . 'r' . $reviewLogID);
 		}
+		return $reviewLogID;
  } /* }}} */
 
 	/**
@@ -2738,7 +2791,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 	 * @param string $comment comment for review
 	 * @return integer new review log id
 	 */
-	function setReviewByGrp($group, $requestUser, $status, $comment) { /* {{{ */
+	function setReviewByGrp($group, $requestUser, $status, $comment, $file='') { /* {{{ */
 		$db = $this->_document->_dms->getDB();
 
 		// Check to see if the user can be removed from the review list.
@@ -2770,6 +2823,9 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 			return -1;
 		else {
 			$reviewLogID = $db->getInsertID();
+			if($file) {
+				SeedDMS_Core_File::copyFile($file, $this->_dms->contentDir . $this->_document->getDir() . 'r' . $reviewLogID);
+			}
 			return $reviewLogID;
 		}
  } /* }}} */
@@ -2918,7 +2974,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 	 * @param string $comment approval comment
 	 * @return integer 0 on success, < 0 in case of an error
 	 */
-	function setApprovalByInd($user, $requestUser, $status, $comment) { /* {{{ */
+	function setApprovalByInd($user, $requestUser, $status, $comment, $file='') { /* {{{ */
 		$db = $this->_document->_dms->getDB();
 
 		// Check to see if the user can be removed from the approval list.
@@ -2948,8 +3004,12 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		$res=$db->getResult($queryStr);
 		if (is_bool($res) && !$res)
 			return -1;
-		else
-			return 0;
+
+		$approveLogID = $db->getInsertID();
+		if($file) {
+			SeedDMS_Core_File::copyFile($file, $this->_dms->contentDir . $this->_document->getDir() . 'a' . $approveLogID);
+		}
+		return $approveLogID;
  } /* }}} */
 
 	/**
@@ -2958,7 +3018,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 	 * {link SeedDMS_Core_DocumentContent::setApprovalByInd} but does it for
 	 * group instead of a user
 	 */
-	function setApprovalByGrp($group, $requestUser, $status, $comment) { /* {{{ */
+	function setApprovalByGrp($group, $requestUser, $status, $comment, $file='') { /* {{{ */
 		$db = $this->_document->_dms->getDB();
 
 		// Check to see if the user can be removed from the approval list.
@@ -2988,8 +3048,12 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		$res=$db->getResult($queryStr);
 		if (is_bool($res) && !$res)
 			return -1;
-		else
-			return 0;
+
+		$approveLogID = $db->getInsertID();
+		if($file) {
+			SeedDMS_Core_File::copyFile($file, $this->_dms->contentDir . $this->_document->getDir() . 'a' . $approveLogID);
+		}
+		return $approveLogID;
  } /* }}} */
 
 	function delIndReviewer($user, $requestUser) { /* {{{ */

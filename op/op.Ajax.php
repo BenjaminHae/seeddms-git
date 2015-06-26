@@ -474,6 +474,11 @@ switch($command) {
 
 				$fileType = ".".pathinfo($userfilename, PATHINFO_EXTENSION);
 
+				if($settings->_overrideMimeType) {
+					$finfo = finfo_open(FILEINFO_MIME_TYPE);
+					$userfiletype = finfo_file($finfo, $userfiletmp);
+				}
+
 				if (!empty($_POST["name"]))
 					$name = $_POST["name"];
 				else

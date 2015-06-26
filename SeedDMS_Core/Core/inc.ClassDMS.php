@@ -262,7 +262,7 @@ class SeedDMS_Core_DMS {
 		$this->convertFileTypes = array();
 		$this->version = '@package_version@';
 		if($this->version[0] == '@')
-			$this->version = '4.3.18';
+			$this->version = '4.3.19';
 	} /* }}} */
 
 	/**
@@ -2126,9 +2126,9 @@ class SeedDMS_Core_DMS {
 
 		$versions = array();
 		foreach($resArr as $row) {
-			$document = new $this->classnames['document']($row['document'], '', '', '', '', '', '', '', '', '', '', '');
+			$document = new SeedDMS_Core_Document($row['document'], '', '', '', '', '', '', '', '', '', '', '');
 			$document->setDMS($this);
-			$version = new $this->classnames['documentcontent']($row['id'], $document, $row['version'], $row['comment'], $row['date'], $row['createdBy'], $row['dir'], $row['orgFileName'], $row['fileType'], $row['mimeType'], $row['fileSize'], $row['checksum']);
+			$version = new SeedDMS_Core_DocumentContent($row['id'], $document, $row['version'], $row['comment'], $row['date'], $row['createdBy'], $row['dir'], $row['orgFileName'], $row['fileType'], $row['mimeType'], $row['fileSize'], $row['checksum']);
 			if(!isset($versions[$row['dupid']])) {
 				$versions[$row['id']]['content'] = $version;
 				$versions[$row['id']]['duplicates'] = array();

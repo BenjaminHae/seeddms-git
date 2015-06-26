@@ -23,8 +23,16 @@ include("../inc/inc.ClassUI.php");
 include("../inc/inc.Authentication.php");
 
 $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
-$view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user));
+$view = UI::factory($theme, $tmp[1]);
+
+if(isset($_GET['context']))
+	$context = $_GET['context'];
+else
+	$context = '';
 if($view) {
+	$view->setParam('dms', $dms);
+	$view->setParam('user', $user);
+	$view->setParam('context', $context);
 	$view->show();
 	exit;
 }

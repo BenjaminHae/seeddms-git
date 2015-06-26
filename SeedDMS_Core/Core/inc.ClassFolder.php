@@ -284,7 +284,16 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		return $this->_defaultAccess;
 	} /* }}} */
 
-	function setDefaultAccess($mode) { /* {{{ */
+	/**
+	 * Set default access mode
+	 *
+	 * This method sets the default access mode and also removes all notifiers which
+	 * will not have read access anymore.
+	 *
+	 * @param integer $mode access mode
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
+	 */
+	function setDefaultAccess($mode, $noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$queryStr = "UPDATE tblFolders set defaultAccess = " . (int) $mode . " WHERE id = " . $this->_id;
@@ -293,27 +302,29 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		$this->_defaultAccess = $mode;
 
-		// If any of the notification subscribers no longer have read access,
-		// remove their subscription.
-		if (empty($this->_notifyList))
-			$this->getNotifyList();
-		foreach ($this->_notifyList["users"] as $u) {
-			if ($this->getAccessMode($u) < M_READ) {
-				$this->removeNotify($u->getID(), true);
-			}
-		}
-		foreach ($this->_notifyList["groups"] as $g) {
-			if ($this->getGroupAccessMode($g) < M_READ) {
-				$this->removeNotify($g->getID(), false);
-			}
-		}
+		if(!$noclean)
+			self::cleanNotifyList();
 
 		return true;
 	} /* }}} */
 
 	function inheritsAccess() { return $this->_inheritAccess; }
 
-	function setInheritAccess($inheritAccess) { /* {{{ */
+	/**
+	 * Set inherited access mode
+	 * Setting inherited access mode will set or unset the internal flag which
+	 * controls if the access mode is inherited from the parent folder or not.
+	 * It will not modify the
+	 * access control list for the current object. It will remove all
+	 * notifications of users which do not even have read access anymore
+	 * after setting or unsetting inherited access.
+	 *
+	 * @param boolean $inheritAccess set to true for setting and false for
+	 *        unsetting inherited access mode
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
+	 * @return boolean true if operation was successful otherwise false
+	 */
+	function setInheritAccess($inheritAccess, $noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$inheritAccess = ($inheritAccess) ? "1" : "0";
@@ -324,20 +335,8 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		$this->_inheritAccess = $inheritAccess;
 
-		// If any of the notification subscribers no longer have read access,
-		// remove their subscription.
-		if (empty($this->_notifyList))
-			$this->getNotifyList();
-		foreach ($this->_notifyList["users"] as $u) {
-			if ($this->getAccessMode($u) < M_READ) {
-				$this->removeNotify($u->getID(), true);
-			}
-		}
-		foreach ($this->_notifyList["groups"] as $g) {
-			if ($this->getGroupAccessMode($g) < M_READ) {
-				$this->removeNotify($g->getID(), false);
-			}
-		}
+		if(!$noclean)
+			self::cleanNotifyList();
 
 		return true;
 	} /* }}} */
@@ -383,9 +382,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	 *
 	 * @param string $orderby if set to 'n' the list is ordered by name, otherwise
 	 *        it will be ordered by sequence
+	 * @param string $dir direction of sorting (asc or desc)
 	 * @return array list of folder objects or false in case of an error
 	 */
-	function getSubFolders($orderby="") { /* {{{ */
+	function getSubFolders($orderby="", $dir="asc") { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		if (!isset($this->_subFolders)) {
@@ -393,6 +393,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 			if ($orderby=="n") $queryStr .= " ORDER BY name";
 			elseif ($orderby=="s") $queryStr .= " ORDER BY sequence";
+			elseif ($orderby=="d") $queryStr .= " ORDER BY date";
+			if($dir == 'desc')
+				$queryStr .= " DESC";
+
 			$resArr = $db->getResultArray($queryStr);
 			if (is_bool($resArr) && $resArr == false)
 				return false;
@@ -564,15 +568,19 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	 *
 	 * @param string $orderby if set to 'n' the list is ordered by name, otherwise
 	 *        it will be ordered by sequence
+	 * @param string $dir direction of sorting (asc or desc)
 	 * @return array list of documents or false in case of an error
 	 */
-	function getDocuments($orderby="") { /* {{{ */
+	function getDocuments($orderby="", $dir="asc") { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		if (!isset($this->_documents)) {
 			$queryStr = "SELECT * FROM tblDocuments WHERE folder = " . $this->_id;
 			if ($orderby=="n") $queryStr .= " ORDER BY name";
 			elseif($orderby=="s") $queryStr .= " ORDER BY sequence";
+			elseif($orderby=="d") $queryStr .= " ORDER BY date";
+			if($dir == 'desc')
+				$queryStr .= " DESC";
 
 			$resArr = $db->getResultArray($queryStr);
 			if (is_bool($resArr) && !$resArr)
@@ -874,9 +882,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	/**
 	 * Delete all entries for this folder from the access control list
 	 *
+	 * @param boolean $noclean set to true if notifier list shall not be clean up
 	 * @return boolean true if operation was successful otherwise false
 	 */
-	function clearAccessList() { /* {{{ */
+	function clearAccessList($noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		$queryStr = "DELETE FROM tblACLs WHERE targetType = " . T_FOLDER . " AND target = " . $this->_id;
@@ -884,6 +893,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 			return false;
 
 		unset($this->_accessList);
+
+		if(!$noclean)
+			self::cleanNotifyList();
+
 		return true;
 	} /* }}} */
 
@@ -1089,6 +1102,33 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 			}
 		}
 		return $this->_notifyList;
+	} /* }}} */
+
+	/**
+	 * Make sure only users/groups with read access are in the notify list
+	 *
+	 */
+	function cleanNotifyList() { /* {{{ */
+		// If any of the notification subscribers no longer have read access,
+		// remove their subscription.
+		if (empty($this->_notifyList))
+			$this->getNotifyList();
+
+		/* Make a copy of both notifier lists because removeNotify will empty
+		 * $this->_notifyList and the second foreach will not work anymore.
+		 */
+		$nusers = $this->_notifyList["users"];
+		$ngroups = $this->_notifyList["groups"];
+		foreach ($nusers as $u) {
+			if ($this->getAccessMode($u) < M_READ) {
+				$this->removeNotify($u->getID(), true);
+			}
+		}
+		foreach ($ngroups as $g) {
+			if ($this->getGroupAccessMode($g) < M_READ) {
+				$this->removeNotify($g->getID(), false);
+			}
+		}
 	} /* }}} */
 
 	/*

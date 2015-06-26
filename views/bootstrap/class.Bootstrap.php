@@ -296,7 +296,8 @@ $(document).ready(function () {
 	//		echo "    <li><a href=\"../out/out.SearchForm.php?folderid=".$this->params['rootfolderid']."\">".getMLText("search")."</a></li>\n";
 			if ($this->params['enablecalendar']) echo "    <li><a href=\"../out/out.Calendar.php?mode=".$this->params['calendardefaultview']."\">".getMLText("calendar")."</a></li>\n";
 			if ($this->params['user']->isAdmin()) echo "    <li><a href=\"../out/out.AdminTools.php\">".getMLText("admin_tools")."</a></li>\n";
-			echo "    <li><a href=\"../out/out.Help.php\">".getMLText("help")."</a></li>\n";
+			$tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
+			echo "    <li><a href=\"../out/out.Help.php?context=".$tmp[1]."\">".getMLText("help")."</a></li>\n";
 			echo "   </ul>\n";
 			echo "     <form action=\"../op/op.Search.php\" class=\"form-inline navbar-search pull-left\" autocomplete=\"off\">";
 			if ($folder!=null && is_object($folder) && !strcasecmp(get_class($folder), "SeedDMS_Core_Folder")) {
@@ -417,7 +418,7 @@ $(document).ready(function () {
 			}
 			echo "<li><a href=\"../out/out.FolderNotify.php?folderid=". $folderID ."&showtree=".showtree()."\">".getMLText("edit_existing_notify")."</a></li>\n";
 		}
-		if ($this->params['user']->isAdmin()) {
+		if ($this->params['user']->isAdmin() && $this->params['enablefullsearch']) {
 			echo "<li><a href=\"../out/out.Indexer.php?folderid=". $folderID ."\">".getMLText("index_folder")."</a></li>\n";
 		}
 		echo "</ul>\n";
@@ -679,10 +680,8 @@ $(document).ready(function () {
 		return;
 	} /* }}} */
 
-	function contentContainerStart($type='info') { /* {{{ */
-
-		//echo "<div class=\"alert alert-".$type."\">\n";
-		echo "<div class=\"well\">\n";
+	function contentContainerStart($class='') { /* {{{ */
+		echo "<div class=\"well".($class ? " ".$class : "")."\">\n";
 		return;
 	} /* }}} */
 
@@ -871,7 +870,7 @@ $(document).ready(function () {
 		print "<input type=\"hidden\" id=\"docid".$formName."\" name=\"docid\" value=\"\">";
 		print "<div class=\"input-append\">\n";
 		print "<input type=\"text\" id=\"choosedocsearch\" data-target=\"docid".$formName."\" data-provide=\"typeahead\" name=\"docname".$formName."\" placeholder=\"".getMLText('type_to_search')."\" autocomplete=\"off\" />";
-		print "<a data-target=\"#docChooser".$formName."\" href=\"out.DocumentChooser.php?form=".$formName."&folderid=".$this->params['rootfolderid']."\" role=\"button\" class=\"btn\" data-toggle=\"modal\">".getMLText("document")."…</a>\n";
+		print "<a data-target=\"#docChooser".$formName."\" href=\"../out/out.DocumentChooser.php?form=".$formName."&folderid=".$this->params['rootfolderid']."\" role=\"button\" class=\"btn\" data-toggle=\"modal\">".getMLText("document")."…</a>\n";
 		print "</div>\n";
 ?>
 <div class="modal hide" id="docChooser<?php echo $formName ?>" tabindex="-1" role="dialog" aria-labelledby="docChooserLabel" aria-hidden="true">
@@ -1176,6 +1175,14 @@ function clearFilename<?php print $formName ?>() {
 				$node['children'] = array();
 			} else {
 				$node['children'] = jqtree($path, $folder, $this->params['user'], $accessmode, $showdocs, $expandtree, $orderby);
+				if($showdocs) {
+					$documents = $folder->getDocuments($orderby);
+					$documents = SeedDMS_Core_DMS::filterAccess($documents, $this->params['user'], $accessmode);
+					foreach($documents as $document) {
+						$node2 = array('label'=>$document->getName(), 'id'=>$document->getID(), 'load_on_demand'=>false, 'is_folder'=>false);
+						$node['children'][] = $node2;
+					}
+				}
 			}
 			$tree[] = $node;
 			
@@ -1887,6 +1894,95 @@ mayscript>
 </form>
 <p></p>
 <p id="fileList"></p>
+<?php
+	} /* }}} */
+
+	/**
+	 * Output a protocol
+	 *
+	 * @param object $attribute attribute
+	 */
+	protected function printProtocol($latestContent, $type="") { /* {{{ */
+		$dms = $this->params['dms'];
+?>
+		<legend><?php printMLText($type.'_log'); ?></legend>
+		<table class="table condensed">
+			<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('last_update'); ?>, <?php printMLText('comment'); ?></th><th><?php printMLText('status'); ?></th></tr>
+<?php
+		switch($type) {
+		case "review":
+			$statusList = $latestContent->getReviewStatus(10);
+			break;
+		case "approval":
+			$statusList = $latestContent->getApprovalStatus(10);
+			break;
+		default:
+			$statusList = array();
+		}
+		foreach($statusList as $rec) {
+			echo "<tr>";
+			echo "<td>";
+			switch ($rec["type"]) {
+				case 0: // individual.
+					$required = $dms->getUser($rec["required"]);
+					if (!is_object($required)) {
+						$reqName = getMLText("unknown_user")." '".$rec["required"]."'";
+					} else {
+						$reqName = htmlspecialchars($required->getFullName()." (".$required->getLogin().")");
+					}
+					break;
+				case 1: // Approver is a group.
+					$required = $dms->getGroup($rec["required"]);
+					if (!is_object($required)) {
+						$reqName = getMLText("unknown_group")." '".$rec["required"]."'";
+					}
+					else {
+						$reqName = "<i>".htmlspecialchars($required->getName())."</i>";
+					}
+					break;
+			}
+			echo $reqName;
+			echo "</td>";
+			echo "<td>";
+			echo "<i style=\"font-size: 80%;\">".$rec['date']." - ";
+			$updateuser = $dms->getUser($rec["userID"]);
+			if(!is_object($required))
+				echo getMLText("unknown_user");
+			else
+				echo htmlspecialchars($updateuser->getFullName()." (".$updateuser->getLogin().")");
+			echo "</i>";
+			if($rec['comment'])
+				echo "<br />".htmlspecialchars($rec['comment']);
+			switch($type) {
+			case "review":
+				if($rec['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+				}
+				break;
+			case "approval":
+				if($rec['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+				}
+				break;
+			}
+			echo "</td>";
+			echo "<td>";
+			switch($type) {
+			case "review":
+				echo getReviewStatusText($rec["status"]);
+				break;
+			case "approval":
+				echo getApprovalStatusText($rec["status"]);
+				break;
+			default:
+			}
+			echo "</td>";
+			echo "</tr>";
+		}
+?>
+				</table>
 <?php
 	} /* }}} */
 }
