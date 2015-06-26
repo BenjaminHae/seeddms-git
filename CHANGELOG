@@ -10,6 +10,7 @@
 - take out remaining link to old version info file
 - new configuration parameter for overriding the mimetype delivered
   by the browser (Closes #195)
+- new option -c to force recreation of index (Closes #219)
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.18
