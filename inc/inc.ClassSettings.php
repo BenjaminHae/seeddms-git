@@ -187,6 +187,8 @@ class Settings { /* {{{ */
 	var $_showMissingTranslations = false;
 	// Extra Path to additional software, will be added to include path
 	var $_extraPath = null;
+	// do not check version of database
+	var $_doNotCheckDBVersion = false;
 	// DB-Driver used by adodb (see adodb-readme)
 	var $_dbDriver = "mysql";
 	// DB-Server
@@ -436,6 +438,7 @@ class Settings { /* {{{ */
 		$this->_dbDatabase = strval($tab["dbDatabase"]);
 		$this->_dbUser = strval($tab["dbUser"]);
 		$this->_dbPass = strval($tab["dbPass"]);
+		$this->_doNotCheckDBVersion = Settings::boolVal($tab["doNotCheckVersion"]);
 
 		// XML Path: /configuration/system/smtp
 		$node = $xml->xpath('/configuration/system/smtp');
@@ -712,6 +715,7 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "dbDatabase", $this->_dbDatabase);
     $this->setXMLAttributValue($node, "dbUser", $this->_dbUser);
     $this->setXMLAttributValue($node, "dbPass", $this->_dbPass);
+    $this->setXMLAttributValue($node, "doNotCheckVersion", $this->_doNotCheckVersion);
 
     // XML Path: /configuration/system/smtp
     $node = $this->getXMLNode($xml, '/configuration/system', 'smtp');
