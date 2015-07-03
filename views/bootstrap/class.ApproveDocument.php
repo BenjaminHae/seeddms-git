@@ -51,7 +51,7 @@ class SeedDMS_View_ApproveDocument extends SeedDMS_Bootstrap_Style {
 		$this->globalNavigation($folder);
 		$this->contentStart();
 		$this->pageNavigation($this->getFolderPathHTML($folder, true, $document), "view_document", $document);
-		$this->contentHeading(getMLText("submit_approval"));
+		$this->contentHeading(getMLText("add_approval"));
 ?>
 <script language="JavaScript">
 function checkIndForm()
