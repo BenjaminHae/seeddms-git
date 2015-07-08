@@ -3,6 +3,7 @@
 --------------------------------------------------------------------------------
 - fix setting expire date when editing a document (Closes: #225)
 - MyDocumets: list only documents to approve which have passed review
+- show preview image in Review/Approval summary
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.19
