@@ -2,6 +2,7 @@
                      Changes in version 4.3.20
 --------------------------------------------------------------------------------
 - fix setting expire date when editing a document (Closes: #225)
+- MyDocumets: list only documents to approve which have passed review
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.19
