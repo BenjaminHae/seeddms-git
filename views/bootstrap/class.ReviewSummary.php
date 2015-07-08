@@ -34,6 +34,10 @@ class SeedDMS_View_ReviewSummary extends SeedDMS_Bootstrap_Style {
 	function show() { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
+		$cachedir = $this->params['cachedir'];
+		$previewwidth = $this->params['previewWidthList'];
+
+		$previewer = new SeedDMS_Preview_Previewer($cachedir, $previewwidth);
 
 		$this->htmlStartPage(getMLText("my_documents"));
 		$this->globalNavigation();
@@ -56,8 +60,7 @@ class SeedDMS_View_ReviewSummary extends SeedDMS_Bootstrap_Style {
 		$iRev = array();
 		foreach ($reviewStatus["indstatus"] as $st) {
 			$document = $dms->getDocument($st['documentID']);
-			if($document)
-				$version = $document->getContentByVersion($st['version']);
+			$version = $document->getContentByVersion($st['version']);
 			$owner = $document->getOwner();
 			$moduser = $dms->getUser($st['required']);
 
@@ -66,6 +69,7 @@ class SeedDMS_View_ReviewSummary extends SeedDMS_Bootstrap_Style {
 				if ($printheader){
 					print "<table class=\"table-condensed\">";
 					print "<thead>\n<tr>\n";
+					print "<th></th>\n";
 					print "<th>".getMLText("name")."</th>\n";
 					print "<th>".getMLText("owner")."</th>\n";
 					print "<th>".getMLText("status")."</th>\n";
@@ -77,6 +81,14 @@ class SeedDMS_View_ReviewSummary extends SeedDMS_Bootstrap_Style {
 				}
 			
 				print "<tr>\n";
+				$previewer->createPreview($version);
+				print "<td><a href=\"../op/op.Download.php?documentid=".$st["documentID"]."&version=".$st["version"]."\">";
+				if($previewer->hasPreview($version)) {
+					print "<img class=\"mimeicon\" width=\"".$previewwidth."\"src=\"../op/op.Preview.php?documentid=".$document->getID()."&version=".$version->getVersion()."&width=".$previewwidth."\" title=\"".htmlspecialchars($version->getMimeType())."\">";
+				} else {
+					print "<img class=\"mimeicon\" src=\"".$this->getMimeIcon($version->getFileType())."\" title=\"".htmlspecialchars($version->getMimeType())."\">";
+				}
+				print "</a></td>";
 				print "<td><a href=\"out.DocumentVersionDetail.php?documentid=".$st["documentID"]."&version=".$st["version"]."\">".htmlspecialchars($document->getName())."</a></td>";
 				print "<td>".htmlspecialchars($owner->getFullName())."</td>";
 				print "<td>".getOverallStatusText($st["status"])."</td>";
@@ -102,8 +114,7 @@ class SeedDMS_View_ReviewSummary extends SeedDMS_Bootstrap_Style {
 		$printheader=true;
 		foreach ($reviewStatus["grpstatus"] as $st) {
 			$document = $dms->getDocument($st['documentID']);
-			if($document)
-				$version = $document->getContentByVersion($st['version']);
+			$version = $document->getContentByVersion($st['version']);
 			$owner = $document->getOwner();
 			$modgroup = $dms->getGroup($st['required']);
 
@@ -112,6 +123,7 @@ class SeedDMS_View_ReviewSummary extends SeedDMS_Bootstrap_Style {
 				if ($printheader){
 					print "<table class=\"folderView\">";
 					print "<thead>\n<tr>\n";
+					print "<th></th>\n";
 					print "<th>".getMLText("name")."</th>\n";
 					print "<th>".getMLText("owner")."</th>\n";
 					print "<th>".getMLText("status")."</th>\n";
@@ -123,6 +135,14 @@ class SeedDMS_View_ReviewSummary extends SeedDMS_Bootstrap_Style {
 				}		
 			
 				print "<tr>\n";
+				$previewer->createPreview($version);
+				print "<td><a href=\"../op/op.Download.php?documentid=".$st["documentID"]."&version=".$st["version"]."\">";
+				if($previewer->hasPreview($version)) {
+					print "<img class=\"mimeicon\" width=\"".$previewwidth."\"src=\"../op/op.Preview.php?documentid=".$document->getID()."&version=".$version->getVersion()."&width=".$previewwidth."\" title=\"".htmlspecialchars($version->getMimeType())."\">";
+				} else {
+					print "<img class=\"mimeicon\" src=\"".$this->getMimeIcon($version->getFileType())."\" title=\"".htmlspecialchars($version->getMimeType())."\">";
+				}
+				print "</a></td>";
 				print "<td><a href=\"out.DocumentVersionDetail.php?documentid=".$st["documentID"]."&version=".$st["version"]."\">".htmlspecialchars($document->getName())."</a></td>";
 				print "<td>".htmlspecialchars($owner->getFullName())."</td>";
 				print "<td>".getOverallStatusText($st["status"])."</td>";
