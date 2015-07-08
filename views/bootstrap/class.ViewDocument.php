@@ -871,7 +871,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 				print "<li>".getMLText("uploaded_by")." <a href=\"mailto:".$updatingUser->getEmail()."\">".htmlspecialchars($updatingUser->getFullName())."</a></li>";
 				print "<li>".getLongReadableDate($version->getDate())."</li>";
 				print "</ul>\n";
-				print "<ul class=\"documentDetail\">\n";
+				print "<ul class=\"actions unstyled\">\n";
 				$attributes = $version->getAttributes();
 				if($attributes) {
 					foreach($attributes as $attribute) {
