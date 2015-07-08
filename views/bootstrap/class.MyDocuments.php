@@ -232,7 +232,7 @@ class SeedDMS_View_MyDocuments extends SeedDMS_Bootstrap_Style {
 					
 					foreach ($approvalStatus["indstatus"] as $st) {
 					
-						if ( $st["status"]==0 && isset($docIdx[$st["documentID"]][$st["version"]])) {
+						if ( $st["status"]==0 && isset($docIdx[$st["documentID"]][$st["version"]]) && $docIdx[$st["documentID"]][$st["version"]]['status'] == S_DRAFT_APP) {
 							$document = $dms->getDocument($st["documentID"]);
 						
 							if ($printheader){
@@ -268,7 +268,7 @@ class SeedDMS_View_MyDocuments extends SeedDMS_Bootstrap_Style {
 					}
 					foreach ($approvalStatus["grpstatus"] as $st) {
 					
-						if (!in_array($st["documentID"], $iRev) && $st["status"]==0 && isset($docIdx[$st["documentID"]][$st["version"]]) && $docIdx[$st["documentID"]][$st["version"]]['owner'] != $user->getId()) {
+						if (!in_array($st["documentID"], $iRev) && $st["status"]==0 && isset($docIdx[$st["documentID"]][$st["version"]]) && $docIdx[$st["documentID"]][$st["version"]]['status'] == S_DRAFT_APP && $docIdx[$st["documentID"]][$st["version"]]['owner'] != $user->getId()) {
 							$document = $dms->getDocument($st["documentID"]);
 							if ($printheader){
 								print "<table class=\"table table-condensed\">";
