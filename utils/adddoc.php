@@ -21,6 +21,7 @@ function usage() { /* {{{ */
 	echo "  -s <number>: set sequence for file (used for ordering files within a folder\n";
 	echo "  -n <name>: set name of file\n";
 	echo "  -V <version>: set version of file (defaults to 1).\n";
+	echo "  -u <user>: login name of user\n";
 	echo "  -f <filename>: upload this file\n";
 	echo "  -s <sequence>: set sequence of file\n";
 	echo "  -t <mimetype> set mimetype of file manually. Do not do that unless you know\n";
@@ -28,8 +29,7 @@ function usage() { /* {{{ */
 } /* }}} */
 
 $version = "0.0.1";
-$shortoptions = "F:c:C:d:k:K:s:V:f:n:t:hv";
-$longoptions = array('help', 'version', 'config:');
+$shortoptions = "F:c:C:d:k:K:s:V:u:f:n:t:hv";$longoptions = array('help', 'version', 'config:');
 if(false === ($options = getopt($shortoptions, $longoptions))) {
 	usage();
 	exit(0);
@@ -128,6 +128,11 @@ if(isset($options['n'])) {
 	$name = $options['n'];
 }
 
+$username = '';
+if(isset($options['u'])) {
+	$username = $options['u'];
+}
+
 $filename = '';
 if(isset($options['f'])) {
 	$filename = $options['f'];
@@ -148,11 +153,17 @@ $dms->setEnableConverting($settings->_enableConverting);
 $dms->setViewOnlineFileTypes($settings->_viewOnlineFileTypes);
 
 /* Create a global user object */
-$user = $dms->getUser(1);
+if($username) {
+	if(!($user = $dms->getUserByLogin($username))) {
+		echo "No such user '".$username."'.";
+		exit;
+	}
+} else
+	$user = $dms->getUser(1);
 
 if(is_readable($filename)) {
 	if(filesize($filename)) {
-		$finfo = new finfo(FILEINFO_MIME);
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
 		if(!$mimetype) {
 			$mimetype = $finfo->file($filename);
 		}

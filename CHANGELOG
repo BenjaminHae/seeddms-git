@@ -1,4 +1,78 @@
 --------------------------------------------------------------------------------
+                     Changes in version 4.3.19
+--------------------------------------------------------------------------------
+- end date in search form actually ends at the end of the day
+- allow context sensitive help
+- document chooser shows docs in root folder again
+- fixed regression from 4.3.18. Documents can not be approved if
+  review is still pending
+- polish page for document version details, add review/approval log
+- take out remaining link to old version info file
+- new configuration parameter for overriding the mimetype delivered
+  by the browser (Closes #195)
+- new option -c to force recreation of index (Closes #219)
+- username can be passed to utils/adddoc.php (Closes #214)
+
+--------------------------------------------------------------------------------
+                     Changes in version 4.3.18
+--------------------------------------------------------------------------------
+- utils/indexer.php uses propper converter settings
+- search result can be restricted to folders or documents only
+- documents still in review can still be reviewed even if the workflow
+  mode changes to traditional_only_approval
+- approvals can be submitted, even if document was released/rejected
+- check for duplicate content on document/folder check page
+- open tab on ViewDocument page as specified in URL
+
+--------------------------------------------------------------------------------
+                     Changes in version 4.3.17
+--------------------------------------------------------------------------------
+- when adding a document, notifications can be specified
+- send mail to those users and groups next in the workflow after adding
+  a document or a new version (previously mails were only send when a
+  transition was triggered)
+- clean workflow log when deleting a document version.
+- programms for indexing are actually used (Bug #137)
+- fix take over of reviewers/approvers from previos version
+- fix calculation of quota in user list
+- do not show hidden users in select box of search form
+- notifier can be set when new document is uploaded
+
+--------------------------------------------------------------------------------
+                     Changes in version 4.3.16
+--------------------------------------------------------------------------------
+- propperly take new workflow mode 'traditional without review' into
+  account
+- fix bug in calculating pages for page browser
+- updated italian and german translation
+
+--------------------------------------------------------------------------------
+                     Changes in version 4.3.15
+--------------------------------------------------------------------------------
+- ѕend notification to users if they are required to take action
+  in the next workflow transition
+- escape quotes in workflow graph (javascript threw an error if usernames
+  contains quotes)
+- fix installation issue on MS Windows
+- propperly escape quotes in strings to confirm deletion when clicking
+  on the delete icon in the folder/document list (Bug #189, #204)
+- new language turkish
+- SeedDMS_Core_DMS::getAllUsers() returns now previously missing
+  language and theme of user
+- fix setting a group notification only (Bug #201)
+- old cached preview images will be replaced with a new version
+- reviewers and approvers can be taken over from the previous version
+- disabling clipboard will disable all clipboard functions not just
+  the clipboard area on the ViewFolder page
+- if a user substitution was done, it will be done in the restapi too
+- doSearch() in restapi applies the limit after filtering the hits
+  by access rights. This slows down search, but at least returns a
+  result set in cases where the user has access to very few documents only.
+- workflow mode can be set to traditional without review process
+- add bulgarian translation
+- propperly obey permissions of documents and folders in search result
+
+--------------------------------------------------------------------------------
                      Changes in version 4.3.14
 --------------------------------------------------------------------------------
 - add missing start in transaction in SeedDMS_Core_Folder::remove()

@@ -176,19 +176,21 @@ class SeedDMS_View_DocumentVersionDetail extends SeedDMS_Bootstrap_Style {
 			print "<li><a href=\"../op/op.Download.php?documentid=".$document->getID()."&version=".$version->getVersion()."\" title=\"".htmlspecialchars($version->getMimeType())."\"><i class=\"icon-download\"></i> ".getMLText("download")."</a>";
 			if ($viewonlinefiletypes && in_array(strtolower($version->getFileType()), $viewonlinefiletypes))
 				print "<li><a target=\"_blank\" href=\"../op/op.ViewOnline.php?documentid=".$document->getID()."&version=".$version->getVersion()."\"><i class=\"icon-star\"></i> " . getMLText("view_online") . "</a>";
-		}else print "<li><img class=\"mimeicon\" src=\"images/icons/".$this->getMimeIcon($version->getFileType())."\" title=\"".htmlspecialchars($version->getMimeType())."\"> ";
+			print "</ul>";
+			print "<ul class=\"actions unstyled\">";
+		}
 
 		if (($enableversionmodification && ($document->getAccessMode($user) >= M_READWRITE)) || $user->isAdmin()) {
 			print "<li><a href=\"out.RemoveVersion.php?documentid=".$document->getID()."&version=".$version->getVersion()."\"><i class=\"icon-remove\"></i> ".getMLText("rm_version")."</a></li>";
 		}
 		if (($enableversionmodification && ($document->getAccessMode($user) == M_ALL)) || $user->isAdmin()) {
 			if ( $status["status"]==S_RELEASED || $status["status"]==S_OBSOLETE ){
-				print "<li><a href='../out/out.OverrideContentStatus.php?documentid=".$document->getID()."&version=".$version->getVersion()."'>".getMLText("change_status")."</a></li>";
+				print "<li><a href='../out/out.OverrideContentStatus.php?documentid=".$document->getID()."&version=".$version->getVersion()."'><i class=\"icon-align-justify\"></i>".getMLText("change_status")."</a></li>";
 			}
 		}
 		if (($enableversionmodification && ($document->getAccessMode($user) >= M_READWRITE)) || $user->isAdmin()) {
 			if($status["status"] != S_OBSOLETE)
-				print "<li><a href=\"out.EditComment.php?documentid=".$document->getID()."&version=".$version->getVersion()."\"><i class=\"icon-edit\"></i> ".getMLText("edit_comment")."</a></li>";
+				print "<li><a href=\"out.EditComment.php?documentid=".$document->getID()."&version=".$version->getVersion()."\"><i class=\"icon-comment\"></i> ".getMLText("edit_comment")."</a></li>";
 			if ( $status["status"] == S_DRAFT_REV){
 				print "<li><a href=\"out.EditAttributes.php?documentid=".$document->getID()."&version=".$latestContent->getVersion()."\"><i class=\"icon-edit\"></i> ".getMLText("edit_attributes")."</a></li>";
 		}
@@ -299,6 +301,34 @@ class SeedDMS_View_DocumentVersionDetail extends SeedDMS_Bootstrap_Style {
 		print "</table>\n";
 
 		$this->contentContainerEnd();
+
+		if($user->isAdmin()) {
+?>
+			<div class="row-fluid">
+<?php
+			/* Check for an existing review log, even if the workflowmode
+			 * is set to traditional_only_approval. There may be old documents
+			 * that still have a review log if the workflow mode has been
+			 * changed afterwards.
+			 */
+			if($version->getReviewStatus(10)) {
+?>
+				<div class="span6">
+				<?php $this->printProtocol($version, 'review'); ?>
+				</div>
+<?php
+			}
+			if($version->getApprovalStatus(10)) {
+?>
+				<div class="span6">
+				<?php $this->printProtocol($version, 'approval'); ?>
+				</div>
+<?php
+			}
+?>
+			</div>
+<?php
+		}
 		$this->htmlEndPage();
 	} /* }}} */
 }

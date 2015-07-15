@@ -174,6 +174,11 @@ if( move_uploaded_file( $source_file_path, $target_file_path ) ) {
 
 		$fileType = ".".pathinfo($userfilename, PATHINFO_EXTENSION);
 
+		if($settings->_overrideMimeType) {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$userfiletype = finfo_file($finfo, $userfiletmp);
+		}
+
 		if(isset($_POST["name"]) && $_POST["name"] != "")
 			$name = $_POST["name"];
 		else

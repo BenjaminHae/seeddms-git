@@ -57,8 +57,10 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 		$allCats = $this->params['allcategories'];
 		$allUsers = $this->params['allusers'];
 		$mode = $this->params['mode'];
+		$resultmode = $this->params['resultmode'];
 		$workflowmode = $this->params['workflowmode'];
 		$enablefullsearch = $this->params['enablefullsearch'];
+		$enableclipboard = $this->params['enableclipboard'];
 		$attributes = $this->params['attributes'];
 		$categories = $this->params['categories'];
 		$owner = $this->params['owner'];
@@ -132,11 +134,21 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 <option value="-1"></option>
 <?php
 		foreach ($allUsers as $userObj) {
-			if ($userObj->isGuest())
+			if ($userObj->isGuest() || ($userObj->isHidden() && $userObj->getID() != $user->getID() && !$user->isAdmin()))
 				continue;
-			print "<option value=\"".$userObj->getID()."\" ".(($owner && $userObj->getID() == $owner->getID()) ? "selected" : "").">" . htmlspecialchars($userObj->getLogin()." - ".$userObj->getFullName()) . "\n";
+			print "<option value=\"".$userObj->getID()."\" ".(($owner && $userObj->getID() == $owner->getID()) ? "selected" : "").">" . htmlspecialchars($userObj->getLogin()." - ".$userObj->getFullName()) . "</option>\n";
 		}
 ?>
+</select>
+</td>
+</tr>
+<tr>
+<td><?php printMLText("search_resultmode");?>:</td>
+<td>
+<select name="resultmode">
+<option value="3" <?php echo ($resultmode=='3') ? "selected" : ""; ?>><?php printMLText("search_resultmode_both");?>
+<option value="2"<?php echo ($resultmode=='2') ? "selected" : ""; ?>><?php printMLText("search_mode_folders");?>
+<option value="1"<?php echo ($resultmode=='1') ? "selected" : ""; ?>><?php printMLText("search_mode_documents");?>
 </select>
 </td>
 </tr>
@@ -239,8 +251,10 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 <tr>
 <td><?php printMLText("status");?>:</td>
 <td>
+<?php if($workflowmode == 'traditional' || $workflowmode == 'traditional_only_approval') { ?>
 <?php if($workflowmode == 'traditional') { ?>
 <label class="checkbox" for='pendingReview'><input type="checkbox" id="pendingReview" name="pendingReview" value="1" <?php echo in_array(S_DRAFT_REV, $status) ? "checked" : ""; ?>><?php printOverallStatusText(S_DRAFT_REV);?></label>
+<?php } ?>
 <label class="checkbox" for='pendingApproval'><input type="checkbox" id="pendingApproval" name="pendingApproval" value="1" <?php echo in_array(S_DRAFT_APP, $status) ? "checked" : ""; ?>><?php printOverallStatusText(S_DRAFT_APP);?></label>
 <?php } else { ?>
 <label class="checkbox" for='inWorkflow'><input type="checkbox" id="inWorkflow" name="inWorkflow" value="1" <?php echo in_array(S_IN_WORKFLOW, $status) ? "checked" : ""; ?>><?php printOverallStatusText(S_IN_WORKFLOW);?></label>
@@ -359,13 +373,13 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 <tr>
 <td><?php printMLText("owner");?>:</td>
 <td>
-<select class="chzn-select-deselect" name="ownerid">
+<select class="chzn-select-deselect" name="ownerid" data-placeholder="<?php printMLText('select_users'); ?>" data-no_results_text="<?php printMLText('unknown_owner'); ?>">
 <option value="-1"></option>
 <?php
 			foreach ($allUsers as $userObj) {
-				if ($userObj->isGuest())
+				if ($userObj->isGuest() || ($userObj->isHidden() && $userObj->getID() != $user->getID() && !$user->isAdmin()))
 					continue;
-				print "<option value=\"".$userObj->getID()."\" ".(($owner && $userObj->getID() == $owner->getID()) ? "selected" : "").">" . htmlspecialchars($userObj->getLogin()." - ".$userObj->getFullName()) . "\n";
+				print "<option value=\"".$userObj->getID()."\" ".(($owner && $userObj->getID() == $owner->getID()) ? "selected" : "").">" . htmlspecialchars($userObj->getLogin()." - ".$userObj->getFullName()) . "</option>\n";
 			}
 ?>
 </select>
@@ -510,9 +524,11 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
      <span style="padding: 2px; color: #CCC;"><i class="icon-edit"></i></span>
 <?php
 					}
+					if($enableclipboard) {
 ?>
      <a class="addtoclipboard" rel="<?php echo "D".$document->getID(); ?>" msg="<?php printMLText('splash_added_to_clipboard'); ?>" _href="../op/op.AddToClipboard.php?documentid=<?php echo $document->getID(); ?>&type=document&id=<?php echo $document->getID(); ?>&refferer=<?php echo urlencode($this->params['refferer']); ?>" title="<?php printMLText("add_to_clipboard");?>"><i class="icon-copy"></i></a>
 <?php
+					}
 					print "</div>";
 					print "</td>";
 
@@ -572,9 +588,11 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
      <span style="padding: 2px; color: #CCC;"><i class="icon-edit"></i></span>
 <?php
 					}
+					if($enableclipboard) {
 ?>
      <a class="addtoclipboard" rel="<?php echo "F".$folder->getID(); ?>" msg="<?php printMLText('splash_added_to_clipboard'); ?>" _href="../op/op.AddToClipboard.php?folderid=<?php echo $folder->getID(); ?>&type=folder&id=<?php echo $folder->getID(); ?>&refferer=<?php echo urlencode($this->params['refferer']); ?>" title="<?php printMLText("add_to_clipboard");?>"><i class="icon-copy"></i></a>
 <?php
+					}
 					print "</div>";
 					print "</td>";
 					print "</tr>\n";

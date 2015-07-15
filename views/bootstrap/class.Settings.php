@@ -35,6 +35,7 @@ class SeedDMS_View_Settings extends SeedDMS_Bootstrap_Style {
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$settings = $this->params['settings'];
+		$currenttab = $this->params['currenttab'];
 
 		$this->htmlStartPage(getMLText("admin_tools"));
 		$this->globalNavigation();
@@ -44,8 +45,17 @@ class SeedDMS_View_Settings extends SeedDMS_Bootstrap_Style {
 
 ?>
 
+		<script language="JavaScript">
+		$(document).ready( function() {
+			$('#settingstab li a').click(function(event) {
+				$('#currenttab').val($(event.currentTarget).data('target').substring(1));
+			});
+		}); 
+		</script>
+
   <form action="../op/op.Settings.php" method="post" enctype="multipart/form-data" name="form0" >
   <input type="hidden" name="action" value="saveSettings" />
+	<input type="hidden" id="currenttab" name="currenttab" value="<?php echo (isset($_POST['currenttab']) ? $_POST['currenttab'] : 'site' ); ?>" />
 <?php
 if(!is_writeable($settings->_configFilePath)) {
 	print "<div class=\"alert alert-warning\">";
@@ -55,13 +65,13 @@ if(!is_writeable($settings->_configFilePath)) {
 ?>
 
   <ul class="nav nav-tabs" id="settingstab">
-	  <li class="active"><a data-target="#site" data-toggle="tab"><?php printMLText('settings_Site'); ?></a></li>
-	  <li><a data-target="#system" data-toggle="tab"><?php printMLText('settings_System'); ?></a></li>
-	  <li><a data-target="#advanced" data-toggle="tab"><?php printMLText('settings_Advanced'); ?></a></li>
+		<li class="<?php if(!$currenttab || $currenttab == 'site') echo 'active'; ?>"><a data-target="#site" data-toggle="tab"><?php printMLText('settings_Site'); ?></a></li>
+	  <li class="<?php if($currenttab == 'system') echo 'active'; ?>"><a data-target="#system" data-toggle="tab"><?php printMLText('settings_System'); ?></a></li>
+	  <li class="<?php if($currenttab == 'advanced') echo 'active'; ?>"><a data-target="#advanced" data-toggle="tab"><?php printMLText('settings_Advanced'); ?></a></li>
 	</ul>
 
 	<div class="tab-content">
-	  <div class="tab-pane active" id="site">
+	  <div class="tab-pane <?php if(!$currenttab || $currenttab == 'site') echo 'active'; ?>" id="site">
 <?php		$this->contentContainerStart(); ?>
     <table class="table-condensed">
       <!--
@@ -244,7 +254,7 @@ if(!is_writeable($settings->_configFilePath)) {
 <?php		$this->contentContainerEnd(); ?>
   </div>
 
-	  <div class="tab-pane" id="system">
+	  <div class="tab-pane <?php if($currenttab == 'system') echo 'active'; ?>" id="system">
 <?php		$this->contentContainerStart(); ?>
     <table class="table-condensed">
      <!--
@@ -324,7 +334,7 @@ if(!is_writeable($settings->_configFilePath)) {
         <td><?php printMLText("settings_enablePasswordForgotten");?>:</td>
         <td><input name="enablePasswordForgotten" type="checkbox" <?php if ($settings->_enablePasswordForgotten) echo "checked" ?> /></td>
       </tr>
-      <tr title="<?php printMLText("settings_passwordЅtrength_desc");?>">
+      <tr title="<?php printMLText("settings_passwordStrength_desc");?>">
         <td><?php printMLText("settings_passwordStrength");?>:</td>
         <td><input type="text" name="passwordStrength" value="<?php echo $settings->_passwordStrength; ?>" size="2" /></td>
       </tr>
@@ -414,7 +424,7 @@ if(!is_writeable($settings->_configFilePath)) {
 <?php		$this->contentContainerEnd(); ?>
   </div>
 
-	  <div class="tab-pane" id="advanced">
+	  <div class="tab-pane <?php if($currenttab == 'advanced') echo 'active'; ?>" id="advanced">
 <?php		$this->contentContainerStart(); ?>
     <table class="table-condensed">
       <!--
@@ -460,6 +470,7 @@ if(!is_writeable($settings->_configFilePath)) {
         <td>
 				  <select name="workflowMode">
 					  <option value="traditional" <?php if ($settings->_workflowMode=='traditional') echo "selected" ?>><?php printMLText("settings_workflowMode_valtraditional");?></option>
+					  <option value="traditional_only_approval" <?php if ($settings->_workflowMode=='traditional_only_approval') echo "selected" ?>><?php printMLText("settings_workflowMode_valtraditional_only_approval");?></option>
 						<option value="advanced" <?php if ($settings->_workflowMode=='advanced') echo "selected" ?>><?php printMLText("settings_workflowMode_valadvanced");?></option>
 					</select>
 				</td>
@@ -496,6 +507,10 @@ if(!is_writeable($settings->_configFilePath)) {
         <td><?php printMLText("settings_enableDuplicateDocNames");?>:</td>
         <td><input name="enableDuplicateDocNames" type="checkbox" <?php if ($settings->_enableDuplicateDocNames) echo "checked" ?> /></td>
       </tr>
+      <tr title="<?php printMLText("settings_overrideMimeType_desc");?>">
+        <td><?php printMLText("settings_overrideMimeType");?>:</td>
+        <td><input name="overrideMimeType" type="checkbox" <?php if ($settings->_overrideMimeType) echo "checked" ?> /></td>
+      </tr>
 
       <!--
         -- SETTINGS - ADVANCED - NOTIFICATION
@@ -508,6 +523,10 @@ if(!is_writeable($settings->_configFilePath)) {
       <tr title="<?php printMLText("settings_enableNotificationAppRev_desc");?>">
         <td><?php printMLText("settings_enableNotificationAppRev");?>:</td>
         <td><input name="enableNotificationAppRev" type="checkbox" <?php if ($settings->_enableNotificationAppRev) echo "checked" ?> /></td>
+      </tr>
+      <tr title="<?php printMLText("settings_enableNotificationWorkflow_desc");?>">
+        <td><?php printMLText("settings_enableNotificationWorkflow");?>:</td>
+        <td><input name="enableNotificationWorkflow" type="checkbox" <?php if ($settings->_enableNotificationWorkflow) echo "checked" ?> /></td>
       </tr>
 
       <!--
@@ -545,7 +564,7 @@ if(!is_writeable($settings->_configFilePath)) {
 
       <tr ><td><b> <?php printMLText("index_converters");?></b></td> </tr>
 <?php
-	foreach($settings->_converters as $mimetype=>$cmd) {
+	foreach($settings->_converters['fulltext'] as $mimetype=>$cmd) {
 ?>
       <tr title="<?php echo $mimetype;?>">
         <td><?php echo $mimetype;?>:</td>
@@ -554,6 +573,10 @@ if(!is_writeable($settings->_configFilePath)) {
 <?php
 	}
 ?>
+      <tr title="">
+        <td><input type="text" name="converters_newmimetype" value="" />:</td>
+        <td><input type="text" name="converters_newcmd" value="" /></td>
+      </tr>
     </table>
 <?php		$this->contentContainerEnd(); ?>
   </div>

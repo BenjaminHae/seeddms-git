@@ -108,7 +108,7 @@ if ($folder->remove()) {
 	UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("error_occured"));
 }
 
-add_log_line();
+add_log_line("?folderid=".$folderid."&name=".$foldername);
 
 header("Location:../out/out.ViewFolder.php?folderid=".$parent->getID()."&showtree=".$_POST["showtree"]);
 

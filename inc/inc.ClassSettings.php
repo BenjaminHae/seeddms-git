@@ -121,8 +121,15 @@ class Settings { /* {{{ */
 	var $_enableVersionModification = false;
 	// enable/disable duplicate names of a document in a folder
 	var $_enableDuplicateDocNames = true;
+	// override mimetype set by browser when uploading a file
+	var $_overrideMimeType = false;
 	// enable/disable notification when added as a reviewer/approver
 	var $_enableNotificationAppRev = true;
+	// enable/disable notification of users/group who need to take action for
+	// next transition. This is not like enableNotificationAppRev where a
+	// notification is added to the document. If this is turned on, the
+	// notification will be send in any case.
+	var $_enableNotificationWorkflow = false;
 	// preset expiration date
 	var $_presetExpirationDate = "";
 	// the name of the versioning info file created by the backup tool
@@ -478,6 +485,7 @@ class Settings { /* {{{ */
 		$this->_enableVersionDeletion = Settings::boolval($tab["enableVersionDeletion"]);
 		$this->_enableVersionModification = Settings::boolval($tab["enableVersionModification"]);
 		$this->_enableDuplicateDocNames = Settings::boolval($tab["enableDuplicateDocNames"]);
+		$this->_overrideMimeType = Settings::boolval($tab["overrideMimeType"]);
 
 		// XML Path: /configuration/advanced/notification
 		$node = $xml->xpath('/configuration/advanced/notification');
@@ -485,6 +493,7 @@ class Settings { /* {{{ */
 			$tab = $node[0]->attributes();
 			$this->_enableNotificationAppRev = Settings::boolval($tab["enableNotificationAppRev"]);
 			$this->_enableOwnerNotification = Settings::boolval($tab["enableOwnerNotification"]);
+			$this->_enableNotificationWorkflow = Settings::boolval($tab["enableNotificationWorkflow"]);
 		}
 
 		// XML Path: /configuration/advanced/server
@@ -502,11 +511,16 @@ class Settings { /* {{{ */
 			$this->_maxExecutionTime = ini_get("max_execution_time");
 
 		// XML Path: /configuration/system/advanced/converters
-		$converters = $xml->xpath('/configuration/advanced/converters/converter');
+		$converters = $xml->xpath('/configuration/advanced/converters[@target="fulltext"]/converter');
+		if(!$converters)
+			$converters = $xml->xpath('/configuration/advanced/converters/converter');
 		$this->_converters = array();
 		foreach($converters as $converter) {
 			$tab = $converter->attributes();
-			$this->_converters[trim(strval($tab['mimeType']))] = trim(strval($converter));
+			if(!trim(strval($tab['target'])))
+				$this->_converters['fulltext'][trim(strval($tab['mimeType']))] = trim(strval($converter));
+			else
+				$this->_converters[trim(strval($tab['target']))][trim(strval($tab['mimeType']))] = trim(strval($converter));
 		}
 		return true;
 	} /* }}} */
@@ -730,11 +744,13 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "enableVersionDeletion", $this->_enableVersionDeletion);
     $this->setXMLAttributValue($node, "enableVersionModification", $this->_enableVersionModification);
     $this->setXMLAttributValue($node, "enableDuplicateDocNames", $this->_enableDuplicateDocNames);
+    $this->setXMLAttributValue($node, "overrideMimeType", $this->_overrideMimeType);
 
     // XML Path: /configuration/advanced/notification
     $node = $this->getXMLNode($xml, '/configuration/advanced', 'notification');
     $this->setXMLAttributValue($node, "enableNotificationAppRev", $this->_enableNotificationAppRev);
     $this->setXMLAttributValue($node, "enableOwnerNotification", $this->_enableOwnerNotification);
+    $this->setXMLAttributValue($node, "enableNotificationWorkflow", $this->_enableNotificationWorkflow);
 
     // XML Path: /configuration/advanced/server
     $node = $this->getXMLNode($xml, '/configuration/advanced', 'server');
@@ -747,7 +763,7 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "maxExecutionTime", $this->_maxExecutionTime);
 
     // XML Path: /configuration/advanced/converters
-    foreach($this->_converters as $mimeType => $cmd)
+    foreach($this->_converters['fulltext'] as $mimeType => $cmd)
     {
       // search XML node
       $node = $xml->xpath('/configuration/advanced/converters/converter[@mimeType="'. $mimeType .'"]');
@@ -761,7 +777,7 @@ class Settings { /* {{{ */
         else
         {
           $nodeParent = $xml->xpath('/configuration/advanced/converters');
-          $node = $nodeParent[0]->addChild("converters");
+          $node = $nodeParent[0]->addChild("converter");
         }
 
 				$node[0] = $cmd;
@@ -801,7 +817,7 @@ class Settings { /* {{{ */
 	 */
 	function getConfigDir() { /* {{{ */
 		$_tmp = dirname($_SERVER['SCRIPT_FILENAME']);
-		$_arr = preg_split('/\//', $_tmp);
+		$_arr = preg_split('/\//', rtrim(str_replace('\\', '/', $_tmp)));
 		$configDir = null;
 		if(file_exists(implode('/', $_arr)."/conf/"))
 			$configDir = implode('/', $_arr)."/conf/";

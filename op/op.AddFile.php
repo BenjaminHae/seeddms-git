@@ -59,6 +59,11 @@ $userfilename = $_FILES["userfile"]["name"];
 
 $fileType = ".".pathinfo($userfilename, PATHINFO_EXTENSION);
 
+if($settings->_overrideMimeType) {
+	$finfo = finfo_open(FILEINFO_MIME_TYPE);
+	$userfiletype = finfo_file($finfo, $userfiletmp);
+}
+
 $res = $document->addDocumentFile($name, $comment, $user, $userfiletmp, 
                                   basename($userfilename),$fileType, $userfiletype );
                                 
@@ -106,7 +111,7 @@ if (is_bool($res) && !$res) {
 
 add_log_line("?name=".$name."&documentid=".$documentid);
 
-header("Location:../out/out.ViewDocument.php?documentid=".$documentid);
+header("Location:../out/out.ViewDocument.php?documentid=".$documentid."&currenttab=attachments");
 
 
 ?>

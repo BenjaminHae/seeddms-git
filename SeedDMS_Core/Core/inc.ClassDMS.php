@@ -175,6 +175,25 @@ class SeedDMS_Core_DMS {
 	} /* }}} */
 
 	/**
+	 * Checks if a list of objects contains a single object 
+	 *
+	 * The regular php check done by '==' compares all attributes of
+	 * two objects, which isn't required. The method will first check
+	 * if the objects are instances of the same class.
+	 *
+	 * @param object $object1 object to look for (needle)
+	 * @param array $list list of objects (haystack)
+	 * @return boolean true if object was found, otherwise false
+	 */
+	static function inList($object, $list) { /* {{{ */
+		foreach($list as $item) {
+			if(get_class($item) == get_class($object) && $item->getID() == $object->getID())
+				return true;
+		}
+		return false;
+	} /* }}} */
+
+	/**
 	 * Filter objects out which are not accessible in a given mode by a user.
 	 *
 	 * @param array $objArr list of objects (either documents or folders)
@@ -250,7 +269,7 @@ class SeedDMS_Core_DMS {
 		$this->convertFileTypes = array();
 		$this->version = '@package_version@';
 		if($this->version[0] == '@')
-			$this->version = '4.3.14';
+			$this->version = '4.3.19';
 	} /* }}} */
 
 	/**
@@ -1228,7 +1247,7 @@ class SeedDMS_Core_DMS {
 		$users = array();
 
 		for ($i = 0; $i < count($resArr); $i++) {
-			$user = new SeedDMS_Core_User($resArr[$i]["id"], $resArr[$i]["login"], $resArr[$i]["pwd"], $resArr[$i]["fullName"], $resArr[$i]["email"], (isset($resArr["language"])?$resArr["language"]:NULL), (isset($resArr["theme"])?$resArr["theme"]:NULL), $resArr[$i]["comment"], $resArr[$i]["role"], $resArr[$i]["hidden"], $resArr[$i]["disabled"], $resArr[$i]["pwdExpiration"], $resArr[$i]["loginfailures"], $resArr[$i]["quota"]);
+			$user = new SeedDMS_Core_User($resArr[$i]["id"], $resArr[$i]["login"], $resArr[$i]["pwd"], $resArr[$i]["fullName"], $resArr[$i]["email"], (isset($resArr[$i]["language"])?$resArr[$i]["language"]:NULL), (isset($resArr[$i]["theme"])?$resArr[$i]["theme"]:NULL), $resArr[$i]["comment"], $resArr[$i]["role"], $resArr[$i]["hidden"], $resArr[$i]["disabled"], $resArr[$i]["pwdExpiration"], $resArr[$i]["loginfailures"], $resArr[$i]["quota"]);
 			$user->setDMS($this);
 			$users[$i] = $user;
 		}
@@ -2094,6 +2113,34 @@ class SeedDMS_Core_DMS {
 			$document->setDMS($this);
 			$version = new SeedDMS_Core_DocumentContent($row['id'], $document, $row['version'], $row['comment'], $row['date'], $row['createdBy'], $row['dir'], $row['orgFileName'], $row['fileType'], $row['mimeType'], $row['fileSize'], $row['checksum']);
 			$versions[] = $version;
+		}
+		return $versions;
+		
+	} /* }}} */
+
+	/**
+	 * Returns document content which is duplicated
+	 *
+	 * This method is for finding document content which is available twice
+	 * in the database. The checksum of a document content was introduced
+	 * in version 4.0.0 of SeedDMS for finding duplicates.
+	 */
+	function getDuplicateDocumentContent() { /* {{{ */
+		$queryStr = "SELECT a.*, b.id as dupid FROM tblDocumentContent a LEFT JOIN tblDocumentContent b ON a.checksum=b.checksum where a.id!=b.id ORDER by a.id";
+		$resArr = $this->db->getResultArray($queryStr);
+		if (!$resArr)
+			return false;
+
+		$versions = array();
+		foreach($resArr as $row) {
+			$document = new SeedDMS_Core_Document($row['document'], '', '', '', '', '', '', '', '', '', '', '');
+			$document->setDMS($this);
+			$version = new SeedDMS_Core_DocumentContent($row['id'], $document, $row['version'], $row['comment'], $row['date'], $row['createdBy'], $row['dir'], $row['orgFileName'], $row['fileType'], $row['mimeType'], $row['fileSize'], $row['checksum']);
+			if(!isset($versions[$row['dupid']])) {
+				$versions[$row['id']]['content'] = $version;
+				$versions[$row['id']]['duplicates'] = array();
+			} else
+				$versions[$row['dupid']]['duplicates'][] = $version;
 		}
 		return $versions;
 		

@@ -51,9 +51,9 @@ if($document->isLocked()) {
 	}
 }
 
-$name =     $_POST["name"];
-$comment =  $_POST["comment"];
-$keywords = $_POST["keywords"];
+$name =     isset($_POST['name']) ? $_POST["name"] : "";
+$comment =  isset($_POST['comment']) ? $_POST["comment"] : "";
+$keywords = isset($_POST["keywords"]) ? $_POST["keywords"] : "";
 if(isset($_POST['categoryidform1'])) {
 	$categories = explode(',', preg_replace('/[^0-9,]+/', '', $_POST["categoryidform1"]));
 } elseif(isset($_POST["categories"])) { 
@@ -61,7 +61,7 @@ if(isset($_POST['categoryidform1'])) {
 } else {
 	$categories = array();
 }
-$sequence = $_POST["sequence"];
+$sequence = isset($_POST["sequence"]) ? $_POST["sequence"] : "keep";
 $sequence = str_replace(',', '.', $_POST["sequence"]);
 if (!is_numeric($sequence)) {
 	$sequence="keep";
@@ -106,13 +106,16 @@ if (($oldname = $document->getName()) != $name) {
 			$params['url'] = "http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'].$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
 			$params['sitename'] = $settings->_siteName;
 			$params['http_root'] = $settings->_httpRoot;
+
+			// if user is not owner send notification to owner
+			if ($user->getID() != $document->getOwner()->getID() &&
+				!SeedDMS_Core_DMS::inList($document->getOwner(), $notifyList['users'])) {
+				$notifyList['users'][] = $document->getOwner();
+			}
 			$notifier->toList($user, $notifyList["users"], $subject, $message, $params);
 			foreach ($notifyList["groups"] as $grp) {
 				$notifier->toGroup($user, $grp, $subject, $message, $params);
 			}
-			// if user is not owner send notification to owner
-			if ($user->getID() != $document->getOwner()->getID()) 
-				$notifier->toIndividual($user, $document->getOwner(), $subject, $message, $params);
 		}
 
 	}
@@ -157,14 +160,16 @@ if (($oldcomment = $document->getComment()) != $comment) {
 			$params['url'] = "http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'].$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
 			$params['sitename'] = $settings->_siteName;
 			$params['http_root'] = $settings->_httpRoot;
+
+			// if user is not owner send notification to owner
+			if ($user->getID() != $document->getOwner()->getID() &&
+				!SeedDMS_Core_DMS::inList($document->getOwner(), $notifyList['users'])) {
+				$notifyList['users'][] = $document->getOwner();
+			}
 			$notifier->toList($user, $notifyList["users"], $subject, $message, $params);
 			foreach ($notifyList["groups"] as $grp) {
 				$notifier->toGroup($user, $grp, $subject, $message, $params);
 			}
-			// if user is not owner send notification to owner
-			if ($user->getID() != $document->getOwner()->getID()) 
-				$notifier->toIndividual($user, $document->getOwner(), $subject, $message, $params);
-
 		}
 	}
 	else {
@@ -173,7 +178,7 @@ if (($oldcomment = $document->getComment()) != $comment) {
 }
 
 $expires = false;
-if ($_POST["expires"] != "false") {
+if (isset($_POST["expires"]) && $_POST["expires"] != "false") {
 	if($_POST["expdate"]) {
 		$tmp = explode('-', $_POST["expdate"]);
 		$expires = mktime(0,0,0, $tmp[1], $tmp[0], $tmp[2]);
@@ -182,7 +187,7 @@ if ($_POST["expires"] != "false") {
 	}
 }
 
-//if ($expires) {
+if ($expires != $document->getExpires()) {
 	if($document->setExpires($expires)) {
 		if($notifier) {
 			$notifyList = $document->getNotifyList();
@@ -197,6 +202,12 @@ if ($_POST["expires"] != "false") {
 			$params['url'] = "http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'].$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
 			$params['sitename'] = $settings->_siteName;
 			$params['http_root'] = $settings->_httpRoot;
+
+			// if user is not owner send notification to owner
+			if ($user->getID() != $document->getOwner()->getID() &&
+				!SeedDMS_Core_DMS::inList($document->getOwner(), $notifyList['users'])) {
+				$notifyList['users'][] = $document->getOwner();
+			}
 			$notifier->toList($user, $notifyList["users"], $subject, $message, $params);
 			foreach ($notifyList["groups"] as $grp) {
 				$notifier->toGroup($user, $grp, $subject, $message, $params);
@@ -205,7 +216,7 @@ if ($_POST["expires"] != "false") {
 	} else {
 		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("error_occured"));
 	}
-//}
+}
 
 if (($oldkeywords = $document->getKeywords()) != $keywords) {
 	if($document->setKeywords($keywords)) {

@@ -24,6 +24,7 @@ include("../inc/inc.ClassEmail.php");
 include("../inc/inc.DBInit.php");
 include("../inc/inc.Language.php");
 include("../inc/inc.ClassUI.php");
+include("../inc/inc.ClassAccessOperation.php");
 include("../inc/inc.Authentication.php");
 
 /* Check if the form data comes for a trusted request */
@@ -63,8 +64,11 @@ if ($latestContent->getVersion()!=$version) {
 	UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("invalid_version"));
 }
 
-// verify if document has expired
-if ($document->hasExpired()){
+/* Create object for checking access to certain operations */
+$accessop = new SeedDMS_AccessOperation($document, $user, $settings);
+
+// verify if document may be reviewed
+if (!$accessop->mayReview()){
 	UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("access_denied"));
 }
 
@@ -73,10 +77,20 @@ if (!isset($_POST["reviewStatus"]) || !is_numeric($_POST["reviewStatus"]) ||
 	UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("invalid_review_status"));
 }
 
+if($_FILES["reviewfile"]["tmp_name"]) {
+	if (is_uploaded_file($_FILES["reviewfile"]["tmp_name"]) && $_FILES['reviewfile']['error']!=0){
+		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("uploading_failed"));
+	}
+}
+
 if ($_POST["reviewType"] == "ind") {
 
 	$comment = $_POST["comment"];
-	$reviewLogID = $latestContent->setReviewByInd($user, $user, $_POST["reviewStatus"], $comment);
+	if($_FILES["reviewfile"]["tmp_name"])
+		$file = $_FILES["reviewfile"]["tmp_name"];
+	else
+		$file = '';
+	$reviewLogID = $latestContent->setReviewByInd($user, $user, $_POST["reviewStatus"], $comment, $file);
 	if(0 > $reviewLogID) {
 		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("review_update_failed"));
 	}
@@ -128,7 +142,11 @@ if ($_POST["reviewType"] == "ind") {
 else if ($_POST["reviewType"] == "grp") {
 	$comment = $_POST["comment"];
 	$group = $dms->getGroup($_POST['reviewGroup']);
-	$reviewLogID = $latestContent->setReviewByGrp($group, $user, $_POST["reviewStatus"], $comment);
+	if($_FILES["reviewfile"]["tmp_name"])
+		$file = $_FILES["reviewfile"]["tmp_name"];
+	else
+		$file = '';
+	$reviewLogID = $latestContent->setReviewByGrp($group, $user, $_POST["reviewStatus"], $comment, $file);
 	if(0 > $reviewLogID) {
 		UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("review_update_failed"));
 	}
@@ -344,6 +362,6 @@ if ($_POST["reviewStatus"]==-1){
 	}
 }
 
-header("Location:../out/out.ViewDocument.php?documentid=".$documentid);
+header("Location:../out/out.ViewDocument.php?documentid=".$documentid."&currenttab=revapp");
 
 ?>

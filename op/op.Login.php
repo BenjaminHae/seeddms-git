@@ -58,11 +58,15 @@ if(isset($_POST['pwd'])) {
 	}
 }
 
-$guestUser = $dms->getUser($settings->_guestID);
-if ((!isset($pwd) || strlen($pwd)==0) && ($login != $guestUser->getLogin()))  {
-	_printMessage(getMLText("login_error_title"),	getMLText("login_error_text")."\n");
-	exit;
+if($settings->_enableGuestLogin && (int) $settings->_guestID) {
+	$guestUser = $dms->getUser((int) $settings->_guestID);
+	if ((!isset($pwd) || strlen($pwd)==0) && ($login != $guestUser->getLogin()))  {
+		_printMessage(getMLText("login_error_title"),	getMLText("login_error_text")."\n");
+		exit;
+	}
 }
+
+$user = false;
 
 //
 // LDAP Sign In
@@ -72,8 +76,7 @@ if ((!isset($pwd) || strlen($pwd)==0) && ($login != $guestUser->getLogin()))  {
  * if authentication against ldap succeeds.
  * _ldapHost will only have a value if the ldap connector has been enabled
  */
-$user = false;
-if (isset($settings->_ldapHost) && strlen($settings->_ldapHost)>0) {
+if (!$user && isset($settings->_ldapHost) && strlen($settings->_ldapHost)>0) {
 	if (isset($settings->_ldapPort) && is_int($settings->_ldapPort)) {
 		$ds = ldap_connect($settings->_ldapHost, $settings->_ldapPort);
 	} else {
@@ -296,7 +299,7 @@ if (isset($referuri) && strlen($referuri)>0) {
 	header("Location: http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'] . $referuri);
 }
 else {
-	header("Location: ../".(isset($settings->_siteDefaultPage) && strlen($settings->_siteDefaultPage)>0 ? $settings->_siteDefaultPage : "out/out.ViewFolder.php?folderid=".$settings->_rootFolderID));
+	header("Location: ".$settings->_httpRoot.(isset($settings->_siteDefaultPage) && strlen($settings->_siteDefaultPage)>0 ? $settings->_siteDefaultPage : "out/out.ViewFolder.php?folderid=".$settings->_rootFolderID));
 }
 
 //_printMessage(getMLText("login_ok"),

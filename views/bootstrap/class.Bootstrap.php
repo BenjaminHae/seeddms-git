@@ -48,12 +48,12 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 		echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/bootstrap/css/bootstrap.css" rel="stylesheet">'."\n";
-		echo '<link href="../styles/'.$this->theme.'/application.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/font-awesome/css/font-awesome.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/datepicker/css/datepicker.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/chosen/css/chosen.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/jqtree/jqtree.css" rel="stylesheet">'."\n";
+		echo '<link href="../styles/'.$this->theme.'/application.css" rel="stylesheet">'."\n";
 //		echo '<link href="../styles/'.$this->theme.'/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">'."\n";
 
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/jquery/jquery.min.js"></script>'."\n";
@@ -285,17 +285,19 @@ $(document).ready(function () {
 			echo "    </li>\n";
 			echo "   </ul>\n";
 
-			echo "   <div id=\"menu-clipboard\">";
-			echo $this->menuClipboard($this->params['session']->getClipboard());
-			echo "   </div>";
-
+			if($this->params['enableclipboard']) {
+				echo "   <div id=\"menu-clipboard\">";
+				echo $this->menuClipboard($this->params['session']->getClipboard());
+				echo "   </div>";
+			}
 
 			echo "   <ul class=\"nav\">\n";
 	//		echo "    <li id=\"first\"><a href=\"../out/out.ViewFolder.php?folderid=".$this->params['rootfolderid']."\">".getMLText("content")."</a></li>\n";
 	//		echo "    <li><a href=\"../out/out.SearchForm.php?folderid=".$this->params['rootfolderid']."\">".getMLText("search")."</a></li>\n";
 			if ($this->params['enablecalendar']) echo "    <li><a href=\"../out/out.Calendar.php?mode=".$this->params['calendardefaultview']."\">".getMLText("calendar")."</a></li>\n";
 			if ($this->params['user']->isAdmin()) echo "    <li><a href=\"../out/out.AdminTools.php\">".getMLText("admin_tools")."</a></li>\n";
-			echo "    <li><a href=\"../out/out.Help.php\">".getMLText("help")."</a></li>\n";
+			$tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
+			echo "    <li><a href=\"../out/out.Help.php?context=".$tmp[1]."\">".getMLText("help")."</a></li>\n";
 			echo "   </ul>\n";
 			echo "     <form action=\"../op/op.Search.php\" class=\"form-inline navbar-search pull-left\" autocomplete=\"off\">";
 			if ($folder!=null && is_object($folder) && !strcasecmp(get_class($folder), "SeedDMS_Core_Folder")) {
@@ -416,7 +418,7 @@ $(document).ready(function () {
 			}
 			echo "<li><a href=\"../out/out.FolderNotify.php?folderid=". $folderID ."&showtree=".showtree()."\">".getMLText("edit_existing_notify")."</a></li>\n";
 		}
-		if ($this->params['user']->isAdmin()) {
+		if ($this->params['user']->isAdmin() && $this->params['enablefullsearch']) {
 			echo "<li><a href=\"../out/out.Indexer.php?folderid=". $folderID ."\">".getMLText("index_folder")."</a></li>\n";
 		}
 		echo "</ul>\n";
@@ -493,8 +495,9 @@ $(document).ready(function () {
 
 		echo "<li><a href=\"../out/out.MyDocuments.php?inProcess=1\">".getMLText("documents_in_process")."</a></li>\n";
 		echo "<li><a href=\"../out/out.MyDocuments.php\">".getMLText("all_documents")."</a></li>\n";
-		if($this->params['workflowmode'] == 'traditional') {
-			echo "<li><a href=\"../out/out.ReviewSummary.php\">".getMLText("review_summary")."</a></li>\n";
+		if($this->params['workflowmode'] == 'traditional' || $this->params['workflowmode'] == 'traditional_only_approval') {
+			if($this->params['workflowmode'] == 'traditional')
+				echo "<li><a href=\"../out/out.ReviewSummary.php\">".getMLText("review_summary")."</a></li>\n";
 			echo "<li><a href=\"../out/out.ApprovalSummary.php\">".getMLText("approval_summary")."</a></li>\n";
 		} else {
 			echo "<li><a href=\"../out/out.WorkflowSummary.php\">".getMLText("workflow_summary")."</a></li>\n";
@@ -526,7 +529,7 @@ $(document).ready(function () {
 		echo "      <li><a href=\"../out/out.DefaultKeywords.php\">".getMLText("global_default_keywords")."</a></li>\n";
 		echo "     <li><a href=\"../out/out.Categories.php\">".getMLText("global_document_categories")."</a></li>\n";
 		echo "     <li><a href=\"../out/out.AttributeMgr.php\">".getMLText("global_attributedefinitions")."</a></li>\n";
-		if($this->params['workflowmode'] != 'traditional') {
+		if($this->params['workflowmode'] == 'advanced') {
 			echo "     <li><a href=\"../out/out.WorkflowMgr.php\">".getMLText("global_workflows")."</a></li>\n";
 			echo "     <li><a href=\"../out/out.WorkflowStatesMgr.php\">".getMLText("global_workflow_states")."</a></li>\n";
 			echo "     <li><a href=\"../out/out.WorkflowActionsMgr.php\">".getMLText("global_workflow_actions")."</a></li>\n";
@@ -677,10 +680,8 @@ $(document).ready(function () {
 		return;
 	} /* }}} */
 
-	function contentContainerStart($type='info') { /* {{{ */
-
-		//echo "<div class=\"alert alert-".$type."\">\n";
-		echo "<div class=\"well\">\n";
+	function contentContainerStart($class='') { /* {{{ */
+		echo "<div class=\"well".($class ? " ".$class : "")."\">\n";
 		return;
 	} /* }}} */
 
@@ -869,7 +870,7 @@ $(document).ready(function () {
 		print "<input type=\"hidden\" id=\"docid".$formName."\" name=\"docid\" value=\"\">";
 		print "<div class=\"input-append\">\n";
 		print "<input type=\"text\" id=\"choosedocsearch\" data-target=\"docid".$formName."\" data-provide=\"typeahead\" name=\"docname".$formName."\" placeholder=\"".getMLText('type_to_search')."\" autocomplete=\"off\" />";
-		print "<a data-target=\"#docChooser".$formName."\" href=\"out.DocumentChooser.php?form=".$formName."&folderid=".$this->params['rootfolderid']."\" role=\"button\" class=\"btn\" data-toggle=\"modal\">".getMLText("document")."…</a>\n";
+		print "<a data-target=\"#docChooser".$formName."\" href=\"../out/out.DocumentChooser.php?form=".$formName."&folderid=".$this->params['rootfolderid']."\" role=\"button\" class=\"btn\" data-toggle=\"modal\">".getMLText("document")."…</a>\n";
 		print "</div>\n";
 ?>
 <div class="modal hide" id="docChooser<?php echo $formName ?>" tabindex="-1" role="dialog" aria-labelledby="docChooserLabel" aria-hidden="true">
@@ -1174,6 +1175,14 @@ function clearFilename<?php print $formName ?>() {
 				$node['children'] = array();
 			} else {
 				$node['children'] = jqtree($path, $folder, $this->params['user'], $accessmode, $showdocs, $expandtree, $orderby);
+				if($showdocs) {
+					$documents = $folder->getDocuments($orderby);
+					$documents = SeedDMS_Core_DMS::filterAccess($documents, $this->params['user'], $accessmode);
+					foreach($documents as $document) {
+						$node2 = array('label'=>$document->getName(), 'id'=>$document->getID(), 'load_on_demand'=>false, 'is_folder'=>false);
+						$node['children'][] = $node2;
+					}
+				}
 			}
 			$tree[] = $node;
 			
@@ -1352,7 +1361,7 @@ $('#delete-document-btn-".$docid."').popover({
 	title: '".getMLText("rm_document")."',
 	placement: 'left',
 	html: true,
-	content: \"<div>".getMLText("confirm_rm_document", array ("documentname" => htmlspecialchars($document->getName(), ENT_QUOTES)))."</div><div><button class='btn btn-danger removedocument' style='float: right; margin:10px 0px;' rel='".$docid."' msg='".getMLText($msg)."' formtoken='".createFormKey('removedocument')."' id='confirm-delete-document-btn-".$docid."'><i class='icon-remove'></i> ".getMLText("rm_document")."</button> <button type='button' class='btn' style='float: right; margin:10px 10px;' onclick='$(&quot;#delete-document-btn-".$docid."&quot;).popover(&quot;hide&quot;);'>".getMLText('cancel')."</button></div>\"});
+	content: \"<div>".htmlspecialchars(getMLText("confirm_rm_document", array ("documentname" => $document->getName())), ENT_QUOTES)."</div><div><button class='btn btn-danger removedocument' style='float: right; margin:10px 0px;' rel='".$docid."' msg='".getMLText($msg)."' formtoken='".createFormKey('removedocument')."' id='confirm-delete-document-btn-".$docid."'><i class='icon-remove'></i> ".getMLText("rm_document")."</button> <button type='button' class='btn' style='float: right; margin:10px 10px;' onclick='$(&quot;#delete-document-btn-".$docid."&quot;).popover(&quot;hide&quot;);'>".getMLText('cancel')."</button></div>\"});
 ");
 		if($return)
 			return $content;
@@ -1381,7 +1390,7 @@ $('#delete-folder-btn-".$folderid."').popover({
 	title: '".getMLText("rm_folder")."',
 	placement: 'left',
 	html: true,
-	content: \"<div>".getMLText("confirm_rm_folder", array ("foldername" => htmlspecialchars($folder->getName(), ENT_QUOTES)))."</div><div><button class='btn btn-danger removefolder' style='float: right; margin:10px 0px;' rel='".$folderid."' msg='".getMLText($msg)."' formtoken='".createFormKey('removefolder')."' id='confirm-delete-folder-btn-".$folderid."'><i class='icon-remove'></i> ".getMLText("rm_folder")."</button> <button type='button' class='btn' style='float: right; margin:10px 10px;' onclick='$(&quot;#delete-folder-btn-".$folderid."&quot;).popover(&quot;hide&quot;);'>".getMLText('cancel')."</button></div>\"});
+	content: \"<div>".htmlspecialchars(getMLText("confirm_rm_folder", array ("foldername" => $folder->getName())), ENT_QUOTES)."</div><div><button class='btn btn-danger removefolder' style='float: right; margin:10px 0px;' rel='".$folderid."' msg='".getMLText($msg)."' formtoken='".createFormKey('removefolder')."' id='confirm-delete-folder-btn-".$folderid."'><i class='icon-remove'></i> ".getMLText("rm_folder")."</button> <button type='button' class='btn' style='float: right; margin:10px 10px;' onclick='$(&quot;#delete-folder-btn-".$folderid."&quot;).popover(&quot;hide&quot;);'>".getMLText('cancel')."</button></div>\"});
 ");
 		if($return)
 			return $content;
@@ -1423,6 +1432,7 @@ $('#delete-folder-btn-".$folderid."').popover({
 		$showtree = $this->params['showtree'];
 		$workflowmode = $this->params['workflowmode'];
 		$previewwidth = $this->params['previewWidthList'];
+		$enableClipboard = $this->params['enableclipboard'];
 
 		$content = '';
 
@@ -1503,7 +1513,9 @@ $('#delete-folder-btn-".$folderid."').popover({
 			if($document->getAccessMode($user) >= M_READWRITE) {
 				$content .= $this->printLockButton($document, 'splash_document_locked', 'splash_document_unlocked', true);
 			}
-			$content .= '<a class="addtoclipboard" rel="D'.$docID.'" msg="'.getMLText('splash_added_to_clipboard').'" title="'.getMLText("add_to_clipboard").'"><i class="icon-copy"></i></a>';
+			if($enableClipboard) {
+				$content .= '<a class="addtoclipboard" rel="D'.$docID.'" msg="'.getMLText('splash_added_to_clipboard').'" title="'.getMLText("add_to_clipboard").'"><i class="icon-copy"></i></a>';
+			}
 			$content .= "</div>";
 			$content .= "</td>";
 		}
@@ -1519,6 +1531,7 @@ $('#delete-folder-btn-".$folderid."').popover({
 		$showtree = $this->params['showtree'];
 		$enableRecursiveCount = $this->params['enableRecursiveCount'];
 		$maxRecursiveCount = $this->params['maxRecursiveCount'];
+		$enableClipboard = $this->params['enableclipboard'];
 
 		$owner = $subFolder->getOwner();
 		$comment = $subFolder->getComment();
@@ -1572,7 +1585,9 @@ $('#delete-folder-btn-".$folderid."').popover({
 		} else {
 			$content .= '<span style="padding: 2px; color: #CCC;"><i class="icon-edit"></i></span>';
 		}
-		$content .= '<a class="addtoclipboard" rel="F'.$subFolder->getID().'" msg="'.getMLText('splash_added_to_clipboard').'" title="'.getMLText("add_to_clipboard").'"><i class="icon-copy"></i></a>';
+		if($enableClipboard) {
+			$content .= '<a class="addtoclipboard" rel="F'.$subFolder->getID().'" msg="'.getMLText('splash_added_to_clipboard').'" title="'.getMLText("add_to_clipboard").'"><i class="icon-copy"></i></a>';
+		}
 		$content .= "</div>";
 		$content .= "</td>";
 		$content .= "</tr>\n";
@@ -1879,6 +1894,95 @@ mayscript>
 </form>
 <p></p>
 <p id="fileList"></p>
+<?php
+	} /* }}} */
+
+	/**
+	 * Output a protocol
+	 *
+	 * @param object $attribute attribute
+	 */
+	protected function printProtocol($latestContent, $type="") { /* {{{ */
+		$dms = $this->params['dms'];
+?>
+		<legend><?php printMLText($type.'_log'); ?></legend>
+		<table class="table condensed">
+			<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('last_update'); ?>, <?php printMLText('comment'); ?></th><th><?php printMLText('status'); ?></th></tr>
+<?php
+		switch($type) {
+		case "review":
+			$statusList = $latestContent->getReviewStatus(10);
+			break;
+		case "approval":
+			$statusList = $latestContent->getApprovalStatus(10);
+			break;
+		default:
+			$statusList = array();
+		}
+		foreach($statusList as $rec) {
+			echo "<tr>";
+			echo "<td>";
+			switch ($rec["type"]) {
+				case 0: // individual.
+					$required = $dms->getUser($rec["required"]);
+					if (!is_object($required)) {
+						$reqName = getMLText("unknown_user")." '".$rec["required"]."'";
+					} else {
+						$reqName = htmlspecialchars($required->getFullName()." (".$required->getLogin().")");
+					}
+					break;
+				case 1: // Approver is a group.
+					$required = $dms->getGroup($rec["required"]);
+					if (!is_object($required)) {
+						$reqName = getMLText("unknown_group")." '".$rec["required"]."'";
+					}
+					else {
+						$reqName = "<i>".htmlspecialchars($required->getName())."</i>";
+					}
+					break;
+			}
+			echo $reqName;
+			echo "</td>";
+			echo "<td>";
+			echo "<i style=\"font-size: 80%;\">".$rec['date']." - ";
+			$updateuser = $dms->getUser($rec["userID"]);
+			if(!is_object($required))
+				echo getMLText("unknown_user");
+			else
+				echo htmlspecialchars($updateuser->getFullName()." (".$updateuser->getLogin().")");
+			echo "</i>";
+			if($rec['comment'])
+				echo "<br />".htmlspecialchars($rec['comment']);
+			switch($type) {
+			case "review":
+				if($rec['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+				}
+				break;
+			case "approval":
+				if($rec['file']) {
+					echo "<br />";
+					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+				}
+				break;
+			}
+			echo "</td>";
+			echo "<td>";
+			switch($type) {
+			case "review":
+				echo getReviewStatusText($rec["status"]);
+				break;
+			case "approval":
+				echo getApprovalStatusText($rec["status"]);
+				break;
+			default:
+			}
+			echo "</td>";
+			echo "</tr>";
+		}
+?>
+				</table>
 <?php
 	} /* }}} */
 }

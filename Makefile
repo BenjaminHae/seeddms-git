@@ -1,4 +1,4 @@
-VERSION=4.3.14
+VERSION=4.3.19
 SRC=CHANGELOG inc conf utils index.php languages views op out README.md README.Notification README.Ubuntu drop-tables-innodb.sql styles js TODO LICENSE Makefile webdav install restapi
 # webapp
 
@@ -29,5 +29,8 @@ webapp:
 
 doc:
 	$(PHPDOC) -d SeedDMS_Core --ignore 'getusers.php,getfoldertree.php,config.php,reverselookup.php' --force -t html
+
+apidoc:
+	apigen  generate -s SeedDMS_Core --exclude tests --skip-doc-prefix tests -d html
 
 .PHONY: webdav webapp

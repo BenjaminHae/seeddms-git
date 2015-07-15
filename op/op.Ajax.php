@@ -474,6 +474,11 @@ switch($command) {
 
 				$fileType = ".".pathinfo($userfilename, PATHINFO_EXTENSION);
 
+				if($settings->_overrideMimeType) {
+					$finfo = finfo_open(FILEINFO_MIME_TYPE);
+					$userfiletype = finfo_file($finfo, $userfiletmp);
+				}
+
 				if (!empty($_POST["name"]))
 					$name = $_POST["name"];
 				else
@@ -572,7 +577,7 @@ switch($command) {
 						$index = SeedDMS_Lucene_Indexer::open($settings->_luceneDir);
 						if($index) {
 							SeedDMS_Lucene_Indexer::init($settings->_stopWordsFile);
-							$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, isset($settings->_convcmd) ? $settings->_convcmd : null, true));
+							$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, isset($settings->_converters['fulltext']) ? $settings->_converters['fulltext'] : null, true));
 						}
 					}
 
