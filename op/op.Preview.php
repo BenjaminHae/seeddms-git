@@ -33,34 +33,50 @@ include("../inc/inc.Authentication.php");
 require_once("SeedDMS/Preview.php");
 
 $documentid = $_GET["documentid"];
-if (!isset($documentid) || !is_numeric($documentid) || intval($documentid)<1) {
+$dropfileName = $_GET["dropfile"];
+if (isset($dropfileName))
+{}
+else if (!isset($documentid) || !is_numeric($documentid) || intval($documentid)<1) {
 	exit;
 }
 
-$document = $dms->getDocument($documentid);
-if (!is_object($document)) {
-	exit;
-}
+if (isset $documentid) {
+  $document = $dms->getDocument($documentid);
+  if (!is_object($document)) {
+    exit;
+  }
 
-if ($document->getAccessMode($user) < M_READ) {
-	exit;
-}
+  if ($document->getAccessMode($user) < M_READ) {
+    exit;
+  }
 
-if(isset($_GET['version'])) {
-	$version = $_GET["version"];
-	if (!is_numeric($version))
-		exit;
-	if(intval($version)<1)
-		$object = $document->getLatestContent();
-	else
-		$object = $document->getContentByVersion($version);
-} elseif(isset($_GET['file'])) {
-	$file = $_GET['file'];
-	if (!is_numeric($file) || intval($file)<1)
-		exit;
-	$object = $document->getDocumentFile($file);
-} else {
-	exit;
+  if(isset($_GET['version'])) {
+    $version = $_GET["version"];
+    if (!is_numeric($version))
+      exit;
+    if(intval($version)<1)
+      $object = $document->getLatestContent();
+    else
+      $object = $document->getContentByVersion($version);
+  } elseif(isset($_GET['file'])) {
+    $file = $_GET['file'];
+    if (!is_numeric($file) || intval($file)<1)
+      exit;
+    $object = $document->getDocumentFile($file);
+  } else {
+    exit;
+  }
+}
+else {
+  //get object from dropfolder
+  
+  // Remove anything which isn't a word, whitespace, number
+  // or any of the following caracters -_~,;:[]().
+  $file = preg_replace("([^\w\s\d\-_~,;:\[\]\(\).])", '', $dropfileName);
+  // Remove any runs of periods (thanks falstro!)
+  $file = preg_replace("([\.]{2,})", '', $file);
+  $object = new SeedDMS_Core_DocumentFile(-1, NULL, $user->getId(), "", "", "", "", "", "", $file);
+  // = file($dropfolderdir.'/'.$user->getLogin().'/'.$file);
 }
 
 if (!is_object($object)) {
