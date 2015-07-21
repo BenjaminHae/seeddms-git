@@ -67,6 +67,9 @@ class SeedDMS_Preview_Previewer {
 			case "SeedDMS_Core_DocumentFile":
 				$target = $dir.'f'.$object->getID().'-'.$width.'.png';
 				break;
+      case "SeedDMS_Preview_Dropfolder":
+        $target = $dir.'d'.$user->getLogin().$object->getName().'-'.$width.'.png';
+        break;
 			default:
 				return false;
 		}
@@ -87,7 +90,10 @@ class SeedDMS_Preview_Previewer {
 				return false;
 			}
 		}
-		$file = $document->_dms->contentDir.$object->getPath();
+    if (get_class($object)=="SeedDMS_Preview_Dropfolder")
+      $file = $settings->_dropFolderDir.'/'.$object->getPath();
+    else
+      $file = $document->_dms->contentDir.$object->getPath();
 		if(!file_exists($file))
 			return false;
 		$target = $this->getFileName($object, $width);
@@ -159,5 +165,29 @@ class SeedDMS_Preview_Previewer {
 
 		$target = $this->getFileName($object, $width);
 	} /* }}} */
+}
+class SeedDMS_Preview_Dropfolder {
+  public $filename;
+  function __construct($filename) {
+    $this->filename=$filename;
+  }
+  public function getDocument() {
+    return $this;
+  }
+  public function getDir() {
+    return "drop/";
+  }
+  public function getPath() {
+    return $user->getLogin().'/'.$filename;
+  }
+  public function getName() {
+    return $filename;
+  }
+  public function getMimeType() {
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime=finfo_file($finfo, $this->getPath());
+    finfo_close($finfo);
+    return $mime;
+  }
 }
 ?>
