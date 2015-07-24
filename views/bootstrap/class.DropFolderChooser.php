@@ -60,7 +60,8 @@ var targetName = document.<?php echo $form?>.dropfolderfile<?php print $form ?>;
 				while (false !== ($entry = $d->read())) {
 					if($entry != '..' && $entry != '.') {
 						if(!is_dir($entry)) {
-							echo "<tr><td><span style=\"cursor: pointer;\" onClick=\"fileSelected('".$entry."');\">".$entry."</span></td><td align=\"right\">".SeedDMS_Core_File::format_filesize(filesize($dir.'/'.$entry))."</td></tr>\n";
+							echo "<tr><td><span style=\"cursor: pointer;\" onClick=\"fileSelected('".$entry."');\">".$entry."</span></td><td align=\"right\">".SeedDMS_Core_File::format_filesize(filesize($dir.'/'.$entry))."</td>";
+              echo "<td><a target=\"_blank\" href=\"../op/op.ViewOnline.php?dropfile=".$entry."\"><i class=\"icon-star\"></i>" . getMLText("view_online") . "</a></td></tr>\n";
 						}
 					}
 				}
