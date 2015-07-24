@@ -75,7 +75,8 @@ else {
   $file = preg_replace("([^\w\s\d\-_~,;:\[\]\(\).])", '', $dropfileName);
   // Remove any runs of periods (thanks falstro!)
   $file = preg_replace("([\.]{2,})", '', $file);
-  $object = new SeedDMS_Core_DocumentFile(-1, NULL, $user->getId(), "", "", "", "", "", "", $file);
+  //$object = new SeedDMS_Core_DocumentFile(-1, NULL, $user->getId(), "", "", "", "", "", "", $file);
+  $object = new SeedDMS_Preview_Dropfolder($file);
   // = file($dropfolderdir.'/'.$user->getLogin().'/'.$file);
 }
 
