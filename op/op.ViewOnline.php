@@ -20,18 +20,68 @@
 
 include("../inc/inc.Settings.php");
 include("../inc/inc.LogInit.php");
+//include("../inc/inc.Utils.php");
 include("../inc/inc.DBInit.php");
 include("../inc/inc.Language.php");
 include("../inc/inc.ClassUI.php");
 include("../inc/inc.Authentication.php");
 
-$documentid = $_GET["documentid"];
+class SeedDMS_Preview_Dropfolder {
+  public $filename;
+  function __construct($filename) {
+    $this->filename=$filename;
+  }
+  public function getDocument() {
+    return $this;
+  }
+  public function getDir() {
+    return "drop/";
+  }
+  public function getPath() {
+    //return $user->getLogin().'/'.$filename;
+    return 'benjaminh'.'/'.$filename;
+  }
+  
+  public function getFullPath() {
+    //$dropfolderPath=$settings->_dropFolderDir;
+    $dropfolderPath='/var/local/seeddms/drop';
+    //return $user->getLogin().'/'.$filename;
+    return $dropfolderPath.'/'.'benjaminh'.'/'.$this->filename;
+  }
+  
+  public function getName() {
+    return $this->filename;
+  }
+  public function getMimeType() {
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime=finfo_file($finfo, $this->getFullPath());
+    finfo_close($finfo);
+    return $mime;
+  }
+  public function getAccessMode($user) {
+    
+    //if(file_exists($dropfolderPath.'/'.$user->getLogin().'/'.$this->filename))
+    if(file_exists($this->getFullPath()))      
+      return M_READ;
+    return M_NONE;
+  }
+}
 
-if (!isset($documentid) || !is_numeric($documentid) || intval($documentid)<1) {
+$documentid = $_GET["documentid"];
+$dropfoldercontent = $_GET["dropfile"];
+
+if (((!isset($documentid) || !is_numeric($documentid) || intval($documentid)<1)) && (!isset($dropfoldercontent))) {
 	UI::exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));
 }
 
-$document = $dms->getDocument($documentid);
+if(isset($dropfoldercontent)) {
+  $file = preg_replace("([^\w\s\d\-_~,;:\[\]\(\).])", '', $dropfoldercontent);
+  // Remove any runs of periods (thanks falstro!)
+  $file = preg_replace("([\.]{2,})", '', $file);
+  $document = new SeedDMS_Preview_Dropfolder($file);
+}
+else
+  $document = $dms->getDocument($documentid);
 
 if (!is_object($document)) {
 	UI::exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));
@@ -90,6 +140,15 @@ if(isset($_GET["version"])) {
 	header("Pragma: no-cache");
 
 	readfile($dms->contentDir . $file->getPath());
+} elseif (isset($dropfoldercontent)) {
+  header("Content-Type: " . $document->getMimeType());
+	header("Content-Disposition: filename=\"" . $document->getName(). "\"");
+	header("Content-Length: " . filesize($document->getFullPath()));
+	header("Expires: 0");
+	header("Cache-Control: no-cache, must-revalidate");
+	header("Pragma: no-cache");
+
+	readfile($document->getFullPath());
 }
 
 add_log_line();
