@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (695), pepijn (45), reinoutdijkstra@hotmail.com (270)
+//    Translators: Admin (699), pepijn (45), reinoutdijkstra@hotmail.com (270)
 
 $text = array(
 'accept' => 'Accept',
@@ -836,15 +836,15 @@ URL: [url]',
 'search_fulltext' => 'Zoek in volledige tekst',
 'search_in' => 'Zoek in',
 'search_mode_and' => 'alle woorden',
-'search_mode_documents' => '',
-'search_mode_folders' => '',
+'search_mode_documents' => 'Alleen documenten',
+'search_mode_folders' => 'Alleen mappen',
 'search_mode_or' => 'tenminste 1 woord',
 'search_no_results' => 'Er zijn geen documenten gevonden die aan uw zoekvraag voldoen',
 'search_query' => 'Zoeken naar',
 'search_report' => '[count] documenten en [foldercount] mappen gevonden in [searchtime] sec.',
 'search_report_fulltext' => '[doccount] documenten gevonden',
-'search_resultmode' => '',
-'search_resultmode_both' => '',
+'search_resultmode' => 'Zoek resultaat',
+'search_resultmode_both' => 'Documenten en mappen',
 'search_results' => 'Zoekresultaten',
 'search_results_access_filtered' => 'Zoekresultaten kunnen inhoud bevatten waar U geen toegang toe heeft.',
 'search_time' => 'Verstreken tijd: [time] sec.',
@@ -881,6 +881,8 @@ URL: [url]',
 'settings_Authentication' => 'Authenticatie instellingen',
 'settings_autoLoginUser' => '',
 'settings_autoLoginUser_desc' => '',
+'settings_backupDir' => '',
+'settings_backupDir_desc' => '',
 'settings_cacheDir' => 'cache directory',
 'settings_cacheDir_desc' => 'Waar de voorbeeld afbeeldingen zijn opgeslagen (het is het beste om te kiezen voor een pad, welke niet toegankelijk is door uw webserver)',
 'settings_Calendar' => 'Kalender instellingen',

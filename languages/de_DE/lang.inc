@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2096), dgrutsch (18)
+//    Translators: Admin (2098), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -904,6 +904,8 @@ URL: [url]',
 'settings_Authentication' => 'Authentifikations-Einstellungen',
 'settings_autoLoginUser' => 'Automatisches Login',
 'settings_autoLoginUser_desc' => 'Verwende den Benutzer mit der angegebenen Id, sofern man nicht bereits angemeldet ist. Solch ein Zugriff erzeugt keine eigene Sitzung.',
+'settings_backupDir' => 'Sicherungs-Verzeichnis',
+'settings_backupDir_desc' => 'Verzeichnis in dem das Backup-Tool die Sicherungen ablegt. Wenn hier kein Wert gesetzt wird oder auf das Verzeichnis nicht zugriffen werden kann, dann werden die Sicherungen im Content-Verzeichnis abgelegt.',
 'settings_cacheDir' => 'Cache Verzeichnis',
 'settings_cacheDir_desc' => 'Verzeichnis in dem Vorschaubilder abgelegt werden. Dies sollte ein Verzeichnis sein, auf das man über den Web-Browser keinen direkten Zugriff hat.',
 'settings_Calendar' => 'Kalender-Einstellungen',

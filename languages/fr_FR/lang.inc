@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (970), jeromerobert (50), lonnnew (9)
+//    Translators: Admin (971), jeromerobert (50), lonnnew (9)
 
 $text = array(
 'accept' => 'Accepter',
@@ -866,6 +866,8 @@ URL: [url]',
 'settings_Authentication' => 'Paramètres d\'authentification',
 'settings_autoLoginUser' => '',
 'settings_autoLoginUser_desc' => '',
+'settings_backupDir' => '',
+'settings_backupDir_desc' => '',
 'settings_cacheDir' => 'Dossier Cache',
 'settings_cacheDir_desc' => 'Lieu de stockage des images de prévisualisation (choisir de préférence un dossier non accessible à travers le web-server)',
 'settings_Calendar' => 'Paramètres de l\'agenda',
@@ -1215,7 +1217,7 @@ URL: [url]',
 'tuesday' => 'Mardi',
 'tuesday_abbr' => 'Mar.',
 'type_to_search' => 'Effectuer une recherche',
-'uk_UA' => 'Ukrainien',
+'uk_UA' => 'Ukrénien',
 'under_folder' => 'Dans le dossier',
 'unknown_attrdef' => '',
 'unknown_command' => 'Commande non reconnue.',

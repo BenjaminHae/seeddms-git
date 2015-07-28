@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (465)
+//    Translators: Admin (476)
 
 $text = array(
 'accept' => 'Prijať',
@@ -170,14 +170,14 @@ $text = array(
 'change_recipients' => '',
 'change_revisors' => '',
 'change_status' => 'Zmeniť stav',
-'charts' => '',
-'chart_docsaccumulated_title' => '',
-'chart_docspercategory_title' => '',
+'charts' => 'Grafy',
+'chart_docsaccumulated_title' => 'Počet dokumentov',
+'chart_docspercategory_title' => 'Dokumenty podľa kategórie',
 'chart_docspermimetype_title' => '',
-'chart_docspermonth_title' => '',
-'chart_docsperstatus_title' => '',
-'chart_docsperuser_title' => '',
-'chart_selection' => '',
+'chart_docspermonth_title' => 'Nové dokumenty za mesiac',
+'chart_docsperstatus_title' => 'Dokumenty podľa stavu',
+'chart_docsperuser_title' => 'Dokumenty podľa používateľa',
+'chart_selection' => 'Vyber graf',
 'chart_sizeperuser_title' => '',
 'checkedout_file_has_different_version' => '',
 'checkedout_file_has_disappeared' => '',
@@ -237,7 +237,7 @@ $text = array(
 'december' => 'December',
 'default_access' => 'Štandardný režim prístupu',
 'default_keywords' => 'Dostupné kľúčové slová',
-'definitions' => '',
+'definitions' => 'Definície',
 'delete' => 'Zmazať',
 'details' => 'Podrobnosti',
 'details_version' => 'Podrobnosti verzie: [version]',
@@ -496,7 +496,7 @@ $text = array(
 'may' => 'Máj',
 'mimetype' => '',
 'minutes' => '',
-'misc' => '',
+'misc' => 'Rôzne',
 'missing_checksum' => '',
 'missing_filesize' => '',
 'missing_transition_user_group' => '',
@@ -740,6 +740,8 @@ $text = array(
 'settings_Authentication' => '',
 'settings_autoLoginUser' => '',
 'settings_autoLoginUser_desc' => '',
+'settings_backupDir' => '',
+'settings_backupDir_desc' => '',
 'settings_cacheDir' => '',
 'settings_cacheDir_desc' => '',
 'settings_Calendar' => '',
@@ -1088,8 +1090,8 @@ $text = array(
 'tr_TR' => 'Turecky',
 'tuesday' => 'Utorok',
 'tuesday_abbr' => '',
-'type_to_search' => '',
-'uk_UA' => '',
+'type_to_search' => 'Vyhľadať typ',
+'uk_UA' => 'Ukrajinsky',
 'under_folder' => 'V zložke',
 'unknown_attrdef' => '',
 'unknown_command' => 'Príkaz nebol rozpoznaný.',
