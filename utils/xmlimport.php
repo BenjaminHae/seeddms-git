@@ -268,6 +268,16 @@ function insert_document($document) { /* {{{ */
 					}
 				}
 			}
+			$version_attributes = array();
+			if(isset($initversion['user_attributes'])) {
+				foreach($initversion['user_attributes'] as $orgid=>$value) {
+					if(array_key_exists((int) $orgid, $objmap['attributedefs'])) {
+						$version_attributes[$objmap['attributedefs'][$orgid]] = $value;
+					} else {
+						echo "Warning: User attribute ".$orgid." cannot be mapped\n";
+					}
+				}
+			}
 			if(!$result = $folder->addDocument(
 				$document['attributes']['name'],
 				$document['attributes']['comment'],
@@ -285,7 +295,7 @@ function insert_document($document) { /* {{{ */
 				$initversion['version'],
 				isset($initversion['attributes']['comment']) ? $initversion['attributes']['comment'] : '',
 				$attributes,
-				array(), //version_attributes
+				$version_attributes,
 				null //workflow
 				)
 			) {
@@ -327,7 +337,16 @@ function insert_document($document) { /* {{{ */
 							}
 						}
 					}
-
+					$version_attributes = array();
+					if(isset($version['user_attributes'])) {
+						foreach($version['user_attributes'] as $orgid=>$value) {
+							if(array_key_exists((int) $orgid, $objmap['attributedefs'])) {
+								$version_attributes[$objmap['attributedefs'][$orgid]] = $value;
+							} else {
+								echo "Warning: User attribute ".$orgid." cannot be mapped\n";
+							}
+						}
+					}
 					if(!empty($version['fileref'])) {
 						$filename = tempnam('/tmp', 'FOO');
 						copy($version['fileref'], $filename);
@@ -349,7 +368,7 @@ function insert_document($document) { /* {{{ */
 						$reviews, //reviewers
 						$approvals, //approvers
 						$version['version'],	
-						array(), //attributes
+						$version_attributes,
 						null //workflow
 					)) {
 					}
@@ -916,22 +935,40 @@ function characterData($parser, $data) { /* {{{ */
 					$cur_reviewlog['attributes'][$current['attributes']['NAME']] = $data;
 					break;
 				case 'USER':
-					$cur_user['attributes'][$current['attributes']['NAME']] = $data;
+					if(isset($cur_user['attributes'][$current['attributes']['NAME']]))
+						$cur_user['attributes'][$current['attributes']['NAME']] .= $data;
+					else
+						$cur_user['attributes'][$current['attributes']['NAME']] = $data;
 					break;
 				case 'GROUP':
-					$cur_group['attributes'][$current['attributes']['NAME']] = $data;
+					if(isset($cur_group['attributes'][$current['attributes']['NAME']]))
+						$cur_group['attributes'][$current['attributes']['NAME']] .= $data;
+					else
+						$cur_group['attributes'][$current['attributes']['NAME']] = $data;
 					break;
 				case 'ATTRIBUTEDEFINITION':
-					$cur_attrdef['attributes'][$current['attributes']['NAME']] = $data;
+					if(isset($cur_attrdef['attributes'][$current['attributes']['NAME']]))
+						$cur_attrdef['attributes'][$current['attributes']['NAME']] .= $data;
+					else
+						$cur_attrdef['attributes'][$current['attributes']['NAME']] = $data;
 					break;
 				case 'DOCUMENTCATEGORY':
-					$cur_documentcat['attributes'][$current['attributes']['NAME']] = $data;
+					if(isset($cur_documentcat['attributes'][$current['attributes']['NAME']]))
+						$cur_documentcat['attributes'][$current['attributes']['NAME']] .= $data;
+					else
+						$cur_documentcat['attributes'][$current['attributes']['NAME']] = $data;
 					break;
 				case 'KEYWORDCATEGORY':
-					$cur_keywordcat['attributes'][$current['attributes']['NAME']] = $data;
+					if(isset($cur_keywordcat['attributes'][$current['attributes']['NAME']]))
+						$cur_keywordcat['attributes'][$current['attributes']['NAME']] .= $data;
+					else
+						$cur_keywordcat['attributes'][$current['attributes']['NAME']] = $data;
 					break;
 				case 'KEYWORD':
-					$cur_keyword['attributes'][$current['attributes']['NAME']] = $data;
+					if(isset($cur_keyword['attributes'][$current['attributes']['NAME']]))
+						$cur_keyword['attributes'][$current['attributes']['NAME']] .= $data;
+					else
+						$cur_keyword['attributes'][$current['attributes']['NAME']] = $data;
 					break;
 				case 'IMAGE':
 					$cur_user['image']['mimetype'] = $data;
