@@ -13,6 +13,7 @@ function usage() { /* {{{ */
 	echo "  -v, --version: print version and exit.\n";
 	echo "  --config: set alternative config file.\n";
 	echo "  --folder: set start folder.\n";
+	echo "  --skip-root: do not export the root folder itself.\n";
 	echo "  --maxsize: maximum size of files to be included in output\n";
 	echo "    (defaults to 100000)\n";
 	echo "  --contentdir: directory where all document versions are stored\n";
@@ -283,6 +284,8 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 							echo " fileref=\"".$document->getID()."-".$version->getVersion().$version->getFileType()."\" />\n";
 							if($contentdir) {
 								copy($dms->contentDir . $version->getPath(), $contentdir.$document->getID()."-".$version->getVersion().$version->getFileType());
+							} else {
+								echo "Warning: version content (size=".filesize($dms->contentDir . $version->getPath()).") will be missing from output\n";
 							}
 						}
 					} else {
@@ -316,6 +319,8 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 							echo " fileref=\"".$document->getID()."-A-".$file->getID().$file->getFileType()."\" />\n";
 							if($contentdir) {
 								copy($dms->contentDir . $version->getPath(), $contentdir.$document->getID()."-A-".$file->getID().$file->getFileType());
+							} else {
+								echo "Warning: file content (size=".filesize($dms->contentDir . $file->getPath()).") will be missing from output\n";
 							}
 						}
 					} else {
