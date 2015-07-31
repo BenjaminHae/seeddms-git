@@ -459,6 +459,7 @@ $text = array(
 'keep_doc_status' => '',
 'keywords' => 'Kľúčové slová',
 'keyword_exists' => 'Kľúčové slovo už existuje',
+'ko_KR' => '',
 'language' => 'Jazyk',
 'lastaccess' => '',
 'last_update' => 'Posledná aktualizácia',

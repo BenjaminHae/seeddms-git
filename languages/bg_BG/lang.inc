@@ -459,6 +459,7 @@ $text = array(
 'keep_doc_status' => 'Запази статуса на документа',
 'keywords' => 'Ключови думи',
 'keyword_exists' => 'Ключовата дума съществува',
+'ko_KR' => '',
 'language' => 'Език',
 'lastaccess' => '',
 'last_update' => 'Последно обновление',
