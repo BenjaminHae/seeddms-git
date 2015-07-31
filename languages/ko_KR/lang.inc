@@ -19,13 +19,9 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (929)
+//    Translators: Admin (933)
 
 $text = array(
-' add_workflow_action' => '새 워크플로우 작업 추가',
-' cannot_retrieve_approval_snapshot' => '이 문서의 버전에 대한 승인 상태의 스냅 샷을 확인 할 수 없습니다',
-' category_noname' => '주어진 카테고리명이 없음.',
-' continue' => '계속',
 'accept' => '동의',
 'access_denied' => '접근가 거부되었습니다.',
 'access_inheritance' => '접근 상속',
@@ -69,7 +65,7 @@ $text = array(
 'add_user' => '새 사용자 추가',
 'add_user_to_group' => '그룹에 사용자를 추가합니다',
 'add_workflow' => '새 워크플로우 추가',
-'add_workflow_action' => '',
+'add_workflow_action' => '새 워크플로우 작업 추가',
 'add_workflow_state' => '새 워크플로우 상태 추가',
 'admin' => '관리자',
 'admin_tools' => '관리 도구',
@@ -158,7 +154,7 @@ $text = array(
 'cannot_delete_user' => '사용자를 삭제할 수 없습니다',
 'cannot_delete_yourself' => '자신을 삭제할 수 없습니다',
 'cannot_move_root' => '오류: 루트 폴더를 이동할 수 없습니다',
-'cannot_retrieve_approval_snapshot' => '',
+'cannot_retrieve_approval_snapshot' => '이 문서의 버전에 대한 승인 상태의 스냅 샷을 확인 할 수 없습니다',
 'cannot_retrieve_review_snapshot' => '이 문서의 버전에 대한 검토 상태의 스냅 샷을 확인 할 수 없습니다.',
 'cannot_rm_root' => '오류 : 루트 폴더를 삭제할 수 없습니다.',
 'categories' => '카테고리',
@@ -166,7 +162,7 @@ $text = array(
 'category_exists' => '카테고리가 이미 존재합니다.',
 'category_filter' => '카테고리',
 'category_in_use' => '이 범주에는 현재 문서에서 사용됩니다.',
-'category_noname' => '',
+'category_noname' => '주어진 카테고리명이 없음.',
 'ca_ES' => '카탈로니아어',
 'change_assignments' => '변경 할당',
 'change_password' => '비밀번호 변경',
@@ -222,7 +218,7 @@ $text = array(
 'confirm_rm_version' => '버젼 [version]의 문서 "[documentname]"을 정말 삭제 하시겠습니까?<br>주의: 취소가 불가능 합니다.',
 'confirm_update_transmittalitem' => '',
 'content' => '콘텐츠',
-'continue' => '',
+'continue' => '계속',
 'converter_new_cmd' => '',
 'converter_new_mimetype' => '',
 'copied_to_checkout_as' => '',
