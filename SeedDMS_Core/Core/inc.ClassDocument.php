@@ -2413,7 +2413,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 	 * @param object $updateUser user initiating the status change
 	 * @return boolean true on success, otherwise false
 	 */
-	function setStatus($status, $comment, $updateUser) { /* {{{ */
+	function setStatus($status, $comment, $updateUser, $date='') { /* {{{ */
 		$db = $this->_document->_dms->getDB();
 
 		if (!is_numeric($status)) return false;
@@ -2436,8 +2436,12 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		if ($this->_status["status"]==$status) {
 			return false;
 		}
+		if($date)
+			$ddate = $db->qstr($date);
+		else
+			$ddate = 'CURRENT_TIMESTAMP';
 		$queryStr = "INSERT INTO `tblDocumentStatusLog` (`statusID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $this->_status["statusID"] ."', '". (int) $status ."', ".$db->qstr($comment).", CURRENT_TIMESTAMP, '". $updateUser->getID() ."')";
+			"VALUES ('". $this->_status["statusID"] ."', '". (int) $status ."', ".$db->qstr($comment).", ".$ddate.", '". $updateUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res)
 			return false;
@@ -2446,6 +2450,55 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 
 		return true;
 	} /* }}} */
+
+	/**
+	 * Rewrites the complete status log
+	 * 
+	 * Attention: this function is highly dangerous.
+	 * It removes an existing status log and rewrites it.
+	 * This method was added for importing an xml dump.
+	 *
+	 * @param array $statuslog new status log with the newest log entry first.
+	 * @return boolean true on success, otherwise false
+	 */
+	function rewriteStatusLog($statuslog) { /* {{{ */
+		$db = $this->_document->_dms->getDB();
+
+		$queryStr= "SELECT `tblDocumentStatus`.* FROM `tblDocumentStatus` WHERE `tblDocumentStatus`.`documentID` = '". $this->_document->getID() ."' AND `tblDocumentStatus`.`version` = '". $this->_version ."' ";
+		$res = $db->getResultArray($queryStr);
+		if (is_bool($res) && !$res)
+			return false;
+
+		$statusID = $res[0]['statusID'];
+
+		$db->startTransaction();
+
+		/* First, remove the old entries */
+		$queryStr = "DELETE from `tblDocumentStatusLog` where `statusID`=".$statusID;
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+
+		/* Second, insert the new entries */
+		$statuslog = array_reverse($statuslog);
+		foreach($statuslog as $log) {
+			if(!SeedDMS_Core_DMS::checkDate($log['date'], 'Y-m-d H:i:s')) {
+				$db->rollbackTransaction();
+				return false;
+			}
+			$queryStr = "INSERT INTO `tblDocumentStatusLog` (`statusID`, `status`, `comment`, `date`, `userID`) ".
+				"VALUES ('".$statusID ."', '".(int) $log['status']."', ".$db->qstr($log['comment']) .", ".$db->qstr($log['date']).", ".$log['user']->getID().")";
+			if (!$db->getResult($queryStr)) {
+				$db->rollbackTransaction();
+				return false;
+			}
+		}
+
+		$db->commitTransaction();
+		return true;
+	} /* }}} */
+
 
 	/**
 	 * Returns the access mode similar to a document
