@@ -224,6 +224,18 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 							echo $indent."   <attr type=\"user\" attrdef=\"".$attrdef->getID()."\">".$attribute->getValue()."</attr>\n";
 						}
 					}
+					if($statuslog = $version->getStatusLog()) {
+						echo $indent."   <status id=\"".$statuslog[0]['statusID']."\">\n";
+						foreach($statuslog as $entry) {
+							echo $indent."    <statuslog>\n";
+							echo $indent."     <attr name=\"status\">".$entry['status']."</attr>\n";
+							echo $indent."     <attr name=\"comment\">".wrapWithCData($entry['comment'])."</attr>\n";
+							echo $indent."     <attr name=\"date\">".$entry['date']."</attr>\n";
+							echo $indent."     <attr name=\"user\">".$entry['userID']."</attr>\n";
+							echo $indent."    </statuslog>\n";
+						}
+						echo $indent."   </status>\n";
+					}
 					if($approvalStatus) {
 						echo $indent."   <approvals>\n";
 						$curapprovalid = 0;
