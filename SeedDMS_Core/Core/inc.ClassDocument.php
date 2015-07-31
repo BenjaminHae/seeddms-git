@@ -304,6 +304,26 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 	} /* }}} */
 
 	/**
+	 * Set creation date of the document
+	 *
+	 * @param integer $date timestamp of creation date. If false then set it
+	 * to the current timestamp
+	 * @return boolean true on success
+	 */
+	function setDate($date) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		if(!$date)
+			$date = time();
+
+		$queryStr = "UPDATE tblDocuments SET date = " . $date . " WHERE id = ". $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+		$this->_date = $date;
+		return true;
+	} /* }}} */
+
+	/**
 	 * Return the parent folder of the document
 	 *
 	 * @return object parent folder
