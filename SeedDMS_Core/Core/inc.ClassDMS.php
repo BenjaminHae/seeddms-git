@@ -187,6 +187,17 @@ class SeedDMS_Core_DMS {
 	} /* }}} */
 
 	/**
+	 * Checks if date conforms to a given format
+	 *
+	 * @param string $date date to be checked
+	 * @return boolean true if date is in propper format, otherwise false
+	 */
+	static function checkDate($date) { /* {{{ */
+		$d = DateTime::createFromFormat($format, $date);
+		return $d && $d->format($format) == $date;
+	} /* }}} */
+
+	/**
 	 * Filter objects out which are not accessible in a given mode by a user.
 	 *
 	 * @param array $objArr list of objects (either documents or folders)
