@@ -187,8 +187,8 @@ function insert_keywordcategory($keywordcat) { /* {{{ */
 function insert_document($document) { /* {{{ */
 	global $dms, $debug, $defaultUser, $objmap, $sections, $rootfolder;
 
-	if($debug)
-		print_r($document);
+	if($debug) print_r($document);
+
 	if(!array_key_exists((int) $document['attributes']['owner'], $objmap['users'])) {
 		echo "Warning: owner of document cannot be mapped using default user\n";
 		$owner = $defaultUser;
@@ -574,7 +574,7 @@ function resolve_links() { /* {{{ */
 } /* }}} */
 
 function startElement($parser, $name, $attrs) { /* {{{ */
-	global $elementstack, $objmap, $cur_user, $cur_group, $cur_folder, $cur_document, $cur_version, $cur_approval, $cur_approvallog, $cur_review, $cur_reviewlog, $cur_attrdef, $cur_documentcat, $cur_keyword, $cur_keywordcat, $cur_file, $cur_link;
+	global $elementstack, $objmap, $cur_user, $cur_group, $cur_folder, $cur_document, $cur_version, $cur_statuslog, $cur_approval, $cur_approvallog, $cur_review, $cur_reviewlog, $cur_attrdef, $cur_documentcat, $cur_keyword, $cur_keywordcat, $cur_file, $cur_link;
 
 	$parent = end($elementstack);
 	array_push($elementstack, array('name'=>$name, 'attributes'=>$attrs));
@@ -648,6 +648,10 @@ function startElement($parser, $name, $attrs) { /* {{{ */
 			$cur_version['approvals'] = array();
 			$cur_version['reviews'] = array();
 			break;
+		case "STATUSLOG":
+			$cur_statuslog = array();
+			$cur_statuslog['attributes'] = array();
+			break;
 		case "APPROVAL":
 			$cur_approval = array();
 			$cur_approval['attributes'] = array();
@@ -685,6 +689,8 @@ function startElement($parser, $name, $attrs) { /* {{{ */
 				} else {
 					$cur_version['attributes'][$attrs['NAME']] = '';
 				}
+			} elseif($parent['name'] == 'STATUSLOG') {
+				$cur_statuslog['attributes'][$attrs['NAME']] = '';
 			} elseif($parent['name'] == 'APPROVAL') {
 				$cur_approval['attributes'][$attrs['NAME']] = '';
 			} elseif($parent['name'] == 'APPROVALLOG') {
@@ -823,7 +829,7 @@ function startElement($parser, $name, $attrs) { /* {{{ */
 } /* }}} */
 
 function endElement($parser, $name) { /* {{{ */
-	global $dms, $sections, $rootfolder, $objmap, $elementstack, $users, $groups, $links,$cur_user, $cur_group, $cur_folder, $cur_document, $cur_version, $cur_approval, $cur_approvallog, $cur_review, $cur_reviewlog, $cur_attrdef, $cur_documentcat, $cur_keyword, $cur_keywordcat, $cur_file, $cur_link;
+	global $dms, $sections, $rootfolder, $objmap, $elementstack, $users, $groups, $links,$cur_user, $cur_group, $cur_folder, $cur_document, $cur_version, $cur_statuslog, $cur_approval, $cur_approvallog, $cur_review, $cur_reviewlog, $cur_attrdef, $cur_documentcat, $cur_keyword, $cur_keywordcat, $cur_file, $cur_link;
 
 	array_pop($elementstack);
 	$parent = end($elementstack);
@@ -838,6 +844,9 @@ function endElement($parser, $name) { /* {{{ */
 			break;
 		case "VERSION":
 			$cur_document['versions'][] = $cur_version;
+			break;
+		case "STATUSLOG":
+			$cur_version['statuslogs'][] = $cur_statuslog;
 			break;
 		case "APPROVAL":
 			$cur_version['approvals'][] = $cur_approval;
@@ -854,7 +863,7 @@ function endElement($parser, $name) { /* {{{ */
 		case "USER":
 			/* users can be the users data or the member of a group */
 			$first = $elementstack[1];
-			if($first['name'] == 'USERS') {
+			if($first['name'] == 'USERS' && $parent['name'] == 'USERS') {
 				$users[$cur_user['id']] = $cur_user;
 				insert_user($cur_user);
 			}
@@ -894,7 +903,7 @@ function endElement($parser, $name) { /* {{{ */
 } /* }}} */
 
 function characterData($parser, $data) { /* {{{ */
-	global $elementstack, $objmap, $cur_user, $cur_group, $cur_folder, $cur_document, $cur_version, $cur_approval, $cur_approvallog, $cur_review, $cur_reviewlog, $cur_attrdef, $cur_documentcat, $cur_keyword, $cur_keywordcat, $cur_file, $cur_link;
+	global $elementstack, $objmap, $cur_user, $cur_group, $cur_folder, $cur_document, $cur_version, $cur_statuslog, $cur_approval, $cur_approvallog, $cur_review, $cur_reviewlog, $cur_attrdef, $cur_documentcat, $cur_keyword, $cur_keywordcat, $cur_file, $cur_link;
 
 	$current = end($elementstack);
 	$parent = prev($elementstack);
@@ -921,6 +930,9 @@ function characterData($parser, $data) { /* {{{ */
 					} else {
 						$cur_version['attributes'][$current['attributes']['NAME']] = $data;
 					}
+					break;
+				case 'STATUSLOG':
+					$cur_statuslog['attributes'][$current['attributes']['NAME']] = $data;
 					break;
 				case 'APPROVAL':
 					$cur_approval['attributes'][$current['attributes']['NAME']] = $data;
