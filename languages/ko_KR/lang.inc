@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (926)
+//    Translators: Admin (929)
 
 $text = array(
 ' add_workflow_action' => '새 워크플로우 작업 추가',
@@ -337,8 +337,7 @@ $text = array(
 'equal_transition_states' => '시작 및 종료가 동일한 상태',
 'error' => '오류',
 'error_no_document_selected' => '선택되지 문서는',
-'error_no_folder_selected' => '',
-'error_no_folder_selected 없다' => '어떤 폴더를 선택하지',
+'error_no_folder_selected' => '어떤 폴더를 선택하지',
 'error_occured' => '오류가 발생했습니다',
 'es_ES' => '스페인어',
 'event_details' => '이벤트의 자세한 사항',
@@ -549,8 +548,7 @@ $text = array(
 'november' => '11월',
 'now' => '지금',
 'no_action' => '조치가 필요하지 않습니다',
-'no_approval_needed' => '',
-'no_approval_needed 없다' => '승인을 보류하지 않습니다',
+'no_approval_needed' => '승인을 보류하지 않습니다',
 'no_attached_files' => '첨부 파일 없음',
 'no_current_version' => '',
 'no_default_keywords' => '사용 가능한 키워드가 존재하지 않습니다.',
@@ -913,8 +911,7 @@ $text = array(
 'settings_passwordStrengthAlgorithm_desc' => '비밀번호 강도를 계산하기 위해 사용되는 알고리즘. 총 8 개 이상의 문자, 소문자, 대문자, 숫자 및 특수 문자를 확인합니다. 이러한 조건이 충족되는 경우 반환 된 점수는 100 그렇지 않으면 0',
 'settings_passwordStrengthAlgorithm_valadvanced' => '고급',
 'settings_passwordStrengthAlgorithm_valsimple' => '단순',
-'settings_passwordStrength_desc' => '',
-'settings_passwordtrength_desc' => '0인경우 보안 강도 확인을 하지 않습니다. 비밀번호 보안 설정은 0 ~ 100의 정수 값 입니다.',
+'settings_passwordStrength_desc' => '0인경우 보안 강도 확인을 하지 않습니다. 비밀번호 보안 설정은 0 ~ 100의 정수 값 입니다.',
 'settings_pear_log' => 'Pear 패키지 : 로그인',
 'settings_pear_webdav' => 'Pear 패키지 : HTTP_WebDAV_Server',
 'settings_perms' => '권한',
