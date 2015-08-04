@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1226), dgrutsch (3), netixw (14)
+//    Translators: Admin (1230), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -781,10 +781,10 @@ URL: [url]',
 'reviewer_already_removed' => 'Reviewer has already been removed from review process or has already submitted a review',
 'review_deletion_email' => 'Review request deleted',
 'review_deletion_email_body' => 'Review request deleted
-Dokument: [name]
+Document: [name]
 Version: [version]
-Elternordner: [folder_path]
-Benutzer: [username]
+Parentfolder: [folder_path]
+User: [username]
 URL: [url]',
 'review_deletion_email_subject' => '[sitename]: [name] - Review request deleted',
 'review_file' => 'File',
@@ -913,7 +913,7 @@ URL: [url]',
 'settings_autoLoginUser' => 'Automatic login',
 'settings_autoLoginUser_desc' => 'Use this user id for accesses if the user is not already logged in. Such an access will not create a session.',
 'settings_backupDir' => 'Backup directory',
-'settings_backupDir_desc' => 'Directory where the backup tool saves backups. If this directory ist not set or cannot be accessed, then the backups will be saved in the content directory.',
+'settings_backupDir_desc' => 'Directory where the backup tool saves backups. If this directory is not set or cannot be accessed, then the backups will be saved in the content directory.',
 'settings_cacheDir' => 'Cache directory',
 'settings_cacheDir_desc' => 'Where the preview images are stored (best to choose a directory that is not accessible through your web-server)',
 'settings_Calendar' => 'Calendar settings',
@@ -986,7 +986,7 @@ URL: [url]',
 'settings_enableNotificationAppRev' => 'Enable reviewer/approver notification',
 'settings_enableNotificationAppRev_desc' => 'Check to send a notification to the reviewer/approver when a new document version is added',
 'settings_enableNotificationWorkflow' => 'Send notification to users in next workflow transition',
-'settings_enableNotificationWorkflow_desc' => 'If this option is enabled, the users and groups which need to take action in the next workflow transiton will be notified. Even if they have not added a notification for the document.',
+'settings_enableNotificationWorkflow_desc' => 'If this option is enabled, the users and groups which need to take action in the next workflow transition will be notified. Even if they have not added a notification for the document.',
 'settings_enableOwnerNotification' => 'Enable owner notification by default',
 'settings_enableOwnerNotification_desc' => 'Check for adding a notification for the owner if a document when it is added.',
 'settings_enableOwnerRevApp' => 'Allow review/approval for owner',
@@ -1263,7 +1263,7 @@ URL: [url]',
 'transition_triggered_email_subject' => '[sitename]: [name] - Workflow transition triggered',
 'transmittal' => 'Transmittal',
 'transmittalitem_removed' => 'Transmittal item removed',
-'transmittalitem_updated' => 'Dokument updated to latest version',
+'transmittalitem_updated' => 'Document updated to latest version',
 'transmittal_comment' => 'Comment',
 'transmittal_name' => 'Name',
 'transmittal_size' => 'Size',
