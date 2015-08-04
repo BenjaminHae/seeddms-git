@@ -100,7 +100,7 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 			echo " parent=\"".$parent->getID()."\"";
 		echo ">\n";
 		echo $indent." <attr name=\"name\">".wrapWithCData($folder->getName())."</attr>\n";
-		echo $indent." <attr name=\"date\">".date('c', $folder->getDate())."</attr>\n";
+		echo $indent." <attr name=\"date\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $folder->getDate())."</attr>\n";
 		echo $indent." <attr name=\"defaultaccess\">".$folder->getDefaultAccess()."</attr>\n";
 		echo $indent." <attr name=\"inheritaccess\">".$folder->inheritsAccess()."</attr>\n";
 		echo $indent." <attr name=\"sequence\">".$folder->getSequence()."</attr>\n";
@@ -153,9 +153,9 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 				echo " locked=\"true\"";
 			echo ">\n";
 			echo $indent." <attr name=\"name\">".wrapWithCData($document->getName())."</attr>\n";
-			echo $indent." <attr name=\"date\">".date('c', $document->getDate())."</attr>\n";
+			echo $indent." <attr name=\"date\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $document->getDate())."</attr>\n";
 			if($document->getExpires())
-				echo $indent." <attr name=\"expires\">".date('c', $document->getExpires())."</attr>\n";
+				echo $indent." <attr name=\"expires\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $document->getExpires())."</attr>\n";
 			echo $indent." <attr name=\"owner\">".$owner->getId()."</attr>\n";
 			if($document->getKeywords())
 				echo $indent." <attr name=\"keywords\">".wrapWithCData($document->getKeywords())."</attr>\n";
@@ -213,7 +213,7 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 					$owner = $version->getUser();
 					echo $indent."  <version version=\"".$version->getVersion()."\">\n";
 					echo $indent."   <attr name=\"mimetype\">".$version->getMimeType()."</attr>\n";
-					echo $indent."   <attr name=\"date\">".date('c', $version->getDate())."</attr>\n";
+					echo $indent."   <attr name=\"date\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $version->getDate())."</attr>\n";
 					echo $indent."   <attr name=\"filetype\">".$version->getFileType()."</attr>\n";
 					echo $indent."   <attr name=\"comment\">".wrapWithCData($version->getComment())."</attr>\n";
 					echo $indent."   <attr name=\"owner\">".$owner->getId()."</attr>\n";
@@ -230,7 +230,7 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 							echo $indent."    <statuslog>\n";
 							echo $indent."     <attr name=\"status\">".$entry['status']."</attr>\n";
 							echo $indent."     <attr name=\"comment\">".wrapWithCData($entry['comment'])."</attr>\n";
-							echo $indent."     <attr name=\"date\">".$entry['date']."</attr>\n";
+							echo $indent."     <attr name=\"date\" format=\"Y-m-d H:i:s\">".$entry['date']."</attr>\n";
 							echo $indent."     <attr name=\"user\">".$entry['userID']."</attr>\n";
 							echo $indent."    </statuslog>\n";
 						}
@@ -252,7 +252,7 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 							echo $indent."      <attr name=\"user\">".$a['userID']."</attr>\n";
 							echo $indent."      <attr name=\"status\">".$a['status']."</attr>\n";
 							echo $indent."      <attr name=\"comment\">".wrapWithCData($a['comment'])."</attr>\n";
-							echo $indent."      <attr name=\"date\">".$a['date']."</attr>\n";
+							echo $indent."      <attr name=\"date\" format=\"Y-m-d H:i:s\">".$a['date']."</attr>\n";
 							echo $indent."     </approvallog>\n";
 //							echo $indent."    </approval>\n";
 							$curapprovalid = $a['approveID'];
@@ -277,7 +277,7 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 							echo $indent."      <attr name=\"user\">".$a['userID']."</attr>\n";
 							echo $indent."      <attr name=\"status\">".$a['status']."</attr>\n";
 							echo $indent."      <attr name=\"comment\">".wrapWithCData($a['comment'])."</attr>\n";
-							echo $indent."      <attr name=\"date\">".$a['date']."</attr>\n";
+							echo $indent."      <attr name=\"date\" format=\"Y-m-d H:i:s\">".$a['date']."</attr>\n";
 							echo $indent."     </reviewlog>\n";
 //							echo $indent."    </review>\n";
 							$curreviewid = $a['reviewID'];
@@ -316,7 +316,7 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 					echo $indent."  <file id=\"".$file->getId()."\">\n";
 					echo $indent."   <attr name=\"name\">".wrapWithCData($file->getName())."</attr>\n";
 					echo $indent."   <attr name=\"mimetype\">".$file->getMimeType()."</attr>\n";
-					echo $indent."   <attr name=\"date\">".date('c', $file->getDate())."</attr>\n";
+					echo $indent."   <attr name=\"date\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $file->getDate())."</attr>\n";
 					echo $indent."   <attr name=\"filetype\">".wrapWithCData($file->getFileType())."</attr>\n";
 					echo $indent."   <attr name=\"owner\">".$owner->getId()."</attr>\n";
 					echo $indent."   <attr name=\"comment\">".wrapWithCData($file->getComment())."</attr>\n";
