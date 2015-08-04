@@ -24,8 +24,40 @@ function usage() { /* {{{ */
 	echo "  --debug: turn debug output on\n";
 } /* }}} */
 
-function dateToTimestamp($date) { /* {{{ */
-	return time();
+function dateToTimestamp($date, $format='Y-m-d H:i:s') { /* {{{ */
+	$p = date_parse_from_format($format, $date);
+	return mktime($p['hour'], $p['minute'], $p['second'], $p['month'], $p['day'], $p['year']);
+} /* }}} */
+
+function getRevAppLog($reviews) { /* {{{ */
+	global $dms, $objmap;
+
+	$newreviews = array();
+	foreach($reviews as $i=>$review) {
+		$newreview = array('type'=>$review['attributes']['type']);
+		if($review['attributes']['type'] == 1) {
+			if(isset($objmap['groups'][(int) $review['attributes']['required']]))
+				$newreview['required'] = $dms->getGroup($objmap['groups'][(int) $review['attributes']['required']]);
+		} else {
+			if(isset($objmap['users'][(int) $review['attributes']['required']]))
+				$newreview['required'] = $dms->getUser($objmap['users'][(int) $review['attributes']['required']]);
+		}
+		$newreview['logs'] = array();
+		foreach($review['logs'] as $j=>$log) {
+			if(!array_key_exists($log['attributes']['user'], $objmap['users'])) {
+				echo "Warning: user for review log cannot be mapped\n";
+			} else {
+				$newlog = array();
+				$newlog['user'] = $dms->getUser($objmap['users'][$log['attributes']['user']]);
+				$newlog['status'] = $log['attributes']['status'];
+				$newlog['comment'] = $log['attributes']['comment'];
+				$newlog['date'] = $log['attributes']['date'];
+				$newreview['logs'][] = $newlog;
+			}
+		}
+		$newreviews[] = $newreview;
+	}
+	return $newreviews;
 } /* }}} */
 
 function insert_user($user) { /* {{{ */
@@ -245,6 +277,7 @@ function insert_document($document) { /* {{{ */
 		}
 		if(!$error) {
 			$reviews = array('i'=>array(), 'g'=>array());
+			/*
 			if($initversion['reviews']) {
 				foreach($initversion['reviews'] as $review) {
 					if($review['attributes']['type'] == 1) {
@@ -256,7 +289,9 @@ function insert_document($document) { /* {{{ */
 					}
 				}
 			}
+			 */
 			$approvals = array('i'=>array(), 'g'=>array());
+			/*
 			if($initversion['approvals']) {
 				foreach($initversion['approvals'] as $approval) {
 					if($approval['attributes']['type'] == 1) {
@@ -268,6 +303,7 @@ function insert_document($document) { /* {{{ */
 					}
 				}
 			}
+			 */
 			$version_attributes = array();
 			if(isset($initversion['user_attributes'])) {
 				foreach($initversion['user_attributes'] as $orgid=>$value) {
@@ -305,6 +341,32 @@ function insert_document($document) { /* {{{ */
 			} else {
 				$newDocument = $result[0];
 				unlink($filename);
+
+				$newVersion = $result[1]->getContent();
+				$newVersion->setDate(dateToTimestamp($initversion['attributes']['date']));
+				$newlogs = array();
+				foreach($initversion['statuslogs'] as $i=>$log) {
+					if(!array_key_exists($log['attributes']['user'], $objmap['users'])) {
+						unset($initversion['statuslogs'][$i]);
+						echo "Warning: user for status log cannot be mapped\n";
+					} else {
+						$log['attributes']['user'] = $dms->getUser($objmap['users'][$log['attributes']['user']]);
+						$newlogs[] = $log['attributes'];
+					}
+				}
+				$newVersion->rewriteStatusLog($newlogs);
+
+				/* Set reviewers and review log */
+				if($initversion['reviews']) {
+					$newreviews = getRevAppLog($initversion['reviews']);
+					$newVersion->rewriteReviewLog($newreviews);
+				}
+				if($initversion['approvals']) {
+					$newapprovals = getRevAppLog($initversion['approvals']);
+					$newVersion->rewriteApprovalLog($newapprovals);
+				}
+
+				$newDocument->setDate(dateToTimestamp($document['attributes']['date']));
 				$newDocument->setDefaultAccess($document['attributes']['defaultaccess']);
 				foreach($document['versions'] as $version) {
 					if(!array_key_exists((int) $version['attributes']['owner'], $objmap['users'])) {
@@ -314,6 +376,7 @@ function insert_document($document) { /* {{{ */
 					$owner = $dms->getUser($objmap['users'][(int) $version['attributes']['owner']]);
 
 					$reviews = array('i'=>array(), 'g'=>array());
+					/*
 					if($version['reviews']) {
 						foreach($version['reviews'] as $review) {
 							if($review['attributes']['type'] == 1) {
@@ -325,7 +388,9 @@ function insert_document($document) { /* {{{ */
 							}
 						}
 					}
+					 */
 					$approvals = array('i'=>array(), 'g'=>array());
+					/*
 					if($version['approvals']) {
 						foreach($version['approvals'] as $approval) {
 							if($approval['attributes']['type'] == 1) {
@@ -337,6 +402,7 @@ function insert_document($document) { /* {{{ */
 							}
 						}
 					}
+					 */
 					$version_attributes = array();
 					if(isset($version['user_attributes'])) {
 						foreach($version['user_attributes'] as $orgid=>$value) {
@@ -358,7 +424,7 @@ function insert_document($document) { /* {{{ */
 						$filename = tempnam('/tmp', 'FOO');
 						file_put_contents($filename, $filecontents);
 					}
-					if(!$newDocument->addContent(
+					if(!($result = $newDocument->addContent(
 						$version['attributes']['comment'],
 						$owner,
 						$filename,
@@ -370,8 +436,31 @@ function insert_document($document) { /* {{{ */
 						$version['version'],	
 						$version_attributes,
 						null //workflow
-					)) {
+					))) {
 					}
+					$newVersion = $result->getContent();
+					$newVersion->setDate(dateToTimestamp($version['attributes']['date']));
+					$newlogs = array();
+					foreach($version['statuslogs'] as $i=>$log) {
+						if(!array_key_exists($log['attributes']['user'], $objmap['users'])) {
+							unset($version['statuslogs'][$i]);
+							echo "Warning: user for status log cannot be mapped\n";
+						} else {
+							$log['attributes']['user'] = $dms->getUser($objmap['users'][$log['attributes']['user']]);
+							$newlogs[] = $log['attributes'];
+						}
+					}
+					$newVersion->rewriteStatusLog($newlogs);
+
+					if($version['reviews']) {
+						$newreviews = getRevAppLog($version['reviews']);
+						$newVersion->rewriteReviewLog($newreviews);
+					}
+					if($version['approvals']) {
+						$newapprovals = getRevAppLog($version['approvals']);
+						$newVersion->rewriteApprovalLog($newapprovals);
+					}
+
 					unlink($filename);
 				}	
 			}
@@ -491,6 +580,7 @@ function insert_folder($folder) { /* {{{ */
 			return false;
 		}
 
+		$newFolder->setDate(dateToTimestamp($folder['attributes']['date']));
 		$newFolder->setDefaultAccess($folder['attributes']['defaultaccess']);
 		if(isset($folder['notifications']['users']) && $folder['notifications']['users']) {
 			foreach($folder['notifications']['users'] as $userid) {
