@@ -192,7 +192,7 @@ class SeedDMS_Core_DMS {
 	 * @param string $date date to be checked
 	 * @return boolean true if date is in propper format, otherwise false
 	 */
-	static function checkDate($date) { /* {{{ */
+	static function checkDate($date, $format='Y-m-d H:i:s') { /* {{{ */
 		$d = DateTime::createFromFormat($format, $date);
 		return $d && $d->format($format) == $date;
 	} /* }}} */
