@@ -162,6 +162,7 @@ if ($action == "saveSettings")
   $settings->_maxDirID = intval($_POST["maxDirID"]);
   $settings->_updateNotifyTime = intval($_POST["updateNotifyTime"]);
   $settings->_maxExecutionTime = intval($_POST["maxExecutionTime"]);
+  $settings->_cmdTimeout = (intval($_POST["cmdTimeout"]) > 0) ?intval($_POST["cmdTimeout"]) : 1;
 
   // SETTINGS - ADVANCED - INDEX CMD
   $settings->_converters['fulltext'] = $_POST["converters"];

@@ -43,8 +43,12 @@ class SeedDMS_View_Indexer extends SeedDMS_Bootstrap_Style {
 			echo $indent."  ".$document->getId().":".htmlspecialchars($document->getName())." ";
 			/* If the document wasn't indexed before then just add it */
 			if(!($hits = $index->find('document_id:'.$document->getId()))) {
-				$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, $this->converters ? $this->converters : null));
-				echo "(document added)";
+				try {
+					$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, $this->converters ? $this->converters : null, false, $this->timeout));
+					echo "(document added)";
+				} catch(Exception $e) {
+					echo $indent."(adding document failed '".$e->getMessage()."')";
+				}
 			} else {
 				$hit = $hits[0];
 				/* Check if the attribute created is set or has a value older
@@ -62,8 +66,13 @@ class SeedDMS_View_Indexer extends SeedDMS_Bootstrap_Style {
 					echo $indent."(document unchanged)";
 				} else {
 					$index->delete($hit->id);
-					$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, $this->converters ? $this->converters : null));
-					echo $indent."(document updated)";
+					try {
+						$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, $this->converters ? $this->converters : null, false, $this->timeout));
+						echo $indent."(document updated)";
+					} catch(Exception $e) {
+						print_r($e);
+						echo $indent."(updating document failed)";
+					}
 				}
 			}
 			echo "\n";
@@ -77,6 +86,7 @@ class SeedDMS_View_Indexer extends SeedDMS_Bootstrap_Style {
 		$recreate = $this->params['recreate'];
 		$folder = $this->params['folder'];
 		$this->converters = $this->params['converters'];
+		$this->timeout = $this->params['timeout'];
 
 		$this->htmlStartPage(getMLText("admin_tools"));
 		$this->globalNavigation();

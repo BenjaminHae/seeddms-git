@@ -561,6 +561,10 @@ if(!is_writeable($settings->_configFilePath)) {
         <td><?php printMLText("settings_maxExecutionTime");?>:</td>
         <td><input type="text" name="maxExecutionTime" value="<?php echo $settings->_maxExecutionTime ?>" /></td>
       </tr>
+      <tr title="<?php printMLText("settings_cmdTimeout_desc");?>">
+        <td><?php printMLText("settings_cmdTimeout");?>:</td>
+        <td><input type="text" name="cmdTimeout" value="<?php echo $settings->_cmdTimeout ?>" /></td>
+      </tr>
 
       <tr ><td><b> <?php printMLText("index_converters");?></b></td> </tr>
 <?php
