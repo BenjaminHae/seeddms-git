@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2099), dgrutsch (18)
+//    Translators: Admin (2101), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -915,6 +915,8 @@ URL: [url]',
 'settings_cannot_disable' => 'Datei ENABLE_INSTALL_TOOL konnte nicht gelöscht werden.',
 'settings_checkOutDir' => 'Verzeichnis für ausgecheckte Dokumente',
 'settings_checkOutDir_desc' => 'Dies ist das Verzeichnis, in das Dokumenteninhalte bei einem Check out kopiert werden. Wenn dieses Verzeichnis für die Benutzer erreichbar ist, können die Dateien editiert und dann wieder eingecheckt werden.',
+'settings_cmdTimeout' => 'Timeout für externe Programme',
+'settings_cmdTimeout_desc' => 'Diese Zeit in Sekunden legt fest, wann ein externes Programm (z.B. für die Erstellung des Volltextindex) beendet wird.',
 'settings_contentDir' => 'Content-Verzeichnis',
 'settings_contentDir_desc' => 'Verzeichnis, in dem die Dokumente gespeichert werden. Sie sollten ein Verzeichnis wählen, das nicht durch den Web-Server erreichbar ist.',
 'settings_contentOffsetDir' => 'Content Offset Directory',

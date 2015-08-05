@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1230), dgrutsch (3), netixw (14)
+//    Translators: Admin (1232), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -922,6 +922,8 @@ URL: [url]',
 'settings_cannot_disable' => 'File ENABLE_INSTALL_TOOL could not deleted',
 'settings_checkOutDir' => 'Directory for checked out documents',
 'settings_checkOutDir_desc' => 'This is the directory where the latest content of a document is copied if the document is checked out. If you make this directory accessible for users, they can edit the file and check it back in when finished.',
+'settings_cmdTimeout' => 'Timeout for external commands',
+'settings_cmdTimeout_desc' => 'This duration in seconds determines when an external command (e.g. for creating the full text index) will be terminatd.',
 'settings_contentDir' => 'Content directory',
 'settings_contentDir_desc' => 'Where the uploaded files are stored (best to choose a directory that is not accessible through your web-server)',
 'settings_contentOffsetDir' => 'Content Offset Directory',
