@@ -14,6 +14,7 @@ function usage() { /* {{{ */
 	echo "  --config: set alternative config file.\n";
 	echo "  --folder: set start folder.\n";
 	echo "  --skip-root: do not export the root folder itself.\n";
+	echo "  --sections <sections>: comma seperated list of sections to export.\n";
 	echo "  --maxsize: maximum size of files to be included in output\n";
 	echo "    (defaults to 100000)\n";
 	echo "  --contentdir: directory where all document versions are stored\n";
@@ -29,7 +30,7 @@ function wrapWithCData($text) { /* {{{ */
 
 $version = "0.0.1";
 $shortoptions = "hv";
-$longoptions = array('help', 'version', 'skip-root', 'config:', 'folder:', 'maxsize:', 'contentdir:');
+$longoptions = array('help', 'version', 'skip-root', 'config:', 'folder:', 'maxsize:', 'contentdir:', 'sections:');
 if(false === ($options = getopt($shortoptions, $longoptions))) {
 	usage();
 	exit(0);
@@ -75,6 +76,11 @@ if(isset($options['contentdir'])) {
 	$contentdir = '';
 }
 
+$sections = array();
+if(isset($options['sections'])) {
+	$sections = explode(',', $options['sections']);
+}
+
 if(isset($settings->_extraPath))
 	ini_set('include_path', $settings->_extraPath. PATH_SEPARATOR .ini_get('include_path'));
 
@@ -102,8 +108,9 @@ $statistic = array(
 );
 
 function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
-	global $statistic, $index, $dms, $maxsize, $contentdir;
+	global $sections, $statistic, $index, $dms, $maxsize, $contentdir;
 
+	if(!$sections || in_array('folders', $sections)) {
 	if(!$skipcurrent) {
 		echo $indent."<folder id=\"".$folder->getId()."\"";
 		if($parent)
@@ -155,6 +162,9 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 			tree($subfolder, $parentfolder, $indent);
 		}
 	}
+	}
+
+	if(!$sections || in_array('documents', $sections)) {
 	$documents = $folder->getDocuments();
 	if($documents) {
 		foreach($documents as $document) {
@@ -389,6 +399,7 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 			$statistic['documents']++;
 		}
 	}
+	}
 } /* }}} */
 
 $db = new SeedDMS_Core_DatabaseAccess($settings->_dbDriver, $settings->_dbHostname, $settings->_dbUser, $settings->_dbPass, $settings->_dbDatabase);
@@ -404,6 +415,7 @@ $dms->setRootFolderID($settings->_rootFolderID);
 
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 echo "<dms dbversion=\"".implode('.', array_slice($dms->getDBVersion(), 1, 3))."\" date=\"".date('Y-m-d H:i:s')."\">\n";
+if(!$sections || in_array('users', $sections)) {
 $users = $dms->getAllUsers();
 if($users) {
 	echo "<users>\n";
@@ -451,7 +463,9 @@ if($users) {
 	}
 	echo "</users>\n";
 }
+}
 
+if(!$sections || in_array('groups', $sections)) {
 $groups = $dms->getAllGroups();
 if($groups) {
 	echo "<groups>\n";
@@ -472,7 +486,9 @@ if($groups) {
 	}
 	echo "</groups>\n";
 }
+}
 
+if(!$sections || in_array('keywordcategories', $sections)) {
 $categories = $dms->getAllKeywordCategories();
 if($categories) {
 	echo "<keywordcategories>\n";
@@ -495,7 +511,9 @@ if($categories) {
 	}
 	echo "</keywordcategories>\n";
 }
+}
 
+if(!$sections || in_array('documentcategories', $sections)) {
 $categories = $dms->getDocumentCategories();
 if($categories) {
 	echo "<documentcategories>\n";
@@ -507,7 +525,9 @@ if($categories) {
 	}
 	echo "</documentcategories>\n";
 }
+}
 
+if(!$sections || in_array('attributedefinition', $sections)) {
 $attrdefs = $dms->getAllAttributeDefinitions();
 if($attrdefs) {
 	echo "<attrіbutedefinitions>\n";
@@ -539,6 +559,7 @@ if($attrdefs) {
 		$statistic['attributedefinitions']++;
 	}
 	echo "</attrіbutedefinitions>\n";
+}
 }
 
 $folder = $dms->getFolder($folderid);
