@@ -546,12 +546,10 @@ if($folder) {
 	tree($folder, null, '', $skiproot);
 }
 
-echo "</dms>\n";
-echo "<!--\n";
-echo "Command:\n";
-echo "  ".str_replace('--', '-', implode(" ", $argv))."\n";
-echo "Statistics:\n";
+echo "<statistics>\n";
+echo " <command><![CDATA[".implode(" ", $argv)."]]></command>\n";
 foreach($statistic as $type=>$count)
-	echo "  ".$type.": ".$count."\n";
-echo "-->\n"
+	echo " <".$type.">".$count."</".$type.">\n";
+echo "</statistics>\n";
+echo "</dms>\n";
 ?>
