@@ -548,6 +548,9 @@ if($folder) {
 
 echo "</dms>\n";
 echo "<!--\n";
+echo "Command:\n";
+echo "  ".str_replace('--', '-', implode(" ", $argv))."\n";
+echo "Statistics:\n";
 foreach($statistic as $type=>$count)
 	echo "  ".$type.": ".$count."\n";
 echo "-->\n"
