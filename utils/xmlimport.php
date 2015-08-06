@@ -664,11 +664,21 @@ function resolve_links() { /* {{{ */
 } /* }}} */
 
 function startElement($parser, $name, $attrs) { /* {{{ */
-	global $elementstack, $objmap, $cur_user, $cur_group, $cur_folder, $cur_document, $cur_version, $cur_statuslog, $cur_approval, $cur_approvallog, $cur_review, $cur_reviewlog, $cur_attrdef, $cur_documentcat, $cur_keyword, $cur_keywordcat, $cur_file, $cur_link;
+	global $dms, $noversioncheck, $elementstack, $objmap, $cur_user, $cur_group, $cur_folder, $cur_document, $cur_version, $cur_statuslog, $cur_approval, $cur_approvallog, $cur_review, $cur_reviewlog, $cur_attrdef, $cur_documentcat, $cur_keyword, $cur_keywordcat, $cur_file, $cur_link;
 
 	$parent = end($elementstack);
 	array_push($elementstack, array('name'=>$name, 'attributes'=>$attrs));
 	switch($name) {
+		case "DMS":
+			if(!$noversioncheck) {
+				$xdbversion = explode('.', $attrs['DBVERSION']);
+				$dbversion = $dms->getDBVersion();
+				if(($xdbversion[0] != $dbversion['major']) || ($xdbversion[1] != $dbversion['minor'])) {
+					echo "Error: Database version (".implode('.', array($dbversion['major'], $dbversion['minor'], $dbversion['subminor'])).") doesn't match version in input file (".implode('.', $xdbversion).").\n";
+					exit(1);
+				}
+			}
+			break;
 		case "USER":
 			/* users can be the users data, the member of a group, a mandatory
 			 * reviewer or approver
@@ -1108,7 +1118,7 @@ function characterData($parser, $data) { /* {{{ */
 
 $version = "0.0.1";
 $shortoptions = "hv";
-$longoptions = array('help', 'version', 'debug', 'config:', 'sections:', 'folder:', 'file:', 'contentdir:', 'default-user:', 'export-mapping:');
+$longoptions = array('help', 'version', 'debug', 'config:', 'sections:', 'folder:', 'file:', 'contentdir:', 'default-user:', 'export-mapping:', 'no-version-check');
 if(false === ($options = getopt($shortoptions, $longoptions))) {
 	usage();
 	exit(0);
@@ -1175,6 +1185,11 @@ if(isset($options['file'])) {
 $exportmapping = '';
 if(isset($options['export-mapping'])) {
 	$exportmapping = $options['export-mapping'];
+}
+
+$noversioncheck = false;
+if(isset($options['no-version-check'])) {
+	$noversioncheck = true;
 }
 
 $sections = array('documents', 'folders', 'groups', 'users', 'keywordcategories', 'documentcategories', 'attributedefinitions');
