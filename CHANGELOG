@@ -5,7 +5,7 @@
 - MyDocumets: list only documents to approve which have passed review
 - show preview image in Review/Approval summary
 - timeout for external commands for creating fulltext index can be set
-- add translations for korean
+- add translations for korean, croation, ukrainian
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.19
