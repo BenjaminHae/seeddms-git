@@ -92,7 +92,7 @@ class Settings { /* {{{ */
 	// Maximum number of sub-directories per parent directory
 	var $_maxDirID = 32700;
 	// default language (name of a subfolder in folder "languages")
-	var $_language = "English";
+	var $_language = "en_GB";
 	// users are notified about document-changes that took place within the last $_updateNotifyTime seconds
 	var $_updateNotifyTime = 86400;
 	// files with one of the following endings can be viewed online
