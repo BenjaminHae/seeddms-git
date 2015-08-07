@@ -397,6 +397,7 @@ $text = array(
 'home_folder' => '',
 'hourly' => 'Ежечасно',
 'hours' => 'часа',
+'hr_HR' => '',
 'human_readable' => 'Човекопонятен архив',
 'hu_HU' => '',
 'id' => 'ID',

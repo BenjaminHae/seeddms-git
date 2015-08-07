@@ -397,6 +397,7 @@ $text = array(
 'home_folder' => '',
 'hourly' => '',
 'hours' => '',
+'hr_HR' => '',
 'human_readable' => 'Použivateľský archív',
 'hu_HU' => 'Maďarčina',
 'id' => 'ID',

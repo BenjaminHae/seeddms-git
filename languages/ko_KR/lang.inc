@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (933), daivoc (353)
+//    Translators: Admin (933), daivoc (356)
 
 $text = array(
 'accept' => '동의',
@@ -478,6 +478,7 @@ URL: [url]',
 'home_folder' => '홈 폴더',
 'hourly' => '시간별',
 'hours' => '시간',
+'hr_HR' => '',
 'human_readable' => '가독력',
 'hu_HU' => '헝가리어',
 'id' => 'ID',
@@ -915,8 +916,8 @@ URL : [url]',
 'settings_cannot_disable' => '파일 ENABLE_INSTALL_TOOL 삭제할 수 없습니다',
 'settings_checkOutDir' => '체크아웃 문서 디렉토리',
 'settings_checkOutDir_desc' => '이것은 문서가 체크아웃된 문서의 최신 내용이 복사되는 디렉토리입니다. 사용자를 위해 이 디렉토리에 액세스 할 수 있도록 하면 파일을 편집하고 종료시 그것을 다시 확인할 수 있습니다.',
-'settings_cmdTimeout' => '',
-'settings_cmdTimeout_desc' => '',
+'settings_cmdTimeout' => '작업 시간 초과',
+'settings_cmdTimeout_desc' => '외부로부터 요청된 명령의 종료시점 까지의 소요시간(예: 전체 텍스트 인덱스 생성시간)',
 'settings_contentDir' => '내용 디렉토리',
 'settings_contentDir_desc' => '업로드 된 파일의 저장 위치(웹 서버를 통해 액세스 할 수없는 디렉토리를 선택하는 것이 가장 좋습니다)',
 'settings_contentOffsetDir' => '내용 오프셋 디렉토리',
