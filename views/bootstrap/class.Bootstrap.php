@@ -1904,6 +1904,7 @@ mayscript>
 	 */
 	protected function printProtocol($latestContent, $type="") { /* {{{ */
 		$dms = $this->params['dms'];
+		$document = $latestContent->getDocument();
 ?>
 		<legend><?php printMLText($type.'_log'); ?></legend>
 		<table class="table condensed">
@@ -1957,13 +1958,13 @@ mayscript>
 			case "review":
 				if($rec['file']) {
 					echo "<br />";
-					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+					echo "<a href=\"../op/op.Download.php?documentid=".$document->getID()."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 				}
 				break;
 			case "approval":
 				if($rec['file']) {
 					echo "<br />";
-					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+					echo "<a href=\"../op/op.Download.php?documentid=".$document->getID()."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 				}
 				break;
 			}
