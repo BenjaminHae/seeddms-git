@@ -167,12 +167,20 @@ function checkGrpForm()
 			}
 
 ?>
-	<form method="post" action="../op/op.ReviewDocument.php" name="form1" onsubmit="return checkGrpForm();">
+	<form method="post" action="../op/op.ReviewDocument.php" name="form1" enctype="multipart/form-data" onsubmit="return checkGrpForm();">
 	<?php echo createHiddenFieldWithKey('reviewdocument'); ?>
 	<table class="table-condensed">
 		<tr>
 			<td><?php printMLText("comment")?>:</td>
 			<td><textarea name="comment" cols="80" rows="4"></textarea></td>
+		</tr>
+		<tr>
+			<td><?php printMLText("review_file")?>:</td>
+			<td>
+<?php
+	$this->printFileChooser('reviewfile', false);
+?>
+			</td>
 		</tr>
 		<tr>
 			<td><?php printMLText("review_status")?>:</td>
