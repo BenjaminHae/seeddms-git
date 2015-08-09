@@ -170,12 +170,20 @@ function checkGrpForm()
 			}
 
 ?>
-	<form method="POST" action="../op/op.ApproveDocument.php" name="form1" onsubmit="return checkGrpForm();">
+	<form method="POST" action="../op/op.ApproveDocument.php" name="form1" enctype="multipart/form-data" onsubmit="return checkGrpForm();">
 	<?php echo createHiddenFieldWithKey('approvedocument'); ?>
 	<table>
 	<tr><td><?php printMLText("comment")?>:</td>
 	<td><textarea name="comment" cols="80" rows="4"></textarea>
 	</td></tr>
+		<tr>
+			<td><?php printMLText("approval_file")?>:</td>
+			<td>
+<?php
+	$this->printFileChooser('approvalfile', false);
+?>
+			</td>
+		</tr>
 	<tr><td><?php printMLText("approval_status")?>:</td>
 	<td>
 	<select name="approvalStatus">
