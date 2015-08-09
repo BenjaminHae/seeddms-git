@@ -107,7 +107,10 @@ $statistic = array(
 	'documentcategories'=>0,
 );
 
-function dumplog($type, $logs, $indent) { /* {{{ */
+function dumplog($version, $type, $logs, $indent) { /* {{{ */
+	global $dms, $contentdir, $maxsize;
+
+	$document = $version->getDocument();
 	switch($type) {
 	case 'approval':
 		$type2 = 'approve';
@@ -135,7 +138,7 @@ function dumplog($type, $logs, $indent) { /* {{{ */
 			$filename = $dms->contentDir . $document->getDir().'r'.(int) $a[$type2.'LogID'];
 			if(file_exists($filename)) {
 				echo $indent."     <data length=\"".filesize($filename)."\"";
-				if(filesize($filesize) < $maxsize) {
+				if(filesize($filename) < $maxsize) {
 					echo ">\n";
 					echo chunk_split(base64_encode(file_get_contents($filename)), 76, "\n");
 					echo $indent."     </data>\n";
@@ -280,7 +283,7 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 				echo $indent." <versions>\n";
 				foreach($versions as $version) {
 					$approvalStatus = $version->getApprovalStatus(30);
-					$reviewStatus = $version->getReviewStatus();
+					$reviewStatus = $version->getReviewStatus(30);
 					$owner = $version->getUser();
 					echo $indent."  <version version=\"".$version->getVersion()."\">\n";
 					echo $indent."   <attr name=\"mimetype\">".$version->getMimeType()."</attr>\n";
@@ -308,10 +311,10 @@ function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
 						echo $indent."   </status>\n";
 					}
 					if($approvalStatus) {
-						dumplog('approval', $approvalStatus, $indent);
+						dumplog($version, 'approval', $approvalStatus, $indent);
 					}
 					if($reviewStatus) {
-						dumplog('review', $reviewStatus, $indent);
+						dumplog($version, 'review', $reviewStatus, $indent);
 					}
 					if(file_exists($dms->contentDir . $version->getPath())) {
 						echo $indent."   <data length=\"".filesize($dms->contentDir . $version->getPath())."\"";
