@@ -134,7 +134,7 @@ function dumplog($version, $type, $logs, $indent) { /* {{{ */
 		echo $indent."      <attr name=\"status\">".$a['status']."</attr>\n";
 		echo $indent."      <attr name=\"comment\">".wrapWithCData($a['comment'])."</attr>\n";
 		echo $indent."      <attr name=\"date\" format=\"Y-m-d H:i:s\">".$a['date']."</attr>\n";
-		if($a['file']) {
+		if(!empty($a['file'])) {
 			$filename = $dms->contentDir . $document->getDir().'r'.(int) $a[$type2.'LogID'];
 			if(file_exists($filename)) {
 				echo $indent."     <data length=\"".filesize($filename)."\"";
