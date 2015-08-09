@@ -6,6 +6,7 @@
 - show preview image in Review/Approval summary
 - timeout for external commands for creating fulltext index can be set
 - add translations for korean, croation, ukrainian
+- file can be submitted with approval/review
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.19
