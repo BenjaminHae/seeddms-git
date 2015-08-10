@@ -43,6 +43,17 @@ class SeedDMS_Lucene_Search {
 	} /* }}} */
 
 	/**
+	 * Get document from index
+	 *
+	 * @param object $index lucene index
+	 * @return object instance of SeedDMS_Lucene_Document of false
+	 */
+	function getDocument($id) { /* {{{ */
+		$hits = $this->index->find('document_id:'.$id);
+		return $hits ? $hits[0] : false;
+	} /* }}} */
+
+	/**
 	 * Search in index
 	 *
 	 * @param object $index lucene index
