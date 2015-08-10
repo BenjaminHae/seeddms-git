@@ -319,6 +319,17 @@ switch($command) {
 				if($document) {
 					if ($document->getAccessMode($user) >= M_READWRITE) {
 						if($document->remove()) {
+							/* Remove the document from the fulltext index */
+							if($settings->_enableFullSearch) {
+								$index = $indexconf['Indexer']::open($settings->_luceneDir);
+								if($index) {
+									$lucenesearch = new $indexconf['Search']($index);
+									if($hit = $lucenesearch->getDocument($_REQUEST['id'])) {
+										$index->delete($hit->id);
+										$index->commit();
+									}
+								}
+							}
 							header('Content-Type', 'application/json');
 							echo json_encode(array('success'=>true, 'message'=>'', 'data'=>''));
 						} else {

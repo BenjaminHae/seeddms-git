@@ -62,16 +62,13 @@ if (!$document->remove()) {
 
 	/* Remove the document from the fulltext index */
 	if($settings->_enableFullSearch) {
-		if(!empty($settings->_luceneClassDir))
-			require_once($settings->_luceneClassDir.'/Lucene.php');
-		else
-			require_once('SeedDMS/Lucene.php');
-
-		$index = SeedDMS_Lucene_Indexer::open($settings->_luceneDir);
-		if($index && $hits = $index->find('document_id:'.$documentid)) {
-			$hit = $hits[0];
-			$index->delete($hit->id);
-			$index->commit();
+		$index = $indexconf['Indexer']::open($settings->_luceneDir);
+		if($index) {
+			$lucenesearch = new $indexconf['Search']($index);
+			if($hit = $lucenesearch->getDocument($documentid)) {
+				$index->delete($hit->id);
+				$index->commit();
+			}
 		}
 	}
 

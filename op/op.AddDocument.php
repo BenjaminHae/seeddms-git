@@ -293,15 +293,10 @@ for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
 			}
 		}
 		if($settings->_enableFullSearch) {
-			if(!empty($settings->_luceneClassDir))
-				require_once($settings->_luceneClassDir.'/Lucene.php');
-			else
-				require_once('SeedDMS/Lucene.php');
-
-			$index = SeedDMS_Lucene_Indexer::open($settings->_luceneDir);
+			$index = $indexconf['Indexer']::open($settings->_luceneDir);
 			if($index) {
-				SeedDMS_Lucene_Indexer::init($settings->_stopWordsFile);
-				$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, isset($settings->_converters['fulltext']) ? $settings->_converters['fulltext'] : null, true));
+				$indexconf['Indexer']::init($settings->_stopWordsFile);
+				$index->addDocument(new $indexconf['IndexedDocument']($dms, $document, isset($settings->_converters['fulltext']) ? $settings->_converters['fulltext'] : null, true));
 			}
 		}
 
