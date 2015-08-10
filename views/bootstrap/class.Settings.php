@@ -161,6 +161,15 @@ if(!is_writeable($settings->_configFilePath)) {
         <td><?php printMLText("settings_enableFullSearch");?>:</td>
         <td><input name="enableFullSearch" type="checkbox" <?php if ($settings->_enableFullSearch) echo "checked" ?> /></td>
       </tr>
+      <tr title="<?php printMLText("settings_fullSearchEngine_desc");?>">
+        <td><?php printMLText("settings_fullSearchEngine");?>:</td>
+				<td>
+				  <select name="fullSearchEngine">
+					  <option value="lucene" <?php if ($settings->_fullSearchEngine=='lucene') echo "selected" ?>><?php printMLText("settings_fullSearchEngine_vallucene");?></option>
+						<option value="sqlitefts" <?php if ($settings->_fullSearchEngine=='sqlitefts') echo "selected" ?>><?php printMLText("settings_fullSearchEngine_valsqlitefts");?></option>
+					</select>
+				</td>
+      </tr>
       <tr title="<?php printMLText("settings_stopWordsFile_desc");?>">
         <td><?php printMLText("settings_stopWordsFile");?>:</td>
         <td><input type="text" name="stopWordsFile" value="<?php echo $settings->_stopWordsFile; ?>" size="100" /></td>

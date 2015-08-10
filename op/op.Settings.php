@@ -67,6 +67,7 @@ if ($action == "saveSettings")
   $settings->_enableEmail =getBoolValue("enableEmail");
   $settings->_enableUsersView = getBoolValue("enableUsersView");
   $settings->_enableFullSearch = getBoolValue("enableFullSearch");
+	$settings->_fullSearchEngine = $_POST["fullSearchEngine"];
   $settings->_enableClipboard = getBoolValue("enableClipboard");
   $settings->_enableDropUpload = getBoolValue("enableDropUpload");
   $settings->_enableFolderTree = getBoolValue("enableFolderTree");

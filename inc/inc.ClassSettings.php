@@ -87,6 +87,8 @@ class Settings { /* {{{ */
 	var $_stopWordsFile = null;
 	// enable/disable lucene fulltext search
 	var $_enableFullSearch = true;
+	// fulltext search engine
+	var $_fullSearchEngine = 'lucene';
 	// contentOffsetDirTo
 	var $_contentOffsetDir = "1048576";
 	// Maximum number of sub-directories per parent directory
@@ -347,6 +349,7 @@ class Settings { /* {{{ */
 		$this->_enableLanguageSelector = Settings::boolVal($tab["enableLanguageSelector"]);
 		$this->_enableThemeSelector = Settings::boolVal($tab["enableThemeSelector"]);
 		$this->_enableFullSearch = Settings::boolVal($tab["enableFullSearch"]);
+		$this->_fullSearchEngine = strval($tab["fullSearchEngine"]);
 		$this->_stopWordsFile = strval($tab["stopWordsFile"]);
 		$this->_sortUsersInList = strval($tab["sortUsersInList"]);
 		$this->_sortFoldersDefault = strval($tab["sortFoldersDefault"]);
@@ -619,6 +622,7 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "enableLanguageSelector", $this->_enableLanguageSelector);
     $this->setXMLAttributValue($node, "enableThemeSelector", $this->_enableThemeSelector);
     $this->setXMLAttributValue($node, "enableFullSearch", $this->_enableFullSearch);
+    $this->setXMLAttributValue($node, "fullSearchEngine", $this->_fullSearchEngine);
     $this->setXMLAttributValue($node, "expandFolderTree", $this->_expandFolderTree);
     $this->setXMLAttributValue($node, "stopWordsFile", $this->_stopWordsFile);
     $this->setXMLAttributValue($node, "sortUsersInList", $this->_sortUsersInList);
