@@ -14,6 +14,7 @@ pear:
 	(cd SeedDMS_Core/; pear package)
 	(cd SeedDMS_Lucene/; pear package)
 	(cd SeedDMS_Preview/; pear package)
+	(cd SeedDMS_SQLiteFTS/; pear package)
 
 webdav:
 	mkdir -p tmp/seeddms-webdav-$(VERSION)
