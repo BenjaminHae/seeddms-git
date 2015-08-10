@@ -55,8 +55,7 @@ class SeedDMS_SQLiteFTS_Indexer {
 	 * @param string $indexerDir directory on disk containing the index
 	 */
 	static function create($indexerDir) { /* {{{ */
-		if(!@unlink($indexerDir.'/index.db'))
-			return null;
+		unlink($indexerDir.'/index.db');
 		$index =  new SeedDMS_SQLiteFTS_Indexer($indexerDir);
 		$sql = 'CREATE VIRTUAL TABLE docs USING fts4(title, comment, keywords, category, owner, content, created, notindexed=created, matchinfo=fts3)';
 		$res = $index->_conn->exec($sql);
