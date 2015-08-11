@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (699), pepijn (45), reinoutdijkstra@hotmail.com (270)
+//    Translators: Admin (701), pepijn (45), reinoutdijkstra@hotmail.com (270)
 
 $text = array(
 'accept' => 'Accept',
@@ -466,7 +466,7 @@ URL: [url]',
 'home_folder' => '',
 'hourly' => 'Elk uur',
 'hours' => 'uren',
-'hr_HR' => '',
+'hr_HR' => 'Kroatisch',
 'human_readable' => 'Leesbaar Archief',
 'hu_HU' => 'Hongaars',
 'id' => 'ID',
@@ -529,7 +529,7 @@ URL: [url]',
 'keep_doc_status' => 'Behoud document status',
 'keywords' => 'Sleutelwoorden',
 'keyword_exists' => 'Sleutelwoord bestaat al',
-'ko_KR' => '',
+'ko_KR' => 'Koreaans',
 'language' => 'Talen',
 'lastaccess' => '',
 'last_update' => 'Laatste Update',
