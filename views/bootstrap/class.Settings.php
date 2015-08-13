@@ -31,19 +31,22 @@ require_once("class.Bootstrap.php");
  */
 class SeedDMS_View_Settings extends SeedDMS_Bootstrap_Style {
 
-	protected function showTextField($name, $value, $type='') { /* {{{ */
+	protected function showTextField($name, $value, $type='', $placeholder) { /* {{{ */
 		if($type != 'password' && strlen($value) > 80)
 			echo '<textarea class="input-xxlarge" name="'.$name.'">'.$value.'</textarea>';
-		elseif(strlen($value) > 40)
-			echo '<input '.($type=='password' ? 'type="password"' : 'type="text"').'" class="input-xxlarge" name="'.$name.'" value="'.$value.'"/>';
-		elseif(strlen($value) > 30)
-			echo '<input '.($type=='password' ? 'type="password"' : 'type="text"').'" class="input-xlarge" name="'.$name.'" value="'.$value.'"/>';
-		elseif(strlen($value) > 18)
-			echo '<input '.($type=='password' ? 'type="password"' : 'type="text"').'" class="input-large" name="'.$name.'" value="'.$value.'"/>';
-		elseif(strlen($value) > 12)
-			echo '<input '.($type=='password' ? 'type="password"' : 'type="text"').'" class="input-medium" name="'.$name.'" value="'.$value.'"/>';
-		else
-			echo '<input '.($type=='password' ? 'type="password"' : 'type="text"').'" class="input-small" name="'.$name.'" value="'.$value.'"/>';
+		else {
+			if(strlen($value) > 40)
+				$class = 'input-xxlarge';
+			elseif(strlen($value) > 30)
+				$class = 'input-xlarge';
+			elseif(strlen($value) > 18)
+				$class = 'input-large';
+			elseif(strlen($value) > 12)
+				$class = 'input-medium';
+			else
+				$class = 'input-small';
+			echo '<input '.($type=='password' ? 'type="password"' : 'type="text"').'" class="'.$class.'" name="'.$name.'" value="'.$value.'" placeholder="'.$placeholder.'"/>';
+		}
 	} /* }}} */
 
 	function show() { /* {{{ */
