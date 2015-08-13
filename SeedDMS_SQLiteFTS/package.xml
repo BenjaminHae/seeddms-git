@@ -49,6 +49,9 @@ initial release
    </dir> <!-- /SQLiteFTS -->
    <dir name="tests">
    </dir> <!-- /tests -->
+   <file name="SQLiteFTS.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+   </file>
   </dir> <!-- / -->
  </contents>
  <dependencies>
