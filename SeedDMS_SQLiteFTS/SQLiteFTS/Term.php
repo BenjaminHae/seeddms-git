@@ -52,9 +52,11 @@ class SeedDMS_SQLiteFTS_Term {
 			1 => 'comment',
 			2 => 'keywords',
 			3 => 'category',
-			4 => 'owner',
-			5 => 'content',
-			6 => 'created'
+			4 => 'mimetype',
+			5 => 'origfilename',
+			6 => 'owner',
+			7 => 'content',
+			8 => 'created'
 		);
 		$this->field = $fields[$col];
 		$this->_occurrence = $occurrence;

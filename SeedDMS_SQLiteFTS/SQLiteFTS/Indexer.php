@@ -57,7 +57,10 @@ class SeedDMS_SQLiteFTS_Indexer {
 	static function create($indexerDir) { /* {{{ */
 		unlink($indexerDir.'/index.db');
 		$index =  new SeedDMS_SQLiteFTS_Indexer($indexerDir);
-		$sql = 'CREATE VIRTUAL TABLE docs USING fts4(title, comment, keywords, category, mimetype, orgfilename, owner, content, created, notindexed=created, matchinfo=fts3)';
+		/* Make sure the sequence of fields is identical to the field list
+		 * in SeedDMS_SQLiteFTS_Term
+		 */
+		$sql = 'CREATE VIRTUAL TABLE docs USING fts4(title, comment, keywords, category, mimetype, origfilename, owner, content, created, notindexed=created, matchinfo=fts3)';
 		$res = $index->_conn->exec($sql);
 		if($res === false) {
 			return null;
@@ -88,7 +91,7 @@ class SeedDMS_SQLiteFTS_Indexer {
 		if(!$this->_conn)
 			return false;
 
-		$sql = "INSERT INTO docs (docid, title, comment, keywords, category, owner, content, mimetype, orgfilename, created) VALUES(".$doc->getFieldValue('document_id').", ".$this->_conn->quote($doc->getFieldValue('title')).", ".$this->_conn->quote($doc->getFieldValue('comment')).", ".$this->_conn->quote($doc->getFieldValue('keywords')).", ".$this->_conn->quote($doc->getFieldValue('category')).", ".$this->_conn->quote($doc->getFieldValue('owner')).", ".$this->_conn->quote($doc->getFieldValue('content')).", ".$this->_conn->quote($doc->getFieldValue('mimetype')).", ".$this->_conn->quote($doc->getFieldValue('orgfilename')).", ".time().")";
+		$sql = "INSERT INTO docs (docid, title, comment, keywords, category, owner, content, mimetype, origfilename, created) VALUES(".$doc->getFieldValue('document_id').", ".$this->_conn->quote($doc->getFieldValue('title')).", ".$this->_conn->quote($doc->getFieldValue('comment')).", ".$this->_conn->quote($doc->getFieldValue('keywords')).", ".$this->_conn->quote($doc->getFieldValue('category')).", ".$this->_conn->quote($doc->getFieldValue('owner')).", ".$this->_conn->quote($doc->getFieldValue('content')).", ".$this->_conn->quote($doc->getFieldValue('mimetype')).", ".$this->_conn->quote($doc->getFieldValue('origfilename')).", ".time().")";
 		$res = $this->_conn->exec($sql);
 		if($res === false) {
 			var_dump($this->_conn->errorInfo());
@@ -180,7 +183,7 @@ class SeedDMS_SQLiteFTS_Indexer {
 		if(!$this->_conn)
 			return false;
 
-		$sql = "SELECT title, comment, owner, keywords, category, mimetype, orgfilename, created FROM docs WHERE docid=".(int) $id;
+		$sql = "SELECT title, comment, owner, keywords, category, mimetype, origfilename, created FROM docs WHERE docid=".(int) $id;
 		$res = $this->_conn->query($sql);
 		$doc = false;
 		if($res) {
@@ -191,7 +194,7 @@ class SeedDMS_SQLiteFTS_Indexer {
 			$doc->addField('keywords', $rec['keywords']);
 			$doc->addField('category', $rec['category']);
 			$doc->addField('mimetype', $rec['mimetype']);
-			$doc->addField('orgfilename', $rec['orgfilename']);
+			$doc->addField('origfilename', $rec['origfilename']);
 			$doc->addField('owner', $rec['owner']);
 			$doc->addField('created', $rec['created']);
 		}
