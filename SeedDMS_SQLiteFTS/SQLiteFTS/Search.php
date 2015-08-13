@@ -68,17 +68,19 @@ class SeedDMS_SQliteFTS_Search {
 		}
 		if($owner) {
 			if($querystr)
-				$querystr .= ' AND ';
+				$querystr .= ' ';
+				//$querystr .= ' AND ';
 			$querystr .= 'owner:'.$owner;
+			//$querystr .= $owner;
 		}
 		if($categories) {
 			if($querystr)
-				$querystr .= ' AND ';
+				$querystr .= ' ';
+				//$querystr .= ' AND ';
 			$querystr .= 'category:';
 			$querystr .= implode(' OR category:', $categories);
 			$querystr .= '';
 		}
-//		echo $querystr;
 		try {
 			$hits = $this->index->find($querystr);
 			$recs = array();
