@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (585), fengjohn (5)
+//    Translators: Admin (587), fengjohn (5)
 
 $text = array(
 'accept' => '接受',
@@ -862,6 +862,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => '',
 'settings_footNote' => '附注',
 'settings_footNote_desc' => '显示在每个页面底部的信息',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => '',
 'settings_guestID_desc' => '',
 'settings_httpRoot' => '',

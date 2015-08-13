@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (933), daivoc (356)
+//    Translators: Admin (935), daivoc (356)
 
 $text = array(
 'accept' => '동의',
@@ -1020,6 +1020,10 @@ URL : [url]',
 'settings_firstDayOfWeek_desc' => '요일의 첫날',
 'settings_footNote' => 'Foot Note',
 'settings_footNote_desc' => '메시지는 모든 페이지 하단에 표시',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Guest ID',
 'settings_guestID_desc' => 'Guest로 로그인 할 때 사용하는 ID (변경이 필요치 않음)',
 'settings_httpRoot' => 'HTTP Root',

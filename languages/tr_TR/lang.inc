@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1004), aydin (83)
+//    Translators: Admin (1006), aydin (83)
 
 $text = array(
 'accept' => 'Kabul',
@@ -1007,6 +1007,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'Haftanın ilk günü',
 'settings_footNote' => 'Dipnot',
 'settings_footNote_desc' => 'Her sayfanın en altında görünecek mesaj',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Misafir ID',
 'settings_guestID_desc' => 'Misafir kullanıcı için ID (genelde değiştirmek gerekmez)',
 'settings_httpRoot' => 'Http Kök dizini',

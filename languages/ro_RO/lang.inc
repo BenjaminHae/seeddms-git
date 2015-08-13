@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1005), balan (87)
+//    Translators: Admin (1007), balan (87)
 
 $text = array(
 'accept' => 'Accept',
@@ -1028,6 +1028,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'Prima zi a săptămânii',
 'settings_footNote' => 'Notă de subsol',
 'settings_footNote_desc' => 'Mesaj pentru afișat în partea de jos a fiecarei pagini',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'ID oaspete',
 'settings_guestID_desc' => 'ID-ul utilizatorului oaspete folosit când la Logarea ca oaspete (de cele mai multe ori nu este nevoie să se schimbe)',
 'settings_httpRoot' => 'Http Root',

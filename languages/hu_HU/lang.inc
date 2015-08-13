@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (558), ribaz (1019)
+//    Translators: Admin (560), ribaz (1019)
 
 $text = array(
 'accept' => 'Elfogad',
@@ -1005,6 +1005,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'A hét első napja',
 'settings_footNote' => 'Lábjegyzet',
 'settings_footNote_desc' => 'Minden oldal alján megjelenő üzenet',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Vendég azonosító',
 'settings_guestID_desc' => 'A vendég felhasználó azonosítója ami a vendégként történő bejelentkezéskor lesz használva (általában nem szükséges módosítani)',
 'settings_httpRoot' => 'Http gyökér',

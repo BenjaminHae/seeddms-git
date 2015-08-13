@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2102), dgrutsch (18)
+//    Translators: Admin (2106), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -1020,6 +1020,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'Erster Tag der Woche',
 'settings_footNote' => 'Text im Fuß der Seite',
 'settings_footNote_desc' => 'Meldung, die im Fuß jeder Seite angezeigt wird.',
+'settings_fullSearchEngine' => 'Verfahren für Volltext',
+'settings_fullSearchEngine_desc' => 'Setzt das Verfahren, welches für die Volltextsuche verwendet wird.',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Gast-ID',
 'settings_guestID_desc' => 'Id des Gast-Benutzers, wenn man sich als \'guest\' anmeldet.',
 'settings_httpRoot' => 'HTTP Wurzelverzeichnis',

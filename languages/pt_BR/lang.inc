@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (885), flaviove (627), lfcristofoli (352)
+//    Translators: Admin (887), flaviove (627), lfcristofoli (352)
 
 $text = array(
 'accept' => 'Aceitar',
@@ -1003,6 +1003,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'Primeiro dia da semana',
 'settings_footNote' => 'Nota de Pé',
 'settings_footNote_desc' => 'Mensagem a ser exibida na parte inferior de cada página',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'ID convidado',
 'settings_guestID_desc' => 'ID do usuário-convidado  usada quando conectado como convidado (na maioria das vezes não há necessidade de mudar)',
 'settings_httpRoot' => 'Raiz Http',

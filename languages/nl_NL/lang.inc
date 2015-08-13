@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (701), pepijn (45), reinoutdijkstra@hotmail.com (270)
+//    Translators: Admin (703), pepijn (45), reinoutdijkstra@hotmail.com (270)
 
 $text = array(
 'accept' => 'Accept',
@@ -997,6 +997,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'Eerste dag van de week',
 'settings_footNote' => 'Onderschrift',
 'settings_footNote_desc' => 'Bericht om onderop elke pagina te tonen',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Gast ID',
 'settings_guestID_desc' => 'ID van gastgebruiker gebruikt indien ingelogd als gast (meestal geen wijziging nodig)',
 'settings_httpRoot' => 'Http Basis',

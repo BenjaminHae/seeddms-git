@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1234), dgrutsch (3), netixw (14)
+//    Translators: Admin (1238), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -1027,6 +1027,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'First day of the week',
 'settings_footNote' => 'Foot Note',
 'settings_footNote_desc' => 'Message to display at the bottom of every page',
+'settings_fullSearchEngine' => 'Fulltext engine',
+'settings_fullSearchEngine_desc' => 'Set the method used for the fulltext search.',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Guest ID',
 'settings_guestID_desc' => 'ID of guest-user used when logged in as guest (mostly no need to change)',
 'settings_httpRoot' => 'Http Root',

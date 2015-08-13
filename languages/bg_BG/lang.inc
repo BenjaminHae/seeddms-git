@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (778)
+//    Translators: Admin (780)
 
 $text = array(
 'accept' => 'Приеми',
@@ -856,6 +856,10 @@ $text = array(
 'settings_firstDayOfWeek_desc' => 'Първи ден на седмицата',
 'settings_footNote' => 'Футер',
 'settings_footNote_desc' => 'Съобщение, показвано отдолу на всяка страница',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Идентификатор за гостенин',
 'settings_guestID_desc' => 'Идентификатор за гост (може да не се променя)',
 'settings_httpRoot' => 'Корен Http',

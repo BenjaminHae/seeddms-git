@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1258)
+//    Translators: Admin (1260)
 
 $text = array(
 'accept' => 'Принять',
@@ -996,6 +996,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'Первый день недели.',
 'settings_footNote' => 'Нижний колонтитул',
 'settings_footNote_desc' => 'Сообщение, показываемое внизу каждой страницы.',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Идентификатор гостя',
 'settings_guestID_desc' => 'Идентификатор гостя (можно не изменять).',
 'settings_httpRoot' => 'Корень http',

@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1091), tmichelfelder (106)
+//    Translators: Admin (1093), tmichelfelder (106)
 
 $text = array(
 'accept' => 'Godkänn',
@@ -991,6 +991,10 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'Första dagen i veckan',
 'settings_footNote' => 'Fotnot',
 'settings_footNote_desc' => 'Meddelande som visas på slutet av varje sida',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Gäst-ID',
 'settings_guestID_desc' => 'ID som används för inloggad gästanvändare (behöver oftast inte ändras)',
 'settings_httpRoot' => 'Http-Root',

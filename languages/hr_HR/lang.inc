@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1020)
+//    Translators: Admin (1022)
 
 $text = array(
 'accept' => 'Prihvati',
@@ -1012,6 +1012,10 @@ Internet poveznica: [url]',
 'settings_firstDayOfWeek_desc' => 'Prvi dan u tjednu',
 'settings_footNote' => 'Fusnota',
 'settings_footNote_desc' => 'Poruka koja se prikazuje na dnu svake stranice',
+'settings_fullSearchEngine' => '',
+'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
+'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'ID gosta',
 'settings_guestID_desc' => 'ID gost korisnika koja se koristi kada je prijavljen kao gost (uglavnom se ne treba mijenjati)',
 'settings_httpRoot' => 'Http korijen',
