@@ -33,7 +33,7 @@ class SeedDMS_View_Settings extends SeedDMS_Bootstrap_Style {
 
 	protected function showTextField($name, $value, $type='') { /* {{{ */
 		if($type != 'password' && strlen($value) > 80)
-			echo '<textarea class="input-xlarge" name="'.$name.'">'.$value.'</textarea>';
+			echo '<textarea class="input-xxlarge" name="'.$name.'">'.$value.'</textarea>';
 		elseif(strlen($value) > 40)
 			echo '<input '.($type=='password' ? 'type="password"' : 'type="text"').'" class="input-xxlarge" name="'.$name.'" value="'.$value.'"/>';
 		elseif(strlen($value) > 30)
