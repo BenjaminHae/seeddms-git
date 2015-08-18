@@ -1196,7 +1196,8 @@ function clearFilename<?php print $formName ?>() {
 	<script language="JavaScript">
 var data = <?php echo json_encode($tree); ?>;
 $(function() {
-  $('#jqtree<?php echo $formid ?>').tree({
+	$('#jqtree<?php echo $formid ?>').tree({
+		saveState: true,
 		data: data,
 		openedIcon: '<i class="icon-minus-sign"></i>',
 		closedIcon: '<i class="icon-plus-sign"></i>',
