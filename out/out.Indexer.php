@@ -38,6 +38,9 @@ if(!$settings->_enableFullSearch) {
 if(isset($_GET['create']) && $_GET['create'] == 1) {
 	if(isset($_GET['confirm']) && $_GET['confirm'] == 1) {
 		$index = $indexconf['Indexer']::create($settings->_luceneDir);
+		if(!$index) {
+			UI::exitError(getMLText("admin_tools"),getMLText("no_fulltextindex"));
+		}
 		$indexconf['Indexer']::init($settings->_stopWordsFile);
 	} else {
 		header('Location: out.CreateIndex.php');
