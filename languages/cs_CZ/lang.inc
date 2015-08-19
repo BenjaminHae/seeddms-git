@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (685), kreml (455)
+//    Translators: Admin (688), kreml (455)
 
 $text = array(
 'accept' => 'Přijmout',
@@ -473,7 +473,7 @@ URL: [url]',
 'home_folder' => 'Domácí složka',
 'hourly' => 'Hodinově',
 'hours' => 'hodiny',
-'hr_HR' => '',
+'hr_HR' => 'Chorvatština',
 'human_readable' => 'Bežně čitelný archív',
 'hu_HU' => 'Maďarština',
 'id' => 'ID',
@@ -536,7 +536,7 @@ URL: [url]',
 'keep_doc_status' => 'Zachovat stav dokumentu',
 'keywords' => 'Klíčová slova',
 'keyword_exists' => 'Klíčové slovo už existuje',
-'ko_KR' => '',
+'ko_KR' => 'Korejština',
 'language' => 'Jazyk',
 'lastaccess' => 'Poslední přístup',
 'last_update' => 'Naposledy aktualizoval',
@@ -1252,7 +1252,7 @@ URL: [url]',
 'tuesday' => 'Úterý',
 'tuesday_abbr' => 'Út',
 'type_to_search' => 'Zadejte hledaný výraz',
-'uk_UA' => '',
+'uk_UA' => 'Ukrajnština',
 'under_folder' => 'Ve složce',
 'unknown_attrdef' => 'Neznámá definice atributu',
 'unknown_command' => 'Příkaz nebyl rozpoznán.',

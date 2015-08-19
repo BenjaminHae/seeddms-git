@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (587), fengjohn (5)
+//    Translators: Admin (589), fengjohn (5)
 
 $text = array(
 'accept' => '接受',
@@ -403,7 +403,7 @@ URL: [url]',
 'home_folder' => '',
 'hourly' => '',
 'hours' => '',
-'hr_HR' => '',
+'hr_HR' => '克罗地亚人',
 'human_readable' => '可读存档',
 'hu_HU' => '匈牙利语',
 'id' => '序号',
@@ -466,7 +466,7 @@ URL: [url]',
 'keep_doc_status' => '',
 'keywords' => '关键字',
 'keyword_exists' => '关键字已存在',
-'ko_KR' => '',
+'ko_KR' => '韩国人',
 'language' => '语言',
 'lastaccess' => '',
 'last_update' => '上次更新',

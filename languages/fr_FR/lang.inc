@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (974), jeromerobert (50), lonnnew (9)
+//    Translators: Admin (975), jeromerobert (50), lonnnew (9)
 
 $text = array(
 'accept' => 'Accepter',
@@ -473,7 +473,7 @@ URL: [url]',
 'home_folder' => '',
 'hourly' => 'Une fois par heure',
 'hours' => 'heures',
-'hr_HR' => '',
+'hr_HR' => 'Croate',
 'human_readable' => 'Archive au format lisible',
 'hu_HU' => 'Hongrois',
 'id' => 'ID',

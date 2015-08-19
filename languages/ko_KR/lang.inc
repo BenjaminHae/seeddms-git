@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (935), daivoc (356)
+//    Translators: Admin (935), daivoc (359)
 
 $text = array(
 'accept' => '동의',
@@ -478,7 +478,7 @@ URL: [url]',
 'home_folder' => '홈 폴더',
 'hourly' => '시간별',
 'hours' => '시간',
-'hr_HR' => '',
+'hr_HR' => '크로아티아어',
 'human_readable' => '가독력',
 'hu_HU' => '헝가리어',
 'id' => 'ID',
@@ -1020,8 +1020,8 @@ URL : [url]',
 'settings_firstDayOfWeek_desc' => '요일의 첫날',
 'settings_footNote' => 'Foot Note',
 'settings_footNote_desc' => '메시지는 모든 페이지 하단에 표시',
-'settings_fullSearchEngine' => '',
-'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine' => '전체 텍스트 검색 엔진',
+'settings_fullSearchEngine_desc' => '전체 텍스트 검색에 사용되는 방법을 설정합니다.',
 'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
 'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'Guest ID',

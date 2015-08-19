@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (560), ribaz (1019)
+//    Translators: Admin (562), ribaz (1019)
 
 $text = array(
 'accept' => 'Elfogad',
@@ -473,7 +473,7 @@ URL: [url]',
 'home_folder' => '',
 'hourly' => 'Óra',
 'hours' => 'óra',
-'hr_HR' => '',
+'hr_HR' => 'Horvát',
 'human_readable' => 'Felhasználó által olvasható archívum',
 'hu_HU' => 'Magyar',
 'id' => 'ID',
@@ -1257,7 +1257,7 @@ URL: [url]',
 'tuesday' => 'Kedd',
 'tuesday_abbr' => 'Ke',
 'type_to_search' => 'Adja meg a keresendő kifejezést',
-'uk_UA' => '',
+'uk_UA' => 'Ukrán',
 'under_folder' => 'Mappában',
 'unknown_attrdef' => 'Ismeretlen tulajdonság meghatározás',
 'unknown_command' => 'Parancs nem ismerhető fel.',

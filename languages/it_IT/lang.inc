@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1492), s.pnt (26)
+//    Translators: Admin (1494), s.pnt (26)
 
 $text = array(
 'accept' => 'Accetta',
@@ -479,7 +479,7 @@ URL: [url]',
 'home_folder' => 'Cartella Utente',
 'hourly' => 'Ogni ora',
 'hours' => 'ore',
-'hr_HR' => '',
+'hr_HR' => 'Croato',
 'human_readable' => 'Archivio per uso esterno',
 'hu_HU' => 'Ungherese',
 'id' => 'ID',
@@ -542,7 +542,7 @@ URL: [url]',
 'keep_doc_status' => 'Mantieni lo stato del documento',
 'keywords' => 'Parole-chiave',
 'keyword_exists' => 'Parola-chiave già presente',
-'ko_KR' => '',
+'ko_KR' => 'Coreano',
 'language' => 'Lingua',
 'lastaccess' => 'Ultimo accesso',
 'last_update' => 'Ultima modifica',

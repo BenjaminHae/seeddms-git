@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1093), tmichelfelder (106)
+//    Translators: Admin (1096), tmichelfelder (106)
 
 $text = array(
 'accept' => 'Godkänn',
@@ -466,7 +466,7 @@ URL: [url]',
 'home_folder' => '',
 'hourly' => 'timvis',
 'hours' => 'timmar',
-'hr_HR' => '',
+'hr_HR' => 'Kroatiska',
 'human_readable' => 'Arkiv som är läsbart av användare',
 'hu_HU' => 'ungerska',
 'id' => 'ID',
@@ -529,7 +529,7 @@ URL: [url]',
 'keep_doc_status' => 'Bibehåll dokumentstatus',
 'keywords' => 'Nyckelord',
 'keyword_exists' => 'Nyckelordet finns redan',
-'ko_KR' => '',
+'ko_KR' => 'Koreanska',
 'language' => 'Språk',
 'lastaccess' => '',
 'last_update' => 'Senast uppdaterat',
@@ -707,7 +707,7 @@ URL: [url]',
 'pt_BR' => 'portugisiska (BR)',
 'quota' => 'Kvot',
 'quota_exceeded' => 'Din minneskvot har överskridits med [bytes].',
-'quota_is_disabled' => '',
+'quota_is_disabled' => 'Kvot stöd är för närvarande inaktiverad i inställningarna. Ställa in en användarkvot kommer att ha någon effekt förrän den är aktiverad igen.',
 'quota_warning' => 'Din maximala minneskvot har överskridits med [bytes]. Ta bort dokument eller tidigare versioner.',
 'receipt_log' => '',
 'receipt_summary' => '',
