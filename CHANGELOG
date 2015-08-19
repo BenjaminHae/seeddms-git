@@ -7,6 +7,7 @@
 - timeout for external commands for creating fulltext index can be set
 - add translations for korean, croation, ukrainian
 - file can be submitted with approval/review
+- alternative full text search engine without dependency on Zend
 - much faster user manager
 
 --------------------------------------------------------------------------------
