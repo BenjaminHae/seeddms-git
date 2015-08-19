@@ -31,7 +31,7 @@ require_once("class.Bootstrap.php");
  */
 class SeedDMS_View_Settings extends SeedDMS_Bootstrap_Style {
 
-	protected function showTextField($name, $value, $type='', $placeholder) { /* {{{ */
+	protected function showTextField($name, $value, $type='', $placeholder='') { /* {{{ */
 		if($type != 'password' && strlen($value) > 80)
 			echo '<textarea class="input-xxlarge" name="'.$name.'">'.$value.'</textarea>';
 		else {
