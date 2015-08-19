@@ -128,6 +128,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 		$entries = array();
 		$searchTime = 0;
 	} else {
+		$startTime = getTime();
 		$index = $indexconf['Indexer']::open($settings->_luceneDir);
 		$lucenesearch = new $indexconf['Search']($index);
 		$hits = $lucenesearch->search($query, $owner ? $owner->getLogin() : '', '', $categorynames);
@@ -154,11 +155,14 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 			}
 
 			$entries = array();
+			$dcount = 0;
+			$fcount = 0;
 			if($hits) {
 				foreach($hits as $hit) {
 					if($tmp = $dms->getDocument($hit['document_id'])) {
 						if($tmp->getAccessMode($user) >= M_READ) {
 							$entries[] = $tmp;
+							$dcount++;
 						}
 					}
 				}
