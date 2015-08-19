@@ -1029,41 +1029,48 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		if(!$user)
 			return M_NONE;
 
-		/* Admins have full access */
+		/* Administrators have unrestricted access */
 		if ($user->isAdmin()) return M_ALL;
 
-		/* User has full access if he/she is the owner of the document */
+		/* The owner of the document has unrestricted access */
 		if ($user->getID() == $this->_ownerID) return M_ALL;
 
-		/* Guest has read access by default, if guest login is allowed at all */
-		if ($user->isGuest()) {
-			$mode = $this->getDefaultAccess();
-			if ($mode >= M_READ) return M_READ;
-			else return M_NONE;
-		}
-
-		/* check ACLs */
+		/* Check ACLs */
 		$accessList = $this->getAccessList();
 		if (!$accessList) return false;
 
 		foreach ($accessList["users"] as $userAccess) {
 			if ($userAccess->getUserID() == $user->getID()) {
-				return $userAccess->getMode();
+				$mode = $userAccess->getMode();
+				if ($user->isGuest()) {
+					if ($mode >= M_READ) $mode = M_READ;
+				}
+				return $mode;
 			}
 		}
+
 		/* Get the highest right defined by a group */
-		$result = 0;
-		foreach ($accessList["groups"] as $groupAccess) {
-			if ($user->isMemberOfGroup($groupAccess->getGroup())) {
-				if ($groupAccess->getMode() > $result)
-					$result = $groupAccess->getMode();
-//					return $groupAccess->getMode();
+		if($accessList['groups']) {
+			$mode = 0;
+			foreach ($accessList["groups"] as $groupAccess) {
+				if ($user->isMemberOfGroup($groupAccess->getGroup())) {
+					if ($groupAccess->getMode() > $mode)
+						$mode = $groupAccess->getMode();
+				}
+			}
+			if($mode) {
+				if ($user->isGuest()) {
+					if ($mode >= M_READ) $mode = M_READ;
+				}
+				return $mode;
 			}
 		}
-		if($result)
-			return $result;
-		$result = $this->getDefaultAccess();
-		return $result;
+
+		$mode = $this->getDefaultAccess();
+		if ($user->isGuest()) {
+			if ($mode >= M_READ) $mode = M_READ;
+		}
+		return $mode;
 	} /* }}} */
 
 	/**
