@@ -40,6 +40,7 @@ class SeedDMS_View_UsrMgr extends SeedDMS_Bootstrap_Style {
 	function showUserForm($currUser) { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
+		$users = $this->params['allusers'];
 		$groups = $this->params['allgroups'];
 		$passwordstrength = $this->params['passwordstrength'];
 		$passwordexpiration = $this->params['passwordexpiration'];
