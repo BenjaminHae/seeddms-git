@@ -15,8 +15,8 @@
  <date>2015-06-26</date>
  <time>16:45:59</time>
  <version>
-  <release>4.3.19</release>
-  <api>4.3.19</api>
+  <release>4.3.20</release>
+  <api>4.3.20</api>
  </version>
  <stability>
   <release>stable</release>
@@ -24,9 +24,8 @@
  </stability>
  <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
  <notes>
-- add optional paramter $noclean to clearAccessList(), setDefaultAccess(), setInheritAccess()
-- clearAccessList() will clean up the notifier list
-- new method cleanNotifyList()
+- access rights for guest are also taken into account if set in an acl. Previously guest could gain read rights even if the access was probibited
+by a group or user right
  </notes>
  <contents>
   <dir baseinstalldir="SeedDMS" name="/">
@@ -848,6 +847,24 @@ clean workflow log when a document version was deleted
    <notes>
 - add optional paramter $msg to SeedDMS_Core_DocumentContent::verifyStatus()
 - add method SeedDMS_Core_DMS::getDuplicateDocumentContent()
+   </notes>
+  </release>
+  <release>
+   <date>2015-06-26</date>
+   <time>16:45:59</time>
+   <version>
+    <release>4.3.19</release>
+    <api>4.3.19</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
+   <notes>
+- add optional paramter $noclean to clearAccessList(), setDefaultAccess(), setInheritAccess()
+- clearAccessList() will clean up the notifier list
+- new method cleanNotifyList()
    </notes>
   </release>
  </changelog>
