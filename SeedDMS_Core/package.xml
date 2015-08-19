@@ -24,6 +24,13 @@
  </stability>
  <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
  <notes>
+- add method SeedDMS_Core_DMS::checkDate()
+- add method SeedDMS_Core_Document::setDate()
+- add method SeedDMS_Core_Folder::setDate()
+- date can be passed to SeedDMS_Core_DocumentContent::setStatus()
+- add method SeedDMS_Core_DocumentContent::rewriteStatusLog()
+- add method SeedDMS_Core_DocumentContent::rewriteReviewLog()
+- add method SeedDMS_Core_DocumentContent::rewriteApprovalLog()
 - access rights for guest are also taken into account if set in an acl. Previously guest could gain read rights even if the access was probibited
 by a group or user right
  </notes>
