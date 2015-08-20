@@ -1987,5 +1987,27 @@ mayscript>
 				</table>
 <?php
 	} /* }}} */
+
+	/**
+	 * Show progressbar
+	 *
+	 * @param double $value value
+	 * @param double $max 100% value
+	 */
+	protected function getProgressBar($value, $max=100.0) { /* {{{ */
+		if($max > $value) {
+			$used = (int) ($value/$max*100.0+0.5);
+			$free = 100-$used;
+		} else {
+			$free = 0;
+			$used = 100;
+		}
+		$html .= '
+		<div class="progress">
+			<div class="bar bar-danger" style="width: '.$used.'%;"></div>
+		  <div class="bar bar-success" style="width: '.$free.'%;"></div>
+		</div>';
+		return $html;
+	} /* }}} */
 }
 ?>
