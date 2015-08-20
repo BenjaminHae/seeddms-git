@@ -402,15 +402,30 @@ $(document).ready( function() {
 
 	$('div.ajax').each(function(index) {
 		var element = $(this);
-		var url = element.data('href');
-		console.log('Calling '+url);
+		var url = '';
+		var href = element.data('href');
+		var view = element.data('view');
+		var action = element.data('action');
+		if(view && action)
+			url = "out."+view+".php?action="+action;
+		else
+			url = href;
+	//	console.log('Calling '+url);
 		$.get(url, function(data) {
 			element.html(data);
+			$(".chzn-select").chosen();
 		});
 	});
 	$('div.ajax').on('update', function(event, param1) {
 		var element = $(this);
-		var url = element.data('href');
+		var url = '';
+		var href = element.data('href');
+		var view = element.data('view');
+		var action = element.data('action');
+		if(view && action)
+			url = "out."+view+".php?action="+action;
+		else
+			url = href;
 		if(typeof param1 === 'object') {
 			for(var key in param1) {
 				url += "&"+key+"="+param1[key];
@@ -418,11 +433,11 @@ $(document).ready( function() {
 		} else {
 			url += "&"+param1;
 		}
-		console.log("Calling: "+url);
+	//	console.log("Calling: "+url);
 		element.prepend('<div style="position: absolute; overflow: hidden; background: #f7f7f7; z-index: 1000; height: '+element.height()+'px; width: '+element.width()+'px; opacity: 0.7; display: table;"><div style="display: table-cell;text-align: center; vertical-align: middle; "><img src="../views/bootstrap/images/ajax-loader.gif"></div>');
-//		element.html('<div class="ajaxloader" style="min-height: '+element.height()+'px;"><img src="typo3conf/ext/mmk_gocoachtmpl/template/Public/img/ajax-loader.gif"></div>');
 		$.get(url, function(data) {
 			element.html(data);
+			$(".chzn-select").chosen();
 		});
 	});
 	$("body").on("click", ".ajax-click", function() {
