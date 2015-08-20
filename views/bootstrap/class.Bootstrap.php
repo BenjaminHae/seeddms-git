@@ -2002,7 +2002,7 @@ mayscript>
 			$free = 0;
 			$used = 100;
 		}
-		$html .= '
+		$html = '
 		<div class="progress">
 			<div class="bar bar-danger" style="width: '.$used.'%;"></div>
 		  <div class="bar bar-success" style="width: '.$free.'%;"></div>
