@@ -422,7 +422,7 @@ function showUser(selectObj) {
 
 <div class="span8">
 	<div class="well">
-		<div class="ajax" data-href="../out/out.UsrMgr.php?action=form<?php if($seluser) echo "&userid=".$seluser->getID();?>"></div>
+		<div class="ajax" data-view="UsrMgr" data-action="form"></div>
 <?php if(0): ?>
 		<div id="keywords0" style="display : none;">
 		<?php $this->showUserForm(false); ?>
