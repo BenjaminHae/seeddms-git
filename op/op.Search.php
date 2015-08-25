@@ -112,25 +112,13 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 		}
 	}
 
-	$pageNumber=1;
-	if (isset($_GET["pg"])) {
-		if (is_numeric($_GET["pg"]) && $_GET["pg"]>0) {
-			$pageNumber = (integer)$_GET["pg"];
-		}
-		else if (!strcasecmp($_GET["pg"], "all")) {
-			$pageNumber = "all";
-		}
-	}
-
 	$startTime = getTime();
 	if($settings->_enableFullSearch) {
-		if(!empty($settings->_luceneClassDir))
-			require_once($settings->_luceneClassDir.'/Lucene.php');
-		else
-			require_once('SeedDMS/Lucene.php');
+		if($settings->_fullSearchEngine == 'lucene') {
+			Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+		}
 	}
 
-	Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
 	if(strlen($query) < 4 && strpos($query, '*')) {
 		$session->setSplashMsg(array('type'=>'error', 'msg'=>getMLText('splash_invalid_searchterm')));
 		$resArr = array();
@@ -140,8 +128,9 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 		$entries = array();
 		$searchTime = 0;
 	} else {
-		$index = Zend_Search_Lucene::open($settings->_luceneDir);
-		$lucenesearch = new SeedDMS_Lucene_Search($index);
+		$startTime = getTime();
+		$index = $indexconf['Indexer']::open($settings->_luceneDir);
+		$lucenesearch = new $indexconf['Search']($index);
 		$hits = $lucenesearch->search($query, $owner ? $owner->getLogin() : '', '', $categorynames);
 		if($hits === false) {
 			$session->setSplashMsg(array('type'=>'error', 'msg'=>getMLText('splash_invalid_searchterm')));
@@ -166,11 +155,14 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 			}
 
 			$entries = array();
+			$dcount = 0;
+			$fcount = 0;
 			if($hits) {
 				foreach($hits as $hit) {
 					if($tmp = $dms->getDocument($hit['document_id'])) {
 						if($tmp->getAccessMode($user) >= M_READ) {
 							$entries[] = $tmp;
+							$dcount++;
 						}
 					}
 				}

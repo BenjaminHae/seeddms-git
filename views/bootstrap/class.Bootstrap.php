@@ -243,7 +243,7 @@ $(document).ready(function () {
 		echo "   <a class=\"brand\" href=\"../out/out.ViewFolder.php?folderid=".$this->params['rootfolderid']."\">".(strlen($this->params['sitename'])>0 ? $this->params['sitename'] : "SeedDMS")."</a>\n";
 		if(isset($this->params['user']) && $this->params['user']) {
 			echo "   <div class=\"nav-collapse nav-col1\">\n";
-			echo "   <ul id=\"main-menu-admin\"class=\"nav pull-right\">\n";
+			echo "   <ul id=\"main-menu-admin\" class=\"nav pull-right\">\n";
 			echo "    <li class=\"dropdown\">\n";
 			echo "     <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".($this->params['session']->getSu() ? getMLText("switched_to") : getMLText("signed_in_as"))." '".htmlspecialchars($this->params['user']->getFullName())."' <i class=\"icon-caret-down\"></i></a>\n";
 			echo "     <ul class=\"dropdown-menu\" role=\"menu\">\n";
@@ -346,8 +346,6 @@ $(document).ready(function () {
 	function pageNavigation($pageTitle, $pageType=null, $extra=null) { /* {{{ */
 
 		if ($pageType!=null && strcasecmp($pageType, "noNav")) {
-			if($pageType == "view_folder" || $pageType == "view_document")
-				echo $pageTitle."\n";
 			echo "<div class=\"navbar\">\n";
 			echo " <div class=\"navbar-inner\">\n";
 			echo "  <div class=\"container\">\n";
@@ -378,6 +376,8 @@ $(document).ready(function () {
 			echo " 	</div>\n";
 			echo " </div>\n";
 			echo "</div>\n";
+			if($pageType == "view_folder" || $pageType == "view_document")
+				echo $pageTitle."\n";
 		} else {
 			echo "<legend>".$pageTitle."</legend>\n";
 		}
@@ -1196,7 +1196,8 @@ function clearFilename<?php print $formName ?>() {
 	<script language="JavaScript">
 var data = <?php echo json_encode($tree); ?>;
 $(function() {
-  $('#jqtree<?php echo $formid ?>').tree({
+	$('#jqtree<?php echo $formid ?>').tree({
+		saveState: true,
 		data: data,
 		openedIcon: '<i class="icon-minus-sign"></i>',
 		closedIcon: '<i class="icon-plus-sign"></i>',
@@ -1904,6 +1905,7 @@ mayscript>
 	 */
 	protected function printProtocol($latestContent, $type="") { /* {{{ */
 		$dms = $this->params['dms'];
+		$document = $latestContent->getDocument();
 ?>
 		<legend><?php printMLText($type.'_log'); ?></legend>
 		<table class="table condensed">
@@ -1957,13 +1959,13 @@ mayscript>
 			case "review":
 				if($rec['file']) {
 					echo "<br />";
-					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+					echo "<a href=\"../op/op.Download.php?documentid=".$document->getID()."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 				}
 				break;
 			case "approval":
 				if($rec['file']) {
 					echo "<br />";
-					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+					echo "<a href=\"../op/op.Download.php?documentid=".$document->getID()."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 				}
 				break;
 			}
@@ -1984,6 +1986,28 @@ mayscript>
 ?>
 				</table>
 <?php
+	} /* }}} */
+
+	/**
+	 * Show progressbar
+	 *
+	 * @param double $value value
+	 * @param double $max 100% value
+	 */
+	protected function getProgressBar($value, $max=100.0) { /* {{{ */
+		if($max > $value) {
+			$used = (int) ($value/$max*100.0+0.5);
+			$free = 100-$used;
+		} else {
+			$free = 0;
+			$used = 100;
+		}
+		$html = '
+		<div class="progress">
+			<div class="bar bar-danger" style="width: '.$used.'%;"></div>
+		  <div class="bar bar-success" style="width: '.$free.'%;"></div>
+		</div>';
+		return $html;
 	} /* }}} */
 }
 ?>

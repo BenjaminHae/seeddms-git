@@ -52,26 +52,46 @@ if(isset($settings->_extraPath))
 	ini_set('include_path', $settings->_extraPath. PATH_SEPARATOR .ini_get('include_path'));
 
 require_once("SeedDMS/Core.php");
-require_once("SeedDMS/Lucene.php");
+if($settings->_fullSearchEngine == 'sqlitefts') {
+	$indexconf = array(
+		'Indexer' => 'SeedDMS_SQLiteFTS_Indexer',
+		'Search' => 'SeedDMS_SQLiteFTS_Search',
+		'IndexedDocument' => 'SeedDMS_SQLiteFTS_IndexedDocument'
+	);
 
-function tree($dms, $index, $folder, $indent='') {
+	require_once('SeedDMS/SQLiteFTS.php');
+} else {
+	$indexconf = array(
+		'Indexer' => 'SeedDMS_Lucene_Indexer',
+		'Search' => 'SeedDMS_Lucene_Search',
+		'IndexedDocument' => 'SeedDMS_Lucene_IndexedDocument'
+	);
+
+	require_once('SeedDMS/Lucene.php');
+}
+
+function tree($dms, $index, $indexconf, $folder, $indent='') { /* {{{ */
 	global $settings;
 	echo $indent."D ".$folder->getName()."\n";
 	$subfolders = $folder->getSubFolders();
 	foreach($subfolders as $subfolder) {
-		tree($dms, $index, $subfolder, $indent.'  ');
+		tree($dms, $index, $indexconf, $subfolder, $indent.'  ');
 	}
 	$documents = $folder->getDocuments();
 	foreach($documents as $document) {
 		echo $indent."  ".$document->getId().":".$document->getName()." ";
-		if(!($hits = $index->find('document_id:'.$document->getId()))) {
-			$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, isset($settings->_converters['fulltext']) ? $settings->_converters['fulltext'] : null));
-			echo " (Document added)\n";
+		$lucenesearch = new $indexconf['Search']($index);
+		if(!($hit = $lucenesearch->getDocument($document->getId()))) {
+			try {
+				$index->addDocument(new $indexconf['IndexedDocument']($dms, $document, isset($settings->_converters['fulltext']) ? $settings->_converters['fulltext'] : null, false));
+				echo " (Document added)\n";
+			} catch(Exception $e) {
+				echo " (Timeout)\n";
+			}
 		} else {
-			$hit = $hits[0];
 			try {
 				$created = (int) $hit->getDocument()->getFieldValue('created');
-			} catch (Zend_Search_Lucene_Exception $e) {
+			} catch (Exception $e) {
 				$created = 0;
 			}
 			$content = $document->getLatestContent();
@@ -79,33 +99,42 @@ function tree($dms, $index, $folder, $indent='') {
 				echo " (Document unchanged)\n";
 			} else {
 				if($index->delete($hit->id)) {
-					$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, $settings->_converters['fulltext'] ? $settings->_converters['fulltext'] : null));
-					echo " (Document updated)\n";
+					try {
+						$index->addDocument(new $indexconf['IndexedDocument']($dms, $document, isset($settings->_converters['fulltext']) ? $settings->_converters['fulltext'] : null, false));
+						echo " (Document updated)\n";
+					} catch(Exception $e) {
+						echo " (Timeout)\n";
+					}
 				}
 			}
 		}
 	}
-}
+} /* }}} */
 
 $db = new SeedDMS_Core_DatabaseAccess($settings->_dbDriver, $settings->_dbHostname, $settings->_dbUser, $settings->_dbPass, $settings->_dbDatabase);
 $db->connect() or die ("Could not connect to db-server \"" . $settings->_dbHostname . "\"");
 
 $dms = new SeedDMS_Core_DMS($db, $settings->_contentDir.$settings->_contentOffsetDir);
 if(!$dms->checkVersion()) {
-	echo "Database update needed.";
-	exit;
+	echo "Database update needed.\n";
+	exit(1);
 }
 
 $dms->setRootFolderID($settings->_rootFolderID);
 
 if($recreate)
-	$index = Zend_Search_Lucene::create($settings->_luceneDir);
+	$index = $indexconf['Indexer']::create($settings->_luceneDir);
 else
-	$index = Zend_Search_Lucene::open($settings->_luceneDir);
-SeedDMS_Lucene_Indexer::init($settings->_stopWordsFile);
+	$index = $indexconf['Indexer']::open($settings->_luceneDir);
+if(!$index) {
+	echo "Could not create index.\n";
+	exit(1);
+}
+
+$indexconf['Indexer']::init($settings->_stopWordsFile);
 
 $folder = $dms->getFolder($settings->_rootFolderID);
-tree($dms, $index, $folder);
+tree($dms, $index, $indexconf, $folder);
 
 $index->commit();
 $index->optimize();

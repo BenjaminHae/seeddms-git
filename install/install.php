@@ -119,7 +119,7 @@ function fileExistsInIncludePath($file) { /* {{{ */
  * Load default settings + set
  */
 define("SEEDDMS_INSTALL", "on");
-define("SEEDDMS_VERSION", "4.3.19");
+define("SEEDDMS_VERSION", "4.3.20");
 
 require_once('../inc/inc.ClassSettings.php');
 
@@ -206,7 +206,7 @@ if (isset($_GET['disableinstall'])) { /* {{{ */
 		if(unlink($configDir."/ENABLE_INSTALL_TOOL")) {
 			echo getMLText("settings_install_disabled");
 			echo "<br/><br/>";
-			echo '<a href="' . $httpRoot . '/out/out.Settings.php">' . getMLText("settings_more_settings") .'</a>';
+			echo '<a href="../out/out.Settings.php">' . getMLText("settings_more_settings") .'</a>';
 		} else {
 			echo getMLText("settings_cannot_disable");
 			echo "<br/><br/>";
@@ -368,7 +368,7 @@ if ($action=="setSettings") {
 						echo '<a href="install.php?disableinstall=1">' . getMLText("settings_disable_install") . '</a>';
 						echo "<br/><br/>";
 
-						echo '<a href="' . $httpRoot . '/out/out.Settings.php">' . getMLText("settings_more_settings") .'</a>';
+						echo '<a href="../out/out.Settings.php">' . getMLText("settings_more_settings") .'</a>';
 						$showform = false;
 					}
 				} else {

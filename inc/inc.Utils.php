@@ -296,11 +296,12 @@ function dskspace($dir) { /* {{{ */
 	if(is_file($dir)) {
 		$space = filesize($dir);
 	} elseif (is_dir($dir)) {
-		$dh = opendir($dir);
-		while (($file = readdir($dh)) !== false)
-			if ($file != "." and $file != "..")
-				$space += dskspace($dir."/".$file);
-		closedir($dh);
+		if($dh = opendir($dir)) {
+			while (($file = readdir($dh)) !== false)
+				if ($file != "." and $file != "..")
+					$space += dskspace($dir."/".$file);
+			closedir($dh);
+		}
 	}
 	return $space;
 } /* }}} */

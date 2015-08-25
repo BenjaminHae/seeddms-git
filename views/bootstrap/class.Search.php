@@ -355,7 +355,7 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 	  	echo "<div class=\"tab-pane ".(($fullsearch == true) ? 'active' : '')."\" id=\"fulltext\">\n";
 	$this->contentContainerStart();
 ?>
-<form action="../op/op.Search.php" name="form2" onsubmit="return checkForm();">
+<form action="../op/op.Search.php" name="form2" onsubmit="return checkForm();" style="min-height: 330px;">
 <input type="hidden" name="fullsearch" value="1" />
 <table class="table-condensed">
 <tr>
@@ -418,9 +418,10 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 <?php
 		echo "</div>\n";
 		echo "<div class=\"span8\">\n";
-// Database search Result {{{
+// Search Result {{{
 		$foldercount = $doccount = 0;
 		if($entries) {
+			/*
 			foreach ($entries as $entry) {
 				if(get_class($entry) == 'SeedDMS_Core_Document') {
 					$doccount++;
@@ -428,6 +429,7 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 					$foldercount++;
 				}
 			}
+			 */
 			print "<div class=\"alert\">".getMLText("search_report", array("doccount" => $totaldocs, "foldercount" => $totalfolders, 'searchtime'=>$searchTime))."</div>";
 			$this->pageList($pageNumber, $totalpages, "../op/op.Search.php", $urlparams);
 //			$this->contentContainerStart();
@@ -602,7 +604,7 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 //			$this->contentContainerEnd();
 			$this->pageList($pageNumber, $totalpages, "../op/op.Search.php", $_GET);
 		} else {
-			$numResults = $doccount + $foldercount;
+			$numResults = $totaldocs + $totalfolders;
 			if ($numResults == 0) {
 				print "<div class=\"alert alert-error\">".getMLText("search_no_results")."</div>";
 			}

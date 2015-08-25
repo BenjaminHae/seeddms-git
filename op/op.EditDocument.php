@@ -178,8 +178,8 @@ if (($oldcomment = $document->getComment()) != $comment) {
 }
 
 $expires = false;
-if (isset($_POST["expires"]) && $_POST["expires"] != "false") {
-	if($_POST["expdate"]) {
+if (!isset($_POST["expires"]) || $_POST["expires"] != "false") {
+	if(isset($_POST["expdate"]) && $_POST["expdate"]) {
 		$tmp = explode('-', $_POST["expdate"]);
 		$expires = mktime(0,0,0, $tmp[1], $tmp[0], $tmp[2]);
 	} else {
@@ -268,7 +268,6 @@ if($attributes) {
 					UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("attr_min_values", array("attrname"=>$attrdef->getName())));
 				}
 				if($attrdef->getMaxValues() && $attrdef->getMaxValues() < count($attribute)) {
-					print_r($attrdef);
 					UI::exitError(getMLText("document_title", array("documentname" => $document->getName())),getMLText("attr_max_values", array("attrname"=>$attrdef->getName())));
 				}
 			}

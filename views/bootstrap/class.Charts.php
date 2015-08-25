@@ -57,9 +57,9 @@ class SeedDMS_View_Charts extends SeedDMS_Bootstrap_Style {
 ?>
 
 <?php
-
 echo "<div class=\"row-fluid\">\n";
-echo "<div class=\"span4\">\n";
+
+echo "<div class=\"span3\">\n";
 $this->contentHeading(getMLText("chart_selection"));
 echo "<div class=\"well\">\n";
 foreach(array('docsperuser', 'sizeperuser', 'docspermimetype', 'docspercategory', 'docsperstatus', 'docspermonth', 'docsaccumulated') as $atype) {
@@ -68,12 +68,29 @@ foreach(array('docsperuser', 'sizeperuser', 'docspermimetype', 'docspercategory'
 echo "</div>\n";
 echo "</div>\n";
 
-echo "<div class=\"span8\">\n";
+if(in_array($type, array('docspermonth', 'docsaccumulated'))) {
+	echo "<div class=\"span9\">\n";
+} else {
+	echo "<div class=\"span6\">\n";
+}
 $this->contentHeading(getMLText('chart_'.$type.'_title'));
 echo "<div class=\"well\">\n";
-
 ?>
 <div id="chart" style="height: 400px;" class="chart"></div>
+<?php
+echo "</div>\n";
+echo "</div>\n";
+
+if(!in_array($type, array('docspermonth', 'docsaccumulated'))) {
+	echo "<div class=\"span3\">\n";
+	$this->contentHeading(getMLText('legend'));
+	echo "<div class=\"well\" id=\"legend\">\n";
+	echo "</div>\n";
+	echo "</div>\n";
+}
+
+echo "</div>\n";
+?>
 <script type="text/javascript">
 	$("<div id='tooltip'></div>").css({
 		position: "absolute",
@@ -112,7 +129,7 @@ if(in_array($type, array('docspermonth'))) {
 		grid: {
 			hoverable: true,
 			clickable: true
-		},
+		}
 	});
 
 	$("#chart").bind("plothover", function (event, pos, item) {
@@ -149,7 +166,7 @@ if(in_array($type, array('docspermonth'))) {
 		grid: {
 			hoverable: true,
 			clickable: true
-		},
+		}
 	});
 
 	$("#chart").bind("plothover", function (event, pos, item) {
@@ -173,6 +190,7 @@ if(in_array($type, array('docspermonth'))) {
 	}
 ?>
 	];
+$(document).ready( function() {
 	$.plot('#chart', data, {
 		series: {
 			pie: { 
@@ -192,6 +210,10 @@ if(in_array($type, array('docspermonth'))) {
 		grid: {
 			hoverable: true,
 			clickable: true
+		},
+		legend: {
+			show: true,
+			container: '#legend'
 		}
 	});
 
@@ -210,15 +232,12 @@ if(in_array($type, array('docspermonth'))) {
 	function labelFormatter(label, series) {
 		return "<div style='font-size:8pt; line-height: 14px; text-align:center; padding:2px; color:black; background: white; border-radius: 5px;'>" + label + "<br/>" + series.data[0][1] + " (" + Math.round(series.percent) + "%)</div>";
 	}
+});
 <?php
 }
 ?>
 </script>
 <?php
-echo "</div>\n";
-echo "</div>\n";
-echo "</div>\n";
-
 
 $this->contentContainerEnd();
 $this->htmlEndPage();

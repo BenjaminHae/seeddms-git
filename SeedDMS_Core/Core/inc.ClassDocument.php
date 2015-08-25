@@ -304,6 +304,30 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 	} /* }}} */
 
 	/**
+	 * Set creation date of the document
+	 *
+	 * @param integer $date timestamp of creation date. If false then set it
+	 * to the current timestamp
+	 * @return boolean true on success
+	 */
+	function setDate($date) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		if(!$date)
+			$date = time();
+		else {
+			if(!is_numeric($date))
+				return false;
+		}
+
+		$queryStr = "UPDATE tblDocuments SET date = " . (int) $date . " WHERE id = ". $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+		$this->_date = $date;
+		return true;
+	} /* }}} */
+
+	/**
 	 * Return the parent folder of the document
 	 *
 	 * @return object parent folder
@@ -782,35 +806,42 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		/* The owner of the document has unrestricted access */
 		if ($user->getID() == $this->_ownerID) return M_ALL;
 
-		/* The guest users do not have more than read access */
-		if ($user->isGuest()) {
-			$mode = $this->getDefaultAccess();
-			if ($mode >= M_READ) return M_READ;
-			else return M_NONE;
-		}
-
 		/* Check ACLs */
 		$accessList = $this->getAccessList();
 		if (!$accessList) return false;
 
 		foreach ($accessList["users"] as $userAccess) {
 			if ($userAccess->getUserID() == $user->getID()) {
-				return $userAccess->getMode();
+				$mode = $userAccess->getMode();
+				if ($user->isGuest()) {
+					if ($mode >= M_READ) $mode = M_READ;
+				}
+				return $mode;
 			}
 		}
+
 		/* Get the highest right defined by a group */
-		$result = 0;
-		foreach ($accessList["groups"] as $groupAccess) {
-			if ($user->isMemberOfGroup($groupAccess->getGroup())) {
-				if ($groupAccess->getMode() > $result)
-					$result = $groupAccess->getMode();
-//					return $groupAccess->getMode();
+		if($accessList['groups']) {
+			$mode = 0;
+			foreach ($accessList["groups"] as $groupAccess) {
+				if ($user->isMemberOfGroup($groupAccess->getGroup())) {
+					if ($groupAccess->getMode() > $mode)
+						$mode = $groupAccess->getMode();
+				}
+			}
+			if($mode) {
+				if ($user->isGuest()) {
+					if ($mode >= M_READ) $mode = M_READ;
+				}
+				return $mode;
 			}
 		}
-		if($result)
-			return $result;
-		$result = $this->getDefaultAccess();
-		return $result;
+
+		$mode = $this->getDefaultAccess();
+		if ($user->isGuest()) {
+			if ($mode >= M_READ) $mode = M_READ;
+		}
+		return $mode;
 	} /* }}} */
 
 	/**
@@ -2413,7 +2444,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 	 * @param object $updateUser user initiating the status change
 	 * @return boolean true on success, otherwise false
 	 */
-	function setStatus($status, $comment, $updateUser) { /* {{{ */
+	function setStatus($status, $comment, $updateUser, $date='') { /* {{{ */
 		$db = $this->_document->_dms->getDB();
 
 		if (!is_numeric($status)) return false;
@@ -2436,8 +2467,12 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		if ($this->_status["status"]==$status) {
 			return false;
 		}
+		if($date)
+			$ddate = $db->qstr($date);
+		else
+			$ddate = 'CURRENT_TIMESTAMP';
 		$queryStr = "INSERT INTO `tblDocumentStatusLog` (`statusID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $this->_status["statusID"] ."', '". (int) $status ."', ".$db->qstr($comment).", CURRENT_TIMESTAMP, '". $updateUser->getID() ."')";
+			"VALUES ('". $this->_status["statusID"] ."', '". (int) $status ."', ".$db->qstr($comment).", ".$ddate.", '". $updateUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res)
 			return false;
@@ -2446,6 +2481,55 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 
 		return true;
 	} /* }}} */
+
+	/**
+	 * Rewrites the complete status log
+	 * 
+	 * Attention: this function is highly dangerous.
+	 * It removes an existing status log and rewrites it.
+	 * This method was added for importing an xml dump.
+	 *
+	 * @param array $statuslog new status log with the newest log entry first.
+	 * @return boolean true on success, otherwise false
+	 */
+	function rewriteStatusLog($statuslog) { /* {{{ */
+		$db = $this->_document->_dms->getDB();
+
+		$queryStr= "SELECT `tblDocumentStatus`.* FROM `tblDocumentStatus` WHERE `tblDocumentStatus`.`documentID` = '". $this->_document->getID() ."' AND `tblDocumentStatus`.`version` = '". $this->_version ."' ";
+		$res = $db->getResultArray($queryStr);
+		if (is_bool($res) && !$res)
+			return false;
+
+		$statusID = $res[0]['statusID'];
+
+		$db->startTransaction();
+
+		/* First, remove the old entries */
+		$queryStr = "DELETE from `tblDocumentStatusLog` where `statusID`=".$statusID;
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+
+		/* Second, insert the new entries */
+		$statuslog = array_reverse($statuslog);
+		foreach($statuslog as $log) {
+			if(!SeedDMS_Core_DMS::checkDate($log['date'], 'Y-m-d H:i:s')) {
+				$db->rollbackTransaction();
+				return false;
+			}
+			$queryStr = "INSERT INTO `tblDocumentStatusLog` (`statusID`, `status`, `comment`, `date`, `userID`) ".
+				"VALUES ('".$statusID ."', '".(int) $log['status']."', ".$db->qstr($log['comment']) .", ".$db->qstr($log['date']).", ".$log['user']->getID().")";
+			if (!$db->getResult($queryStr)) {
+				$db->rollbackTransaction();
+				return false;
+			}
+		}
+
+		$db->commitTransaction();
+		return true;
+	} /* }}} */
+
 
 	/**
 	 * Returns the access mode similar to a document
@@ -2539,6 +2623,73 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 	} /* }}} */
 
 	/**
+	 * Rewrites the complete review log
+	 * 
+	 * Attention: this function is highly dangerous.
+	 * It removes an existing review log and rewrites it.
+	 * This method was added for importing an xml dump.
+	 *
+	 * @param array $reviewlog new status log with the newest log entry first.
+	 * @return boolean true on success, otherwise false
+	 */
+	function rewriteReviewLog($reviewers) { /* {{{ */
+		$db = $this->_document->_dms->getDB();
+
+		$queryStr= "SELECT `tblDocumentReviewers`.* FROM `tblDocumentReviewers` WHERE `tblDocumentReviewers`.`documentID` = '". $this->_document->getID() ."' AND `tblDocumentReviewers`.`version` = '". $this->_version ."' ";
+		$res = $db->getResultArray($queryStr);
+		if (is_bool($res) && !$res)
+			return false;
+
+		$db->startTransaction();
+
+		if($res) {
+			foreach($res as $review) {
+				$reviewID = $review['reviewID'];
+
+				/* First, remove the old entries */
+				$queryStr = "DELETE from `tblDocumentReviewLog` where `reviewID`=".$reviewID;
+				if (!$db->getResult($queryStr)) {
+					$db->rollbackTransaction();
+					return false;
+				}
+
+				$queryStr = "DELETE from `tblDocumentReviewers` where `reviewID`=".$reviewID;
+				if (!$db->getResult($queryStr)) {
+					$db->rollbackTransaction();
+					return false;
+				}
+			}
+		}
+
+		/* Second, insert the new entries */
+		foreach($reviewers as $review) {
+			$queryStr = "INSERT INTO `tblDocumentReviewers` (`documentID`, `version`, `type`, `required`) ".
+				"VALUES ('".$this->_document->getID()."', '".$this->_version."', ".$review['type'] .", ".$review['required']->getID().")";
+			if (!$db->getResult($queryStr)) {
+				$db->rollbackTransaction();
+				return false;
+			}
+			$reviewID = $db->getInsertID();
+			$reviewlog = array_reverse($review['logs']);
+			foreach($reviewlog as $log) {
+				if(!SeedDMS_Core_DMS::checkDate($log['date'], 'Y-m-d H:i:s')) {
+					$db->rollbackTransaction();
+					return false;
+				}
+				$queryStr = "INSERT INTO `tblDocumentReviewLog` (`reviewID`, `status`, `comment`, `date`, `userID`) ".
+					"VALUES ('".$reviewID ."', '".(int) $log['status']."', ".$db->qstr($log['comment']) .", ".$db->qstr($log['date']).", ".$log['user']->getID().")";
+				if (!$db->getResult($queryStr)) {
+					$db->rollbackTransaction();
+					return false;
+				}
+			}
+		}
+
+		$db->commitTransaction();
+		return true;
+	} /* }}} */
+
+	/**
 	 * Get the current approval status of the document content
 	 * The approval status is a list of approvals and its current status
 	 *
@@ -2593,6 +2744,73 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 			}
 		}
 		return $this->_approvalStatus;
+	} /* }}} */
+
+	/**
+	 * Rewrites the complete approval log
+	 * 
+	 * Attention: this function is highly dangerous.
+	 * It removes an existing review log and rewrites it.
+	 * This method was added for importing an xml dump.
+	 *
+	 * @param array $reviewlog new status log with the newest log entry first.
+	 * @return boolean true on success, otherwise false
+	 */
+	function rewriteApprovalLog($reviewers) { /* {{{ */
+		$db = $this->_document->_dms->getDB();
+
+		$queryStr= "SELECT `tblDocumentApprovers`.* FROM `tblDocumentApprovers` WHERE `tblDocumentApprovers`.`documentID` = '". $this->_document->getID() ."' AND `tblDocumentApprovers`.`version` = '". $this->_version ."' ";
+		$res = $db->getResultArray($queryStr);
+		if (is_bool($res) && !$res)
+			return false;
+
+		$db->startTransaction();
+
+		if($res) {
+			foreach($res as $review) {
+				$reviewID = $review['reviewID'];
+
+				/* First, remove the old entries */
+				$queryStr = "DELETE from `tblDocumentApproveLog` where `approveID`=".$reviewID;
+				if (!$db->getResult($queryStr)) {
+					$db->rollbackTransaction();
+					return false;
+				}
+
+				$queryStr = "DELETE from `tblDocumentApprovers` where `approveID`=".$reviewID;
+				if (!$db->getResult($queryStr)) {
+					$db->rollbackTransaction();
+					return false;
+				}
+			}
+		}
+
+		/* Second, insert the new entries */
+		foreach($reviewers as $review) {
+			$queryStr = "INSERT INTO `tblDocumentApprovers` (`documentID`, `version`, `type`, `required`) ".
+				"VALUES ('".$this->_document->getID()."', '".$this->_version."', ".$review['type'] .", ".$review['required']->getID().")";
+			if (!$db->getResult($queryStr)) {
+				$db->rollbackTransaction();
+				return false;
+			}
+			$reviewID = $db->getInsertID();
+			$reviewlog = array_reverse($review['logs']);
+			foreach($reviewlog as $log) {
+				if(!SeedDMS_Core_DMS::checkDate($log['date'], 'Y-m-d H:i:s')) {
+					$db->rollbackTransaction();
+					return false;
+				}
+				$queryStr = "INSERT INTO `tblDocumentApproveLog` (`approveID`, `status`, `comment`, `date`, `userID`) ".
+					"VALUES ('".$reviewID ."', '".(int) $log['status']."', ".$db->qstr($log['comment']) .", ".$db->qstr($log['date']).", ".$log['user']->getID().")";
+				if (!$db->getResult($queryStr)) {
+					$db->rollbackTransaction();
+					return false;
+				}
+			}
+		}
+
+		$db->commitTransaction();
+		return true;
 	} /* }}} */
 
 	function addIndReviewer($user, $requestUser, $listadmin=false) { /* {{{ */

@@ -34,12 +34,7 @@ if(!$settings->_enableFullSearch) {
 	UI::exitError(getMLText("admin_tools"),getMLText("fulltextsearch_disabled"));
 }
 
-if(!empty($settings->_luceneClassDir))
-	require_once($settings->_luceneClassDir.'/Lucene.php');
-else
-	require_once('SeedDMS/Lucene.php');
-
-$index = SeedDMS_Lucene_Indexer::open($settings->_luceneDir);
+$index = $indexconf['Indexer']::open($settings->_luceneDir);
 if(!$index) {
 	UI::exitError(getMLText("admin_tools"),getMLText("no_fulltextindex"));
 }

@@ -31,22 +31,26 @@ require_once("class.Bootstrap.php");
  */
 class SeedDMS_View_Indexer extends SeedDMS_Bootstrap_Style {
 
-	function tree($dms, $index, $folder, $indent='') { /* {{{ */
+	function tree($dms, $index, $indexconf, $folder, $indent='') { /* {{{ */
 		set_time_limit(30);
 		echo $indent."D ".htmlspecialchars($folder->getName())."\n";
 		$subfolders = $folder->getSubFolders();
 		foreach($subfolders as $subfolder) {
-			$this->tree($dms, $index, $subfolder, $indent.'  ');
+			$this->tree($dms, $index, $indexconf, $subfolder, $indent.'  ');
 		}
 		$documents = $folder->getDocuments();
 		foreach($documents as $document) {
 			echo $indent."  ".$document->getId().":".htmlspecialchars($document->getName())." ";
 			/* If the document wasn't indexed before then just add it */
-			if(!($hits = $index->find('document_id:'.$document->getId()))) {
-				$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, $this->converters ? $this->converters : null));
-				echo "(document added)";
+			$lucenesearch = new $indexconf['Search']($index);
+			if(!($hit = $lucenesearch->getDocument($document->getId()))) {
+				try {
+					$index->addDocument(new $indexconf['IndexedDocument']($dms, $document, $this->converters ? $this->converters : null, false, $this->timeout));
+					echo "(document added)";
+				} catch(Exception $e) {
+					echo $indent."(adding document failed '".$e->getMessage()."')";
+				}
 			} else {
-				$hit = $hits[0];
 				/* Check if the attribute created is set or has a value older
 				 * than the lasted content. Documents without such an attribute
 				 * where added when a new document was added to the dms. In such
@@ -54,7 +58,7 @@ class SeedDMS_View_Indexer extends SeedDMS_Bootstrap_Style {
 				 */
 				try {
 					$created = (int) $hit->getDocument()->getFieldValue('created');
-				} catch (Zend_Search_Lucene_Exception $e) {
+				} catch (/* Zend_Search_Lucene_ */Exception $e) {
 					$created = 0;
 				}
 				$content = $document->getLatestContent();
@@ -62,8 +66,13 @@ class SeedDMS_View_Indexer extends SeedDMS_Bootstrap_Style {
 					echo $indent."(document unchanged)";
 				} else {
 					$index->delete($hit->id);
-					$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, $this->converters ? $this->converters : null));
-					echo $indent."(document updated)";
+					try {
+						$index->addDocument(new $indexconf['IndexedDocument']($dms, $document, $this->converters ? $this->converters : null, false, $this->timeout));
+						echo $indent."(document updated)";
+					} catch(Exception $e) {
+						print_r($e);
+						echo $indent."(updating document failed)";
+					}
 				}
 			}
 			echo "\n";
@@ -74,9 +83,11 @@ class SeedDMS_View_Indexer extends SeedDMS_Bootstrap_Style {
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$index = $this->params['index'];
+		$indexconf = $this->params['indexconf'];
 		$recreate = $this->params['recreate'];
 		$folder = $this->params['folder'];
 		$this->converters = $this->params['converters'];
+		$this->timeout = $this->params['timeout'];
 
 		$this->htmlStartPage(getMLText("admin_tools"));
 		$this->globalNavigation();
@@ -85,7 +96,7 @@ class SeedDMS_View_Indexer extends SeedDMS_Bootstrap_Style {
 		$this->contentHeading(getMLText("update_fulltext_index"));
 
 		echo "<pre>";
-		$this->tree($dms, $index, $folder);
+		$this->tree($dms, $index, $indexconf, $folder);
 		echo "</pre>";
 
 		$index->commit();

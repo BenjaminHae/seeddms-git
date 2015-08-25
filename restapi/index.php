@@ -140,6 +140,7 @@ function getLockedDocuments() { /* {{{ */
 				'name'=>$document->getName(),
 				'mimetype'=>$lc->getMimeType(),
 				'version'=>$lc->getVersion(),
+				'size'=>$lc->getFileSize(),
 				'comment'=>$document->getComment(),
 				'keywords'=>$document->getKeywords(),
 			);
@@ -249,6 +250,7 @@ function getFolderChildren($id) { /* {{{ */
 							'name'=>htmlspecialchars($document->getName()),
 							'mimetype'=>$lc->getMimeType(),
 							'version'=>$lc->getVersion(),
+							'size'=>$lc->getFileSize(),
 							'comment'=>$document->getComment(),
 							'keywords'=>$document->getKeywords(),
 						);
@@ -436,6 +438,7 @@ function getDocument($id) { /* {{{ */
 				'date'=>$document->getDate(),
 				'mimetype'=>$lc->getMimeType(),
 				'version'=>$lc->getVersion(),
+				'size'=>$lc->getFileSize(),
 				'keywords'=>htmlspecialchars($document->getKeywords()),
 			);
 			$app->response()->header('Content-Type', 'application/json');
@@ -540,6 +543,7 @@ function getDocumentVersions($id) { /* {{{ */
 					'version'=>$lc->getVersion(),
 					'date'=>$lc->getDate(),
 					'mimetype'=>$lc->getMimeType(),
+					'size'=>$lc->getFileSize(),
 					'comment'=>htmlspecialchars($lc->getComment()),
 				);
 			}
@@ -752,6 +756,7 @@ function doSearch() { /* {{{ */
 						'name'=>$document->getName(),
 						'mimetype'=>$lc->getMimeType(),
 						'version'=>$lc->getVersion(),
+						'size'=>$lc->getFileSize(),
 						'comment'=>$document->getComment(),
 						'keywords'=>$document->getKeywords(),
 					);
@@ -814,6 +819,7 @@ function doSearchByAttr() { /* {{{ */
 				'name'=>$document->getName(),
 				'mimetype'=>$lc->getMimeType(),
 				'version'=>$lc->getVersion(),
+				'size'=>$lc->getFileSize(),
 				'comment'=>$document->getComment(),
 				'keywords'=>$document->getKeywords(),
 			);

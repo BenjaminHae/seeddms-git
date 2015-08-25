@@ -1,4 +1,16 @@
 --------------------------------------------------------------------------------
+                     Changes in version 4.3.20
+--------------------------------------------------------------------------------
+- fix setting expire date when editing a document (Closes: #225)
+- MyDocumets: list only documents to approve which have passed review
+- show preview image in Review/Approval summary
+- timeout for external commands for creating fulltext index can be set
+- add translations for korean, croation, ukrainian
+- file can be submitted with approval/review
+- alternative full text search engine without dependency on Zend
+- much faster user manager
+
+--------------------------------------------------------------------------------
                      Changes in version 4.3.19
 --------------------------------------------------------------------------------
 - end date in search form actually ends at the end of the day

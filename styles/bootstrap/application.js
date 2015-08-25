@@ -382,9 +382,6 @@ $(document).ready( function() {
 		});
 	});
 	
-});
-
-$(document).ready( function() {
 	$(document).on('change', '.btn-file :file', function() {
 		var input = $(this),
 		numFiles = input.get(0).files ? input.get(0).files.length : 1,
@@ -402,6 +399,62 @@ $(document).ready( function() {
 			if( log ) alert(log);
 		}
 	});
+
+	$('div.ajax').each(function(index) {
+		var element = $(this);
+		var url = '';
+		var href = element.data('href');
+		var view = element.data('view');
+		var action = element.data('action');
+		if(view && action)
+			url = "out."+view+".php?action="+action;
+		else
+			url = href;
+	//	console.log('Calling '+url);
+		$.get(url, function(data) {
+			element.html(data);
+			$(".chzn-select").chosen();
+		});
+	});
+	$('div.ajax').on('update', function(event, param1) {
+		var element = $(this);
+		var url = '';
+		var href = element.data('href');
+		var view = element.data('view');
+		var action = element.data('action');
+		if(view && action)
+			url = "out."+view+".php?action="+action;
+		else
+			url = href;
+		if(typeof param1 === 'object') {
+			for(var key in param1) {
+				url += "&"+key+"="+param1[key];
+			}
+		} else {
+			url += "&"+param1;
+		}
+	//	console.log("Calling: "+url);
+		element.prepend('<div style="position: absolute; overflow: hidden; background: #f7f7f7; z-index: 1000; height: '+element.height()+'px; width: '+element.width()+'px; opacity: 0.7; display: table;"><div style="display: table-cell;text-align: center; vertical-align: middle; "><img src="../views/bootstrap/images/ajax-loader.gif"></div>');
+		$.get(url, function(data) {
+			element.html(data);
+			$(".chzn-select").chosen();
+		});
+	});
+	$("body").on("click", ".ajax-click", function() {
+		var element = $(this);
+		var url = element.data('href')+"?"+element.data('param1');
+		$.ajax({
+			type: 'GET',
+			url: url,
+			dataType: 'json',
+			success: function(data){
+				for (var i = 0; i < data.length; i++) {
+					noty({text: data[i].text, type: data[i].type});
+				}
+			}
+		});
+	});
+
 });		
 
 function allowDrop(ev) {
