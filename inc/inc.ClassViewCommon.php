@@ -53,6 +53,12 @@ class SeedDMS_View_Common {
 		$this->params[$name] = $value;
 	}
 
+	function getParam($name) {
+		if(isset($this->params[$name]))
+			return $this->params[$name];
+		return null;
+	}
+
 	function unsetParam($name) {
 		if(isset($this->params[$name]))
 			unset($this->params[$name]);
