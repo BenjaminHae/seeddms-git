@@ -879,7 +879,7 @@ $(document).ready(function () {
     <h3 id="docChooserLabel"><?php printMLText("choose_target_document") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until document tree is loaded …</p>
+		<p><?php printMLText('tree_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -911,7 +911,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="folderChooser<?php echo $formName ?>Label"><?php printMLText("choose_target_folder") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until document tree is loaded …</p>
+		<p><?php printMLText('tree_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -970,7 +970,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="categoryChooserLabel"><?php printMLText("choose_target_category") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until category list is loaded …</p>
+		<p><?php printMLText('categories_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -992,7 +992,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="keywordChooserLabel"><?php printMLText("use_default_keywords") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until keyword list is loaded …</p>
+		<p><?php printMLText('keywords_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -1043,7 +1043,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="dropfolderChooserLabel"><?php printMLText("choose_target_file") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until file list is loaded …</p>
+		<p><?php printMLText('files_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
