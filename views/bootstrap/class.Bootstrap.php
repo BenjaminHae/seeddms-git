@@ -2009,5 +2009,50 @@ mayscript>
 		</div>';
 		return $html;
 	} /* }}} */
+
+	/**
+	 * Output a timeline for a document
+	 *
+	 * @param object $document document
+	 */
+	protected function printTimeline($document) { /* {{{ */
+		$timeline = $document->getTimeline();
+?>
+	<script type="text/javascript">
+		var timeline;
+		var data;
+
+		data = [
+<?php 
+		foreach($timeline as $item) {
+			echo "{'start': new Date('".$item['date']."'), 'content': '".$item['msg']."'},";
+		}
+?>
+			{
+				'start': new Date(),
+				'content': 'Today'
+			}
+		];
+
+		// specify options
+		var options = {
+			'width':  '100%',
+			'height': '300px',
+			'editable': false,   // enable dragging and editing events
+			'style': 'box',
+			'locale': 'de_DE'
+		};
+
+		$(document).ready(function () {
+		// Instantiate our timeline object.
+		timeline = new links.Timeline(document.getElementById('timeline'), options);
+
+		timeline.draw(data);
+		});
+
+	</script>
+	<div id="timeline"></div>
+<?php
+	} /* }}} */
 }
 ?>

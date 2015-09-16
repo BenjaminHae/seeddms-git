@@ -2085,6 +2085,57 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		return $resArr[0]['sum'];
 	} /* }}} */
 
+	/**
+	 * Returns a list of events happend during the life of the document
+	 * 
+	 * This includes the creation of new versions, approval and reviews, etc.
+	 *
+	 * @return array list of events
+	 */
+	function getTimeline() { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$timeline = array();
+
+		$queryStr = "SELECT * FROM tblDocumentContent WHERE document = " . $this->_id;
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && $resArr == false)
+			return false;
+
+		foreach ($resArr as $row) {
+			$date = date('Y-m-d H:i:s', $row['date']);
+			$timeline[] = array('date'=>$date, 'msg'=>'Added version '.$row['version']);
+		}
+
+		$queryStr = "SELECT * FROM tblDocumentFiles WHERE document = " . $this->_id;
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && $resArr == false)
+			return false;
+
+		foreach ($resArr as $row) {
+			$date = date('Y-m-d H:i:s', $row['date']);
+			$timeline[] = array('date'=>$date, 'msg'=>'Added attachment "'.$row['name'].'"');
+		}
+
+		$queryStr=
+			"SELECT `tblDocumentStatus`.*, `tblDocumentStatusLog`.`status`, ".
+			"`tblDocumentStatusLog`.`comment`, `tblDocumentStatusLog`.`date`, ".
+			"`tblDocumentStatusLog`.`userID` ".
+			"FROM `tblDocumentStatus` ".
+			"LEFT JOIN `tblDocumentStatusLog` USING (`statusID`) ".
+			"WHERE `tblDocumentStatus`.`documentID` = '". $this->_id ."' ".
+			"ORDER BY `tblDocumentStatusLog`.`statusLogID` DESC";
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && !$resArr)
+			return false;
+
+		foreach ($resArr as $row) {
+			$date = $row['date'];
+			$timeline[] = array('date'=>$date, 'msg'=>'Version '.$row['version'].': Status change to '.$row['status']);
+		}
+		return $timeline;
+	} /* }}} */
+
 } /* }}} */
 
 
