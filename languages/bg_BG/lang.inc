@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (780)
+//    Translators: Admin (781)
 
 $text = array(
 'accept' => 'Приеми',
@@ -158,6 +158,7 @@ $text = array(
 'cannot_retrieve_review_snapshot' => 'Невозможно е да се получи рецензираща снимка за тази версия на документа',
 'cannot_rm_root' => 'Невозможно е да се изтрие руут папката',
 'categories' => 'Категории',
+'categories_loading' => '',
 'category' => 'Категория',
 'category_exists' => 'Категорията существува',
 'category_filter' => 'Само категории',
@@ -349,6 +350,7 @@ $text = array(
 'files' => 'Файлове',
 'files_deletion' => 'Изтриване на файлове',
 'files_deletion_warning' => 'Тази операция ще изтрие всички файлове във всички папки. Информацията за версиите ще остане достъпна',
+'files_loading' => '',
 'file_size' => 'Размер',
 'filter_for_documents' => '',
 'filter_for_folders' => '',
@@ -413,7 +415,7 @@ $text = array(
 'inherits_access_empty_msg' => 'Започни с празен списък за достъп',
 'inherits_access_msg' => 'достъпът наследен.',
 'internal_error' => 'Вътрешна грешка',
-'internal_error_exit' => 'Вътрешна грешка. Невозможно е да се изпълни запитването. Свършвам.',
+'internal_error_exit' => 'Вътрешна грешка. Невозможно е да се изпълни запитването.',
 'invalid_access_mode' => 'Неправилно ниво на достъп',
 'invalid_action' => 'Неправилно действие',
 'invalid_approval_status' => 'Неправилен статус на утвърждаване',
@@ -459,6 +461,7 @@ $text = array(
 'keep' => '',
 'keep_doc_status' => 'Запази статуса на документа',
 'keywords' => 'Ключови думи',
+'keywords_loading' => '',
 'keyword_exists' => 'Ключовата дума съществува',
 'ko_KR' => '',
 'language' => 'Език',
@@ -569,6 +572,7 @@ $text = array(
 'no_update_cause_locked' => 'Вие не можете да обновите документа. Свържете се с блокирщия го потребител.',
 'no_user_image' => 'Изображение не е намерено',
 'no_version_check' => '',
+'no_version_modification' => '',
 'no_workflow_available' => '',
 'objectcheck' => 'Проверка на Папка/Документ',
 'obsolete' => 'Остарял',
@@ -1094,6 +1098,7 @@ $text = array(
 'transmittal_comment' => '',
 'transmittal_name' => '',
 'transmittal_size' => '',
+'tree_loading' => '',
 'trigger_workflow' => 'Процес',
 'tr_TR' => '',
 'tuesday' => 'вторник',

@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (478)
+//    Translators: Admin (479)
 
 $text = array(
 'accept' => 'Prijať',
@@ -158,6 +158,7 @@ $text = array(
 'cannot_retrieve_review_snapshot' => 'Nie je možné získať informáciu o stave kontroly tejto verzie dokumentu.',
 'cannot_rm_root' => 'Chyba: Nie je možné zmazať koreňovú zložku.',
 'categories' => 'Kategórie',
+'categories_loading' => '',
 'category' => '',
 'category_exists' => '',
 'category_filter' => '',
@@ -349,6 +350,7 @@ $text = array(
 'files' => 'Súbory',
 'files_deletion' => 'Odstránenie súboru',
 'files_deletion_warning' => 'Touto akciou môžete odstrániť celú DMS zložku. Verziovacie informácie zostanú viditeľné.',
+'files_loading' => '',
 'file_size' => 'Veľkosť súboru',
 'filter_for_documents' => '',
 'filter_for_folders' => '',
@@ -413,7 +415,7 @@ $text = array(
 'inherits_access_empty_msg' => 'Založiť nový zoznam riadenia prístupu',
 'inherits_access_msg' => 'Prístup sa dedí.',
 'internal_error' => 'Vnútorná chyba',
-'internal_error_exit' => 'Vnútorná chyba. Nebolo možné dokončiť požiadavku. Ukončuje sa.',
+'internal_error_exit' => 'Vnútorná chyba. Nebolo možné dokončiť požiadavku.',
 'invalid_access_mode' => 'Neplatný režim prístupu',
 'invalid_action' => 'Neplatná činnosť',
 'invalid_approval_status' => 'Neplatný stav schválenia',
@@ -459,6 +461,7 @@ $text = array(
 'keep' => '',
 'keep_doc_status' => '',
 'keywords' => 'Kľúčové slová',
+'keywords_loading' => '',
 'keyword_exists' => 'Kľúčové slovo už existuje',
 'ko_KR' => '',
 'language' => 'Jazyk',
@@ -569,6 +572,7 @@ $text = array(
 'no_update_cause_locked' => 'Preto nemôžete aktualizovať tento dokument. Prosím, kontaktujte používateľa, ktorý ho zamkol.',
 'no_user_image' => 'nebol nájdený žiadny obrázok',
 'no_version_check' => '',
+'no_version_modification' => '',
 'no_workflow_available' => '',
 'objectcheck' => '',
 'obsolete' => 'Zastaralé',
@@ -1094,6 +1098,7 @@ $text = array(
 'transmittal_comment' => '',
 'transmittal_name' => '',
 'transmittal_size' => '',
+'tree_loading' => '',
 'trigger_workflow' => '',
 'tr_TR' => 'Turecky',
 'tuesday' => 'Utorok',
