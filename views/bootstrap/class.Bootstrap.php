@@ -28,7 +28,7 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		$this->theme = $theme;
 		$this->params = $params;
 		$this->imgpath = '../views/'.$theme.'/images/';
-		$this->extraheader = '';
+		$this->extraheader = array('js'=>'', 'css'=>'');
 		$this->footerjs = array();
 	}
 
@@ -53,12 +53,14 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		echo '<link href="../styles/'.$this->theme.'/datepicker/css/datepicker.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/chosen/css/chosen.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/jqtree/jqtree.css" rel="stylesheet">'."\n";
+		if($this->extraheader['css'])
+			echo $this->extraheader['css'];
 		echo '<link href="../styles/'.$this->theme.'/application.css" rel="stylesheet">'."\n";
 //		echo '<link href="../styles/'.$this->theme.'/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">'."\n";
 
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/jquery/jquery.min.js"></script>'."\n";
-		if($this->extraheader)
-			echo $this->extraheader;
+		if($this->extraheader['js'])
+			echo $this->extraheader['js'];
 		echo '<script type="text/javascript" src="../js/jquery.passwordstrength.js"></script>'."\n";
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/noty/jquery.noty.js"></script>'."\n";
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/noty/layouts/topRight.js"></script>'."\n";
@@ -98,8 +100,8 @@ background-image: linear-gradient(to bottom, #882222, #111111);;
 		}
 	} /* }}} */
 
-	function htmlAddHeader($head) { /* {{{ */
-		$this->extraheader .= $head;
+	function htmlAddHeader($head, $type='js') { /* {{{ */
+		$this->extraheader[$type] .= $head;
 	} /* }}} */
 
 	function htmlEndPage() { /* {{{ */
@@ -2025,7 +2027,20 @@ mayscript>
 		data = [
 <?php 
 		foreach($timeline as $item) {
-			echo "{'start': new Date('".$item['date']."'), 'content': '".$item['msg']."'},";
+			switch($item['type']) {
+			case 'add_version':
+				$msg = getMLText('timeline_'.$item['type'], array('version'=> $item['params'][0]));
+				break;
+			case 'add_file':
+				$msg = getMLText('timeline_'.$item['type']);
+				break;
+			case 'status_change':
+				$msg = getMLText('timeline_'.$item['type'], array('version'=> $item['params'][0], 'status'=> getOverallStatusText($item['params'][1])));
+				break;
+			default:
+				$msg = '???';
+			}
+			echo "{'start': new Date('".$item['date']."'), 'content': '".$msg."'},";
 		}
 ?>
 			{
