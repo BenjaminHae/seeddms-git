@@ -1282,7 +1282,7 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 			$comment = "";
 		}
 		$queryStr = "INSERT INTO `tblDocumentStatusLog` (`statusID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $statusID ."', '". $status."', 'New document content submitted". $comment ."', CURRENT_TIMESTAMP, '". $user->getID() ."')";
+			"VALUES ('". $statusID ."', '". $status."', 'New document content submitted". $comment ."', ".$db->getCurrentTimestamp().", '". $user->getID() ."')";
 		if (!$db->getResult($queryStr)) {
 			$db->rollbackTransaction();
 			return false;
@@ -2521,7 +2521,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		if($date)
 			$ddate = $db->qstr($date);
 		else
-			$ddate = 'CURRENT_TIMESTAMP';
+			$ddate = $db->getCurrentTimestamp();
 		$queryStr = "INSERT INTO `tblDocumentStatusLog` (`statusID`, `status`, `comment`, `date`, `userID`) ".
 			"VALUES ('". $this->_status["statusID"] ."', '". (int) $status ."', ".$db->qstr($comment).", ".$ddate.", '". $updateUser->getID() ."')";
 		$res = $db->getResult($queryStr);
@@ -2918,7 +2918,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$queryStr = "INSERT INTO `tblDocumentReviewLog` (`reviewID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $reviewID ."', '0', '', CURRENT_TIMESTAMP, '". $requestUser->getID() ."')";
+			"VALUES ('". $reviewID ."', '0', '', ".$db->getCurrentTimestamp().", '". $requestUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res) {
 			return -1;
@@ -2976,7 +2976,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$queryStr = "INSERT INTO `tblDocumentReviewLog` (`reviewID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $reviewID ."', '0', '', CURRENT_TIMESTAMP, '". $requestUser->getID() ."')";
+			"VALUES ('". $reviewID ."', '0', '', ".$db->getCurrentTimestamp().", '". $requestUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res) {
 			return -1;
@@ -3033,7 +3033,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		$queryStr = "INSERT INTO `tblDocumentReviewLog` (`reviewID`, `status`,
   	  `comment`, `date`, `userID`) ".
 			"VALUES ('". $indstatus["reviewID"] ."', '".
-			(int) $status ."', ".$db->qstr($comment).", CURRENT_TIMESTAMP, '".
+			(int) $status ."', ".$db->qstr($comment).", ".$db->getCurrentTimestamp().", '".
 			$requestUser->getID() ."')";
 		$res=$db->getResult($queryStr);
 		if (is_bool($res) && !$res)
@@ -3085,7 +3085,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		$queryStr = "INSERT INTO `tblDocumentReviewLog` (`reviewID`, `status`,
   	  `comment`, `date`, `userID`) ".
 			"VALUES ('". $reviewStatus[0]["reviewID"] ."', '".
-			(int) $status ."', ".$db->qstr($comment).", CURRENT_TIMESTAMP, '".
+			(int) $status ."', ".$db->qstr($comment).", ".$db->getCurrentTimestamp().", '".
 			$requestUser->getID() ."')";
 		$res=$db->getResult($queryStr);
 		if (is_bool($res) && !$res)
@@ -3151,7 +3151,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$queryStr = "INSERT INTO `tblDocumentApproveLog` (`approveID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $approveID ."', '0', '', CURRENT_TIMESTAMP, '". $requestUser->getID() ."')";
+			"VALUES ('". $approveID ."', '0', '', ".$db->getCurrentTimestamp().", '". $requestUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res) {
 			return -1;
@@ -3207,7 +3207,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$queryStr = "INSERT INTO `tblDocumentApproveLog` (`approveID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $approveID ."', '0', '', CURRENT_TIMESTAMP, '". $requestUser->getID() ."')";
+			"VALUES ('". $approveID ."', '0', '', ".$db->getCurrentTimestamp().", '". $requestUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res) {
 			return -1;
@@ -3268,7 +3268,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		$queryStr = "INSERT INTO `tblDocumentApproveLog` (`approveID`, `status`,
   	  `comment`, `date`, `userID`) ".
 			"VALUES ('". $indstatus["approveID"] ."', '".
-			(int) $status ."', ".$db->qstr($comment).", CURRENT_TIMESTAMP, '".
+			(int) $status ."', ".$db->qstr($comment).", ".$db->getCurrentTimestamp().", '".
 			$requestUser->getID() ."')";
 		$res=$db->getResult($queryStr);
 		if (is_bool($res) && !$res)
@@ -3312,7 +3312,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		$queryStr = "INSERT INTO `tblDocumentApproveLog` (`approveID`, `status`,
   	  `comment`, `date`, `userID`) ".
 			"VALUES ('". $approvalStatus[0]["approveID"] ."', '".
-			(int) $status ."', ".$db->qstr($comment).", CURRENT_TIMESTAMP, '".
+			(int) $status ."', ".$db->qstr($comment).", ".$db->getCurrentTimestamp().", '".
 			$requestUser->getID() ."')";
 		$res=$db->getResult($queryStr);
 		if (is_bool($res) && !$res)
@@ -3348,7 +3348,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$queryStr = "INSERT INTO `tblDocumentReviewLog` (`reviewID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $indstatus["reviewID"] ."', '-2', '', CURRENT_TIMESTAMP, '". $requestUser->getID() ."')";
+			"VALUES ('". $indstatus["reviewID"] ."', '-2', '', ".$db->getCurrentTimestamp().", '". $requestUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res) {
 			return -1;
@@ -3379,7 +3379,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$queryStr = "INSERT INTO `tblDocumentReviewLog` (`reviewID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $reviewStatus[0]["reviewID"] ."', '-2', '', CURRENT_TIMESTAMP, '". $requestUser->getID() ."')";
+			"VALUES ('". $reviewStatus[0]["reviewID"] ."', '-2', '', ".$db->getCurrentTimestamp().", '". $requestUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res) {
 			return -1;
@@ -3411,7 +3411,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$queryStr = "INSERT INTO `tblDocumentApproveLog` (`approveID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $indstatus["approveID"] ."', '-2', '', CURRENT_TIMESTAMP, '". $requestUser->getID() ."')";
+			"VALUES ('". $indstatus["approveID"] ."', '-2', '', ".$db->getCurrentTimestamp().", '". $requestUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res) {
 			return -1;
@@ -3442,7 +3442,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		}
 
 		$queryStr = "INSERT INTO `tblDocumentApproveLog` (`approveID`, `status`, `comment`, `date`, `userID`) ".
-			"VALUES ('". $approvalStatus[0]["approveID"] ."', '-2', '', CURRENT_TIMESTAMP, '". $requestUser->getID() ."')";
+			"VALUES ('". $approvalStatus[0]["approveID"] ."', '-2', '', ".$db->getCurrentTimestamp().", '". $requestUser->getID() ."')";
 		$res = $db->getResult($queryStr);
 		if (is_bool($res) && !$res) {
 			return -1;
@@ -3511,7 +3511,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 		if($workflow && is_object($workflow)) {
 			$db->startTransaction();
 			$initstate = $workflow->getInitState();
-			$queryStr = "INSERT INTO tblWorkflowDocumentContent (workflow, document, version, state, date) VALUES (". $workflow->getID(). ", ". $this->_document->getID() .", ". $this->_version .", ".$initstate->getID().", CURRENT_TIMESTAMP)";
+			$queryStr = "INSERT INTO tblWorkflowDocumentContent (workflow, document, version, state, date) VALUES (". $workflow->getID(). ", ". $this->_document->getID() .", ". $this->_version .", ".$initstate->getID().", ".$db->getCurrentTimestamp().")";
 			if (!$db->getResult($queryStr)) {
 				$db->rollbackTransaction();
 				return false;
@@ -3692,7 +3692,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 
 		if($subworkflow) {
 			$initstate = $subworkflow->getInitState();
-			$queryStr = "INSERT INTO tblWorkflowDocumentContent (parentworkflow, workflow, document, version, state, date) VALUES (". $this->_workflow->getID(). ", ". $subworkflow->getID(). ", ". $this->_document->getID() .", ". $this->_version .", ".$initstate->getID().", CURRENT_TIMESTAMP)";
+			$queryStr = "INSERT INTO tblWorkflowDocumentContent (parentworkflow, workflow, document, version, state, date) VALUES (". $this->_workflow->getID(). ", ". $subworkflow->getID(). ", ". $this->_document->getID() .", ". $this->_version .", ".$initstate->getID().", ".$db->getCurrentTimestamp().")";
 			if (!$db->getResult($queryStr)) {
 				return false;
 			}
@@ -3932,7 +3932,7 @@ class SeedDMS_Core_DocumentContent extends SeedDMS_Core_Object { /* {{{ */
 			return false;
 
 		$state = $this->_workflowState;
-		$queryStr = "INSERT INTO tblWorkflowLog (document, version, workflow, userid, transition, date, comment) VALUES (".$this->_document->getID().", ".$this->_version.", " . (int) $this->_workflow->getID() . ", " .(int) $user->getID(). ", ".(int) $transition->getID().", CURRENT_TIMESTAMP, ".$db->qstr($comment).")";
+		$queryStr = "INSERT INTO tblWorkflowLog (document, version, workflow, userid, transition, date, comment) VALUES (".$this->_document->getID().", ".$this->_version.", " . (int) $this->_workflow->getID() . ", " .(int) $user->getID(). ", ".(int) $transition->getID().", ".$db->getCurrentTimestamp().", ".$db->qstr($comment).")";
 		if (!$db->getResult($queryStr))
 			return false;
 

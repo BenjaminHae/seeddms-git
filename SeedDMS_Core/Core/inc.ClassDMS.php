@@ -1591,7 +1591,7 @@ class SeedDMS_Core_DMS {
 	 */
 	function createPasswordRequest($user) { /* {{{ */
 		$hash = md5(uniqid(time()));
-		$queryStr = "INSERT INTO tblUserPasswordRequest (userID, hash, `date`) VALUES (" . $user->getId() . ", " . $this->db->qstr($hash) .", CURRENT_TIMESTAMP)";
+		$queryStr = "INSERT INTO tblUserPasswordRequest (userID, hash, `date`) VALUES (" . $user->getId() . ", " . $this->db->qstr($hash) .", ".$db->getCurrentTimestamp().")";
 		$resArr = $this->db->getResult($queryStr);
 		if (is_bool($resArr) && !$resArr) return false;
 		return $hash;

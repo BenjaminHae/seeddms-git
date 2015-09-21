@@ -454,6 +454,23 @@ class SeedDMS_Core_DatabaseAccess {
 		return '';
 	} /* }}} */
 
+	/**
+	 * Return sql statement for returning the current timestamp
+	 *
+	 * @return string sql code
+	 */
+	function getCurrentTimestamp() { /* {{{ */
+		switch($this->_driver) {
+			case 'mysql':
+				return "CURRENT_TIMESTAMP";
+				break;
+			case 'sqlite':
+				return "datetime('now', 'localtime')";
+				break;
+		}
+		return '';
+	} /* }}} */
+
 }
 
 ?>
