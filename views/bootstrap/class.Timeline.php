@@ -103,7 +103,7 @@ $this->contentHeading(getMLText("timeline"));
 			}
 			$item['msg'] = $msg;
 		}
-$this->printTimeline($data, 500);
+$this->printTimeline($data, 550);
 echo "</div>\n";
 echo "</div>\n";
 
