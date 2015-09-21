@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (714), netixw (84), romi (93), uGn (112)
+//    Translators: Admin (715), netixw (84), romi (93), uGn (112)
 
 $text = array(
 'accept' => 'Akceptuj',
@@ -350,7 +350,7 @@ URL: [url]',
 'dump_creation_warning' => 'Ta operacja utworzy plik będący zrzutem zawartości bazy danych. Po utworzeniu plik zrzutu będzie się znajdował w folderze danych na serwerze.',
 'dump_list' => 'Istniejące pliki zrzutu',
 'dump_remove' => 'Usuń plik zrzutu',
-'duplicate_content' => '',
+'duplicate_content' => 'Zduplikowana zawartość',
 'edit' => 'Edytuj',
 'edit_attributes' => 'Zmiana atrybutów',
 'edit_comment' => 'Edytuj komentarz',
@@ -1215,6 +1215,12 @@ URL: [url]',
 'theme' => 'Wygląd',
 'thursday' => 'Czwartek',
 'thursday_abbr' => 'Cz',
+'timeline' => '',
+'timeline_add_version' => '',
+'timeline_full_add_file' => '',
+'timeline_full_add_version' => '',
+'timeline_full_status_change' => '',
+'timeline_status_change' => '',
 'to' => 'Do',
 'toggle_manager' => 'Przełączanie zarządcy',
 'to_before_from' => '',

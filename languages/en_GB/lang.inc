@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1244), dgrutsch (3), netixw (14)
+//    Translators: Admin (1251), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -1257,6 +1257,12 @@ URL: [url]',
 'theme' => 'Theme',
 'thursday' => 'Thursday',
 'thursday_abbr' => 'Th',
+'timeline' => 'Timeline',
+'timeline_add_version' => 'New version [version]',
+'timeline_full_add_file' => '[document]<br />New Attachment',
+'timeline_full_add_version' => '[document]<br />New version [version]',
+'timeline_full_status_change' => '[document]<br />Version [version]: [status]',
+'timeline_status_change' => 'Version [version]: [status]',
 'to' => 'To',
 'toggle_manager' => 'Toggle manager',
 'to_before_from' => 'End date may not be before start date',

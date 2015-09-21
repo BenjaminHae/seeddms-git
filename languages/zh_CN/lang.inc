@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (589), fengjohn (5)
+//    Translators: Admin (590), fengjohn (5)
 
 $text = array(
 'accept' => '接受',
@@ -1092,6 +1092,12 @@ URL: [url]',
 'theme' => '主题',
 'thursday' => 'Thursday',
 'thursday_abbr' => '',
+'timeline' => '',
+'timeline_add_version' => '',
+'timeline_full_add_file' => '',
+'timeline_full_add_version' => '',
+'timeline_full_status_change' => '',
+'timeline_status_change' => '',
 'to' => '到',
 'toggle_manager' => '角色切换',
 'to_before_from' => '',
@@ -1104,7 +1110,7 @@ URL: [url]',
 'transmittal_comment' => '',
 'transmittal_name' => '',
 'transmittal_size' => '',
-'tree_loading' => '',
+'tree_loading' => '文档结构尚未加载完成，请等待...',
 'trigger_workflow' => '',
 'tr_TR' => '土耳其',
 'tuesday' => 'Tuesday',

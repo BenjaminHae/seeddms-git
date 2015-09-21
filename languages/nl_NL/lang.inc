@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (705), pepijn (45), reinoutdijkstra@hotmail.com (270)
+//    Translators: Admin (706), pepijn (45), reinoutdijkstra@hotmail.com (270)
 
 $text = array(
 'accept' => 'Accept',
@@ -1227,6 +1227,12 @@ URL: [url]',
 'theme' => 'Thema',
 'thursday' => 'Donderdag',
 'thursday_abbr' => 'Th',
+'timeline' => '',
+'timeline_add_version' => '',
+'timeline_full_add_file' => '',
+'timeline_full_add_version' => '',
+'timeline_full_status_change' => '',
+'timeline_status_change' => '',
 'to' => 'Aan',
 'toggle_manager' => 'Wijzig Beheerder',
 'to_before_from' => 'De einddatum mag niet voor de startdatum liggen',
@@ -1248,7 +1254,7 @@ URL: [url]',
 'transmittal_comment' => '',
 'transmittal_name' => '',
 'transmittal_size' => '',
-'tree_loading' => '',
+'tree_loading' => 'Directory boom wordt geladen ...',
 'trigger_workflow' => 'Workflow',
 'tr_TR' => 'Turks',
 'tuesday' => 'Dinsdag',
