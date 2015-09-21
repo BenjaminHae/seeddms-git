@@ -2104,7 +2104,7 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 
 		foreach ($resArr as $row) {
 			$date = date('Y-m-d H:i:s', $row['date']);
-			$timeline[] = array('date'=>$date, 'msg'=>'Added version '.$row['version'], 'type'=>'add_version', 'params'=>array($row['version']));
+			$timeline[] = array('date'=>$date, 'msg'=>'Added version '.$row['version'], 'type'=>'add_version', 'version'=>$row['version'], 'document'=>$this, 'params'=>array($row['version']));
 		}
 
 		$queryStr = "SELECT * FROM tblDocumentFiles WHERE document = " . $this->_id;
@@ -2114,7 +2114,7 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 
 		foreach ($resArr as $row) {
 			$date = date('Y-m-d H:i:s', $row['date']);
-			$timeline[] = array('date'=>$date, 'msg'=>'Added attachment "'.$row['name'].'"', 'type'=>'add_file');
+			$timeline[] = array('date'=>$date, 'msg'=>'Added attachment "'.$row['name'].'"', 'document'=>$this, 'type'=>'add_file');
 		}
 
 		$queryStr=
@@ -2131,7 +2131,7 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 
 		foreach ($resArr as $row) {
 			$date = $row['date'];
-			$timeline[] = array('date'=>$date, 'msg'=>'Version '.$row['version'].': Status change to '.$row['status'], 'type'=>'status_change', 'params'=>array($row['version'], $row['status']));
+			$timeline[] = array('date'=>$date, 'msg'=>'Version '.$row['version'].': Status change to '.$row['status'], 'type'=>'status_change', 'version'=>$row['version'], 'document'=>$this, 'status'=>$row['status'], 'params'=>array($row['version'], $row['status']));
 		}
 		return $timeline;
 	} /* }}} */

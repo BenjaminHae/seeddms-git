@@ -2251,7 +2251,7 @@ class SeedDMS_Core_DMS {
 		$resArr = $this->db->getResultArray($queryStr);
 		foreach($resArr as $rec) {
 			$document = $this->getDocument($rec['document']);
-			$timeline = array_merge($timeline, $document->getTimeline);
+			$timeline = array_merge($timeline, $document->getTimeline());
 		}
 		return $timeline;
 
