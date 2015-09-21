@@ -1118,13 +1118,13 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 			foreach($timeline as &$item) {
 				switch($item['type']) {
 				case 'add_version':
-					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document'], 'version'=> $item['version']));
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName(), 'version'=> $item['version']));
 					break;
 				case 'add_file':
-					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']));
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName()));
 					break;
 				case 'status_change':
-					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document'], 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName(), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
 					break;
 				default:
 					$msg = '???';
