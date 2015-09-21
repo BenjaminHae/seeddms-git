@@ -2157,7 +2157,7 @@ class SeedDMS_Core_DMS {
 	 * documents or used space per user, recent activity, etc.
 	 *
 	 * @param string $type type of statistic
-	 * @param array statistical data
+	 * @return array statistical data
 	 */
 	function getStatisticalData($type='') { /* {{{ */
 		switch($type) {
@@ -2223,6 +2223,38 @@ class SeedDMS_Core_DMS {
 			default:
 				return array();
 		}
+	} /* }}} */
+
+	/**
+	 * Returns changes with a period of time
+	 *
+	 * This method returns a list of all changes happened in the database
+	 * within a given period of time. It currently just checks for
+	 * entries in the database tables tblDocumentContent, tblDocumentFiles,
+	 * and tblDocumentStatusLog
+	 *
+	 * @param string $start start date
+	 * @param string $end end date
+	 * @return array list of changes
+	 */
+	function getTimeline($startts='', $endts='') { /* {{{ */
+		if(!$startts)
+			$startts = mktime(0, 0, 0);
+		if(!$endts)
+			$startts = mktime(24, 0, 0);
+		$timeline = array();
+
+		$queryStr = "SELECT document FROM tblDocumentContent WHERE date > ".$startts." AND date < ".$endts;
+		$resArr = $this->db->getResultArray($queryStr);
+		if (!$resArr)
+			return false;
+		$resArr = $this->db->getResultArray($queryStr);
+		foreach($resArr as $rec) {
+			$document = $this->getDocument($rec['document']);
+			$timeline = array_merge($timeline, $document->getTimeline);
+		}
+		return $timeline;
+
 	} /* }}} */
 
 	/**
