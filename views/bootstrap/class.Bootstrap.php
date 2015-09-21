@@ -2017,8 +2017,7 @@ mayscript>
 	 *
 	 * @param object $document document
 	 */
-	protected function printTimeline($document) { /* {{{ */
-		$timeline = $document->getTimeline();
+	protected function printTimeline($timeline, $height=300) { /* {{{ */
 ?>
 	<script type="text/javascript">
 		var timeline;
@@ -2027,20 +2026,7 @@ mayscript>
 		data = [
 <?php 
 		foreach($timeline as $item) {
-			switch($item['type']) {
-			case 'add_version':
-				$msg = getMLText('timeline_'.$item['type'], array('version'=> $item['params'][0]));
-				break;
-			case 'add_file':
-				$msg = getMLText('timeline_'.$item['type']);
-				break;
-			case 'status_change':
-				$msg = getMLText('timeline_'.$item['type'], array('version'=> $item['params'][0], 'status'=> getOverallStatusText($item['params'][1])));
-				break;
-			default:
-				$msg = '???';
-			}
-			echo "{'start': new Date('".$item['date']."'), 'content': '".$msg."'},";
+			echo "{'start': new Date('".$item['date']."'), 'content': '".$item['msg']."'},";
 		}
 ?>
 			{
@@ -2052,7 +2038,7 @@ mayscript>
 		// specify options
 		var options = {
 			'width':  '100%',
-			'height': '300px',
+			'height': '<?= $height ?>px',
 			'editable': false,   // enable dragging and editing events
 			'style': 'box',
 			'locale': 'de_DE'
