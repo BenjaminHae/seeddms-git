@@ -2094,6 +2094,8 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 
 		$timeline = array();
 
+		/* No need to add entries for new version because the status log
+		 * will generate an entry as well.
 		$queryStr = "SELECT * FROM tblDocumentContent WHERE document = " . $this->_id;
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr) && $resArr == false)
@@ -2103,6 +2105,7 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 			$date = date('Y-m-d H:i:s', $row['date']);
 			$timeline[] = array('date'=>$date, 'msg'=>'Added version '.$row['version'], 'type'=>'add_version', 'version'=>$row['version'], 'document'=>$this, 'params'=>array($row['version']));
 		}
+		 */
 
 		$queryStr = "SELECT * FROM tblDocumentFiles WHERE document = " . $this->_id;
 		$resArr = $db->getResultArray($queryStr);
