@@ -2028,7 +2028,7 @@ mayscript>
 		data = [
 <?php 
 		foreach($timeline as $item) {
-			echo "{'start': new Date('".$item['date']."'), 'content': '".$item['msg']."'},";
+			echo "{'start': new Date('".$item['date']."'), 'content': '".$item['msg']."'},\n";
 		}
 ?>
 			/* {
@@ -2040,19 +2040,19 @@ mayscript>
 		// specify options
 		var options = {
 			'width':  '100%',
-			'_height': '<?= $height ?>px',
 			'height': '100%',
 <?php
 		if($start) {
 			$tmp = explode('-', $start);
-			echo "'min': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),";
+			echo "\t\t\t'min': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),\n";
 		}
 		if($end) {
 			$tmp = explode('-', $end);
-			echo "'max': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),";
+			echo "'\t\t\tmax': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),\n";
 		}
 ?>
-			'editable': false,   // enable dragging and editing events
+			'_editable': false,
+			'selectable': false,
 			'style': 'box',
 			'locale': 'de_DE'
 		};
