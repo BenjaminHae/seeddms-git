@@ -1131,7 +1131,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 				}
 				$item['msg'] = $msg;
 			}
-			$this->printTimeline($timeline);
+			$this->printTimeline($timeline, 300, '', date('Y-m-d'));
 		}
 ?>
 		  </div>
