@@ -2017,7 +2017,7 @@ mayscript>
 	 *
 	 * @param object $document document
 	 */
-	protected function printTimeline($timeline, $height=300) { /* {{{ */
+	protected function printTimeline($timeline, $height=300, $start='', $end='') { /* {{{ */
 ?>
 	<script type="text/javascript">
 		var timeline;
@@ -2038,7 +2038,18 @@ mayscript>
 		// specify options
 		var options = {
 			'width':  '100%',
-			'height': '<?= $height ?>px',
+			'_height': '<?= $height ?>px',
+			'height': '100%',
+<?php
+		if($start) {
+			$tmp = explode('-', $start);
+			echo "'min': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),";
+		}
+		if($end) {
+			$tmp = explode('-', $end);
+			echo "'max': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),";
+		}
+?>
 			'editable': false,   // enable dragging and editing events
 			'style': 'box',
 			'locale': 'de_DE'
@@ -2052,7 +2063,7 @@ mayscript>
 		});
 
 	</script>
-	<div id="timeline"></div>
+	<div id="timeline" style="height: <?= $height ?>px;"></div>
 <?php
 	} /* }}} */
 }
