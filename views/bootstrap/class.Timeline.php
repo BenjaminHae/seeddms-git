@@ -103,7 +103,7 @@ $this->contentHeading(getMLText("timeline"));
 			}
 			$item['msg'] = $msg;
 		}
-$this->printTimeline($data, 550);
+$this->printTimeline($data, 550, date('Y-m-d', $from), date('Y-m-d', $to+1));
 echo "</div>\n";
 echo "</div>\n";
 
