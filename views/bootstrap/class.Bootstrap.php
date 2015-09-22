@@ -2018,6 +2018,8 @@ mayscript>
 	 * @param object $document document
 	 */
 	protected function printTimeline($timeline, $height=300, $start='', $end='') { /* {{{ */
+		if(!$timeline)
+			return;
 ?>
 	<script type="text/javascript">
 		var timeline;

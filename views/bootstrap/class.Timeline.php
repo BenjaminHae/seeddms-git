@@ -87,23 +87,25 @@ echo "</div>\n";
 
 echo "<div class=\"span9\">\n";
 $this->contentHeading(getMLText("timeline"));
-		foreach($data as &$item) {
-			switch($item['type']) {
-			case 'add_version':
-				$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
-				break;
-			case 'add_file':
-				$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName())));
-				break;
-			case 'status_change':
-				$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
-				break;
-			default:
-				$msg = '???';
-			}
-			$item['msg'] = $msg;
+if($data) {
+	foreach($data as &$item) {
+		switch($item['type']) {
+		case 'add_version':
+			$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
+			break;
+		case 'add_file':
+			$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName())));
+			break;
+		case 'status_change':
+			$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
+			break;
+		default:
+			$msg = '???';
 		}
-$this->printTimeline($data, 550, date('Y-m-d', $from), date('Y-m-d', $to+1));
+		$item['msg'] = $msg;
+	}
+	$this->printTimeline($data, 550, date('Y-m-d', $from), date('Y-m-d', $to+1));
+}
 echo "</div>\n";
 echo "</div>\n";
 

@@ -1115,23 +1115,25 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		if($user->isAdmin()) {
 			$this->contentHeading(getMLText("timeline"));
 			$timeline = $document->getTimeline();
-			foreach($timeline as &$item) {
-				switch($item['type']) {
-				case 'add_version':
-					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName(), 'version'=> $item['version']));
-					break;
-				case 'add_file':
-					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName()));
-					break;
-				case 'status_change':
-					$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName(), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
-					break;
-				default:
-					$msg = '???';
+			if($timeline) {
+				foreach($timeline as &$item) {
+					switch($item['type']) {
+					case 'add_version':
+						$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName(), 'version'=> $item['version']));
+						break;
+					case 'add_file':
+						$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName()));
+						break;
+					case 'status_change':
+						$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName(), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
+						break;
+					default:
+						$msg = '???';
+					}
+					$item['msg'] = $msg;
 				}
-				$item['msg'] = $msg;
+				$this->printTimeline($timeline, 300, '', date('Y-m-d'));
 			}
-			$this->printTimeline($timeline, 300, '', date('Y-m-d'));
 		}
 ?>
 		  </div>
