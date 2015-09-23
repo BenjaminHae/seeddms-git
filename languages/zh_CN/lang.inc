@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (590), fengjohn (5)
+//    Translators: Admin (591), fengjohn (5)
 
 $text = array(
 'accept' => '接受',
@@ -1093,7 +1093,7 @@ URL: [url]',
 'theme' => '主题',
 'thursday' => 'Thursday',
 'thursday_abbr' => '',
-'timeline' => '',
+'timeline' => '时间轴',
 'timeline_add_file' => '',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',
