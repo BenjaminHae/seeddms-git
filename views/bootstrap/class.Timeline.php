@@ -42,6 +42,7 @@ class SeedDMS_View_Timeline extends SeedDMS_Bootstrap_Style {
 		$data = $this->params['data'];
 		$from = $this->params['from'];
 		$to = $this->params['to'];
+		$skip = $this->params['skip'];
 
 		$this->htmlAddHeader('<link href="../styles/'.$this->theme.'/timeline/timeline.css" rel="stylesheet">'."\n", 'css');
 		$this->htmlAddHeader('<script type="text/javascript" src="../styles/'.$this->theme.'/timeline/timeline-min.js"></script>'."\n", 'js');
@@ -75,6 +76,18 @@ echo "<div class=\"well\">\n";
 		</div>
 	</div>
 	<div class="control-group">
+		<label class="control-label" for="skip"><?= getMLText('exclude_items') ?></label>
+		<div class="controls">
+			<input type="checkbox" name="skip[]" value="add_file" <?= ($skip &&  in_array('add_file', $skip)) ? 'checked' : '' ?>> <?= getMLText('timeline_skip_add_file') ?><br />
+			<input type="checkbox" name="skip[]" value="status_change_0" <?= ($skip && in_array('status_change_0', $skip)) ? 'checked' : '' ?>> <?= getMLText('timeline_skip_status_change_0') ?><br />
+			<input type="checkbox" name="skip[]" value="status_change_1" <?= ($skip && in_array('status_change_1', $skip)) ? 'checked' : '' ?>> <?= getMLText('timeline_skip_status_change_1') ?><br />
+			<input type="checkbox" name="skip[]" value="status_change_2" <?= ($skip && in_array('status_change_2', $skip)) ? 'checked' : '' ?>> <?= getMLText('timeline_skip_status_change_2') ?><br />
+			<input type="checkbox" name="skip[]" value="status_change_3" <?= ($skip && in_array('status_change_3', $skip)) ? 'checked' : '' ?>> <?= getMLText('timeline_skip_status_change_3') ?><br />
+			<input type="checkbox" name="skip[]" value="status_change_-1" <?= ($skip && in_array('status_change_-1', $skip)) ? 'checked' : '' ?>> <?= getMLText('timeline_skip_status_change_-1') ?><br />
+			<input type="checkbox" name="skip[]" value="status_change_-3" <?= ($skip && in_array('status_change_-3', $skip)) ? 'checked' : '' ?>> <?= getMLText('timeline_skip_status_change_-3') ?><br />
+		</div>
+	</div>
+	<div class="control-group">
 		<label class="control-label" for="enddate"></label>
 		<div class="controls">
 			<button type="submit" class="btn"><i class="icon-search"></i> <?php printMLText("action"); ?></button>
@@ -104,7 +117,7 @@ if($data) {
 		}
 		$item['msg'] = $msg;
 	}
-	$this->printTimeline($data, 550, date('Y-m-d', $from), date('Y-m-d', $to+1));
+	$this->printTimeline($data, 550, date('Y-m-d', $from), date('Y-m-d', $to+1), $skip);
 }
 echo "</div>\n";
 echo "</div>\n";
