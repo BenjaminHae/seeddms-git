@@ -134,6 +134,16 @@ div.timeline-frame {
 	border-color: #e3e3e3;
 }
 
+div.status_change_2 {
+	background-color: #DAF6D5;
+	border-color: #AAF897;
+}
+
+div.status_change_-1 {
+	background-color: #F6D5D5;
+	border-color: #F89797;
+}
+
 @media (max-width: 480px) { 
     .nav-tabs > li {
         float:none;
