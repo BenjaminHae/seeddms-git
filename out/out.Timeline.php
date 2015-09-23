@@ -39,6 +39,11 @@ if(!empty($_GET['todate'])) {
 	$to = time();
 }
 
+if(isset($_GET['skip'])) {
+	$skip = $_GET['skip'];
+else
+	$skip = array();
+
 $data = $dms->getTimeline($from, $to);
 
 $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
