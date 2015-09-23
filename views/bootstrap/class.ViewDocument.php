@@ -1113,9 +1113,9 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		</div>
 <?php
 		if($user->isAdmin()) {
-			$this->contentHeading(getMLText("timeline"));
 			$timeline = $document->getTimeline();
 			if($timeline) {
+				$this->contentHeading(getMLText("timeline"));
 				foreach($timeline as &$item) {
 					switch($item['type']) {
 					case 'add_version':
