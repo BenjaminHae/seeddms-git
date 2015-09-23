@@ -42,7 +42,7 @@ if(!empty($_GET['todate'])) {
 $data = $dms->getTimeline($from, $to);
 
 $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
-$view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user, 'rootfolder'=>$rootfolder, 'from'=>$from, 'to'=>$to, 'data'=>$data));
+$view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user, 'rootfolder'=>$rootfolder, 'from'=>$from, 'to'=>$to, 'skip'=>$_GET['skip'], 'data'=>$data));
 if($view) {
 	$view->show();
 	exit;
