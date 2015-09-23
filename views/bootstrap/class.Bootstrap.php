@@ -2033,8 +2033,12 @@ mayscript>
 				$classname = $item['type']."_".$item['status'];
 			else
 				$classname = $item['type'];
-			if(!$skip || !in_array($classname, $skip))
-				echo "{'start': new Date('".$item['date']."'), 'content': '".$item['msg']."', 'className': '".$classname."'},\n";
+			if(!$skip || !in_array($classname, $skip)) {
+				$s = explode(' ', $item['date']);
+				$d = explode('-', $s[0]);
+				$t = explode(':', $s[1]);
+				echo "{'start': new Date(".$d[0].",".$d[1].",".$d[2].",".$t[0].",".$t[1].",".$t[2]."), 'content': '".$item['msg']."', 'className': '".$classname."'},\n";
+			}
 		}
 ?>
 			/* {
