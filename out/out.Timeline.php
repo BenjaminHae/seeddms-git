@@ -39,7 +39,7 @@ if(!empty($_GET['todate'])) {
 	$to = time();
 }
 
-if(isset($_GET['skip'])) {
+if(isset($_GET['skip']))
 	$skip = $_GET['skip'];
 else
 	$skip = array();
