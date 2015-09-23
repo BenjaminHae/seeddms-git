@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2119), dgrutsch (18)
+//    Translators: Admin (2129), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -395,6 +395,7 @@ URL: [url]',
 'error_occured' => 'Ein Fehler ist aufgetreten. Bitte Administrator benachrichtigen.',
 'es_ES' => 'Spanisch',
 'event_details' => 'Ereignisdetails',
+'exclude_items' => 'Einträge auslassen',
 'expired' => 'abgelaufen',
 'expires' => 'Ablaufdatum',
 'expiry_changed_email' => 'Ablaufdatum geändert',
@@ -1251,10 +1252,18 @@ URL: [url]',
 'thursday' => 'Donnerstag',
 'thursday_abbr' => 'Do',
 'timeline' => 'Verlauf',
+'timeline_add_file' => 'Neuer Anhang',
 'timeline_add_version' => 'Neue Version [version]',
 'timeline_full_add_file' => '[document]<br />Neuer Anhang',
 'timeline_full_add_version' => '[document]<br />Neue Version [version]',
 'timeline_full_status_change' => '[document]<br />Version [version]: [status]',
+'timeline_skip_add_file' => 'Anhang hinzufügen',
+'timeline_skip_status_change_-1' => 'abgelehnt',
+'timeline_skip_status_change_-3' => 'abgelaufen',
+'timeline_skip_status_change_0' => 'bevorstehende Prüfung',
+'timeline_skip_status_change_1' => 'bevorstehende Freigabe',
+'timeline_skip_status_change_2' => 'Freigabe einer Version',
+'timeline_skip_status_change_3' => 'im Workflow',
 'timeline_status_change' => 'Version [version]: [status]',
 'to' => 'bis',
 'toggle_manager' => 'Managerstatus wechseln',
