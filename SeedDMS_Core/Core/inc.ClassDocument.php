@@ -2129,9 +2129,15 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		if (is_bool($resArr) && !$resArr)
 			return false;
 
+		/* The above query will also contain entries where a document status exists
+		 * but no status log entry. Those records will have no date and must be
+		 * skipped.
+		 */
 		foreach ($resArr as $row) {
-			$date = $row['date'];
-			$timeline[] = array('date'=>$date, 'msg'=>'Version '.$row['version'].': Status change to '.$row['status'], 'type'=>'status_change', 'version'=>$row['version'], 'document'=>$this, 'status'=>$row['status'], 'params'=>array($row['version'], $row['status']));
+			if($row['date']) {
+				$date = $row['date'];
+				$timeline[] = array('date'=>$date, 'msg'=>'Version '.$row['version'].': Status change to '.$row['status'], 'type'=>'status_change', 'version'=>$row['version'], 'document'=>$this, 'status'=>$row['status'], 'params'=>array($row['version'], $row['status']));
+			}
 		}
 		return $timeline;
 	} /* }}} */
@@ -4415,7 +4421,7 @@ class SeedDMS_Core_AddContentResultSet { /* {{{ */
 		if (!is_integer($status)) {
 			return false;
 		}
-		if ($status<-3 || $status>2) {
+		if ($status<-3 || $status>3) {
 			return false;
 		}
 		$this->_status = $status;
