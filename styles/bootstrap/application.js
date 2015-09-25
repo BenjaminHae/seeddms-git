@@ -406,9 +406,13 @@ $(document).ready( function() {
 		var href = element.data('href');
 		var view = element.data('view');
 		var action = element.data('action');
-		if(view && action)
+		var query = element.data('query');
+		if(view && action) {
 			url = "out."+view+".php?action="+action;
-		else
+			if(query) {
+				url += "&"+query;
+			}
+		} else
 			url = href;
 	//	console.log('Calling '+url);
 		$.get(url, function(data) {
