@@ -406,21 +406,6 @@ function showUser(selectObj) {
 	id = selectObj.options[selectObj.selectedIndex].value;
 	$('div.ajax').trigger('update', {userid: id});
 }
-
-<?php if(0): ?>
-obj = -1;
-function showUser(selectObj) {
-	if (obj != -1)
-		obj.style.display = "none";
-
-	id = selectObj.options[selectObj.selectedIndex].value;
-	if (id == -1)
-		return;
-
-	obj = document.getElementById("keywords" + id);
-	obj.style.display = "";
-}
-<?php endif; ?>
 </script>
 <?php
 		$this->contentHeading(getMLText("user_management"));
@@ -444,26 +429,12 @@ function showUser(selectObj) {
 ?>
 </select>
 </div>
-	<div class="ajax" data-view="UsrMgr" data-action="info"></div>
+<div class="ajax" data-view="UsrMgr" data-action="info" <?php echo ($seluser ? "data-query=\"userid=".$seluser->getID()."\"" : "") ?>></div>
 </div>
 
 <div class="span8">
 	<div class="well">
-		<div class="ajax" data-view="UsrMgr" data-action="form"></div>
-<?php if(0): ?>
-		<div id="keywords0" style="display : none;">
-		<?php $this->showUserForm(false); ?>
-		</div>
-
-<?php
-		foreach ($users as $currUser) {
-			print "<div id=\"keywords".$currUser->getID()."\" style=\"display : none;\">";
-			$this->showUserForm($currUser);
-			print "</div>\n";
-		}
-		endif;
-?>
-	</div>
+		<div class="ajax" data-view="UsrMgr" data-action="form" <?php echo ($seluser ? "data-query=\"userid=".$seluser->getID()."\"" : "") ?>></div>
 	</div>
 </div>
 
