@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1500), s.pnt (26)
+//    Translators: Admin (1502), s.pnt (26)
 
 $text = array(
 'accept' => 'Accetta',
@@ -1273,7 +1273,7 @@ URL: [url]',
 'timeline_skip_status_change_1' => '',
 'timeline_skip_status_change_2' => '',
 'timeline_skip_status_change_3' => '',
-'timeline_status_change' => '',
+'timeline_status_change' => 'Versione - Stato',
 'to' => 'A',
 'toggle_manager' => 'Gestore',
 'to_before_from' => 'La data di fine non può essere antecedente a quella di inizio',
@@ -1295,7 +1295,7 @@ URL: [url]',
 'transmittal_comment' => 'Commento',
 'transmittal_name' => 'Nome',
 'transmittal_size' => 'Dimensione',
-'tree_loading' => '',
+'tree_loading' => 'Caricamento directory in corso',
 'trigger_workflow' => 'Flusso di lavoro',
 'tr_TR' => 'Turco',
 'tuesday' => 'Martedì',

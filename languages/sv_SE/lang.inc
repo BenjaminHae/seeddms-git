@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1097), tmichelfelder (106)
+//    Translators: Admin (1098), tmichelfelder (106)
 
 $text = array(
 'accept' => 'Godkänn',
@@ -1222,7 +1222,7 @@ URL: [url]',
 'theme' => 'Visningstema',
 'thursday' => 'torsdag',
 'thursday_abbr' => 'to',
-'timeline' => '',
+'timeline' => 'Tidslinje',
 'timeline_add_file' => '',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',
