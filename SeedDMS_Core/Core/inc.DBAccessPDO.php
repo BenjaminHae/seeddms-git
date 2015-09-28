@@ -483,7 +483,7 @@ class SeedDMS_Core_DatabaseAccess {
 				return "UNIX_TIMESTAMP()";
 				break;
 			case 'sqlite':
-				return "strftime('%s', 'now', 'localtime')";
+				return "strftime('%s', 'now')";
 				break;
 		}
 		return '';
