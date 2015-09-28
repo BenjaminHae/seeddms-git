@@ -443,7 +443,7 @@ class Settings { /* {{{ */
 		$this->_dbDatabase = strval($tab["dbDatabase"]);
 		$this->_dbUser = strval($tab["dbUser"]);
 		$this->_dbPass = strval($tab["dbPass"]);
-		$this->_doNotCheckDBVersion = Settings::boolVal($tab["doNotCheckVersion"]);
+		$this->_doNotCheckDBVersion = Settings::boolVal($tab["doNotCheckDBVersion"]);
 
 		// XML Path: /configuration/system/smtp
 		$node = $xml->xpath('/configuration/system/smtp');
@@ -722,7 +722,7 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "dbDatabase", $this->_dbDatabase);
     $this->setXMLAttributValue($node, "dbUser", $this->_dbUser);
     $this->setXMLAttributValue($node, "dbPass", $this->_dbPass);
-    $this->setXMLAttributValue($node, "doNotCheckVersion", $this->_doNotCheckVersion);
+    $this->setXMLAttributValue($node, "doNotCheckVersion", $this->_doNotCheckDBVersion);
 
     // XML Path: /configuration/system/smtp
     $node = $this->getXMLNode($xml, '/configuration/system', 'smtp');
