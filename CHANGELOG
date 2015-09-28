@@ -3,6 +3,8 @@
 --------------------------------------------------------------------------------
 - fix sql statement when searching for attributes (SeedDMS_Core, Closes: 227)
 - show preview images file list of drop folder
+- add timeline
+- fix document and page count in fulltext search
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.20
