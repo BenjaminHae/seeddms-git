@@ -155,6 +155,10 @@ class SeedDMS_View_ViewFolder extends SeedDMS_Bootstrap_Style {
 			echo "<td>".htmlspecialchars($folder->getComment())."</td>\n";
 			echo "</tr>";
 		}
+		echo "<tr>";
+		echo "<td>".getMLText("creation_date").":</td>";
+		echo "<td>".getLongReadableDate($folder->getDate())."</td>";
+		echo "</tr>";
 
 		if($user->isAdmin()) {
 			if($folder->inheritsAccess()) {

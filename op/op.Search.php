@@ -99,7 +99,6 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 		}
 	}
 
-
 	// --------------- Suche starten --------------------------------------------
 
 	// Check to see if the search has been restricted to a particular
@@ -121,10 +120,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 
 	if(strlen($query) < 4 && strpos($query, '*')) {
 		$session->setSplashMsg(array('type'=>'error', 'msg'=>getMLText('splash_invalid_searchterm')));
-		$resArr = array();
-		$resArr['totalDocs'] = 0;
-		$resArr['totalFolders'] = 0;
-		$resArr['totalPages'] = 0;
+		$totalPages = 0;
 		$entries = array();
 		$searchTime = 0;
 	} else {
@@ -134,26 +130,10 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 		$hits = $lucenesearch->search($query, $owner ? $owner->getLogin() : '', '', $categorynames);
 		if($hits === false) {
 			$session->setSplashMsg(array('type'=>'error', 'msg'=>getMLText('splash_invalid_searchterm')));
-			$resArr = array();
-			$resArr['totalDocs'] = 0;
-			$resArr['totalFolders'] = 0;
-			$resArr['totalPages'] = 0;
+			$totalPages = 0;
 			$entries = array();
 			$searchTime = 0;
 		} else {
-			$limit = 20;
-			$resArr = array();
-			$resArr['totalDocs'] = count($hits);
-			$resArr['totalFolders'] = 0;
-			if($pageNumber != 'all' && count($hits) > $limit) {
-				$resArr['totalPages'] = (int) (count($hits) / $limit);
-				if ((count($hits)%$limit) > 0)
-					$resArr['totalPages']++;
-				$hits = array_slice($hits, ($pageNumber-1)*$limit, $limit);
-			} else {
-				$resArr['totalPages'] = 1;
-			}
-
 			$entries = array();
 			$dcount = 0;
 			$fcount = 0;
@@ -166,6 +146,16 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 						}
 					}
 				}
+			}
+			$limit = 20;
+			if($pageNumber != 'all' && count($entries) > $limit) {
+				$totalPages = (int) (count($entries)/$limit);
+				if(count($entries)%$limit)
+					$totalPages++;
+				if($limit > 0)
+					$entries = array_slice($entries, ($pageNumber-1)*$limit, $limit);
+			} else {
+				$totalPages = 1;
 			}
 		}
 		$searchTime = getTime() - $startTime;

@@ -28,7 +28,7 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		$this->theme = $theme;
 		$this->params = $params;
 		$this->imgpath = '../views/'.$theme.'/images/';
-		$this->extraheader = '';
+		$this->extraheader = array('js'=>'', 'css'=>'');
 		$this->footerjs = array();
 	}
 
@@ -53,12 +53,14 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		echo '<link href="../styles/'.$this->theme.'/datepicker/css/datepicker.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/chosen/css/chosen.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/jqtree/jqtree.css" rel="stylesheet">'."\n";
+		if($this->extraheader['css'])
+			echo $this->extraheader['css'];
 		echo '<link href="../styles/'.$this->theme.'/application.css" rel="stylesheet">'."\n";
 //		echo '<link href="../styles/'.$this->theme.'/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">'."\n";
 
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/jquery/jquery.min.js"></script>'."\n";
-		if($this->extraheader)
-			echo $this->extraheader;
+		if($this->extraheader['js'])
+			echo $this->extraheader['js'];
 		echo '<script type="text/javascript" src="../js/jquery.passwordstrength.js"></script>'."\n";
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/noty/jquery.noty.js"></script>'."\n";
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/noty/layouts/topRight.js"></script>'."\n";
@@ -98,8 +100,8 @@ background-image: linear-gradient(to bottom, #882222, #111111);;
 		}
 	} /* }}} */
 
-	function htmlAddHeader($head) { /* {{{ */
-		$this->extraheader .= $head;
+	function htmlAddHeader($head, $type='js') { /* {{{ */
+		$this->extraheader[$type] .= $head;
 	} /* }}} */
 
 	function htmlEndPage() { /* {{{ */
@@ -566,8 +568,9 @@ $(document).ready(function () {
 		echo "    <li class=\"dropdown\">\n";
 		echo "     <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".getMLText("misc")." <i class=\"icon-caret-down\"></i></a>\n";
 		echo "     <ul class=\"dropdown-menu\" role=\"menu\">\n";
-		echo "      <li id=\"first\"><a href=\"../out/out.Statistic.php\">".getMLText("folders_and_documents_statistic")."</a></li>\n";
-		echo "      <li id=\"first\"><a href=\"../out/out.Charts.php\">".getMLText("charts")."</a></li>\n";
+		echo "      <li><a href=\"../out/out.Statistic.php\">".getMLText("folders_and_documents_statistic")."</a></li>\n";
+		echo "      <li><a href=\"../out/out.Charts.php\">".getMLText("charts")."</a></li>\n";
+		echo "      <li><a href=\"../out/out.Timeline.php\">".getMLText("timeline")."</a></li>\n";
 		echo "      <li><a href=\"../out/out.ObjectCheck.php\">".getMLText("objectcheck")."</a></li>\n";
 		echo "      <li><a href=\"../out/out.Info.php\">".getMLText("version_info")."</a></li>\n";
 		echo "     </ul>\n";
@@ -879,7 +882,7 @@ $(document).ready(function () {
     <h3 id="docChooserLabel"><?php printMLText("choose_target_document") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until document tree is loaded …</p>
+		<p><?php printMLText('tree_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -911,7 +914,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="folderChooser<?php echo $formName ?>Label"><?php printMLText("choose_target_folder") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until document tree is loaded …</p>
+		<p><?php printMLText('tree_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -970,7 +973,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="categoryChooserLabel"><?php printMLText("choose_target_category") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until category list is loaded …</p>
+		<p><?php printMLText('categories_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -992,7 +995,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="keywordChooserLabel"><?php printMLText("use_default_keywords") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until keyword list is loaded …</p>
+		<p><?php printMLText('keywords_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -1043,7 +1046,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="dropfolderChooserLabel"><?php printMLText("choose_target_file") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until file list is loaded …</p>
+		<p><?php printMLText('files_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -2008,6 +2011,72 @@ mayscript>
 		  <div class="bar bar-success" style="width: '.$free.'%;"></div>
 		</div>';
 		return $html;
+	} /* }}} */
+
+	/**
+	 * Output a timeline for a document
+	 *
+	 * @param object $document document
+	 */
+	protected function printTimeline($timeline, $height=300, $start='', $end='', $skip=array()) { /* {{{ */
+		if(!$timeline)
+			return;
+?>
+	<script type="text/javascript">
+		var timeline;
+		var data;
+
+		data = [
+<?php 
+		foreach($timeline as $item) {
+			if($item['type'] == 'status_change')
+				$classname = $item['type']."_".$item['status'];
+			else
+				$classname = $item['type'];
+			if(!$skip || !in_array($classname, $skip)) {
+				$s = explode(' ', $item['date']);
+				$d = explode('-', $s[0]);
+				$t = explode(':', $s[1]);
+				echo "{'start': new Date(".$d[0].",".($d[1]-1).",".$d[2].",".$t[0].",".$t[1].",".$t[2]."), 'content': '".$item['msg']."', 'className': '".$classname."'},\n";
+			}
+		}
+?>
+			/* {
+				'start': new Date(),
+				'content': 'Today'
+	} */
+		];
+
+		// specify options
+		var options = {
+			'width':  '100%',
+			'height': '100%',
+<?php
+		if($start) {
+			$tmp = explode('-', $start);
+			echo "\t\t\t'min': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),\n";
+		}
+		if($end) {
+			$tmp = explode('-', $end);
+			echo "'\t\t\tmax': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),\n";
+		}
+?>
+			'_editable': false,
+			'selectable': false,
+			'style': 'box',
+			'locale': 'de_DE'
+		};
+
+		$(document).ready(function () {
+		// Instantiate our timeline object.
+		timeline = new links.Timeline(document.getElementById('timeline'), options);
+
+		timeline.draw(data);
+		});
+
+	</script>
+	<div id="timeline" style="height: <?= $height ?>px;"></div>
+<?php
 	} /* }}} */
 }
 ?>
