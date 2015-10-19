@@ -144,6 +144,12 @@ div.status_change_-1 {
 	border-color: #F89797;
 }
 
+div.timeline-event-selected {
+	background-color: #fff785;
+	border-color: #ffc200;
+	z-index: 999;
+}
+
 @media (max-width: 480px) { 
     .nav-tabs > li {
         float:none;
