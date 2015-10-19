@@ -2114,11 +2114,11 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 
 		foreach ($resArr as $row) {
 			$date = date('Y-m-d H:i:s', $row['date']);
-			$timeline[] = array('date'=>$date, 'msg'=>'Added attachment "'.$row['name'].'"', 'document'=>$this, 'type'=>'add_file');
+			$timeline[] = array('date'=>$date, 'msg'=>'Added attachment "'.$row['name'].'"', 'document'=>$this, 'type'=>'add_file', 'fileid'=>$row['id']);
 		}
 
 		$queryStr=
-			"SELECT `tblDocumentStatus`.*, `tblDocumentStatusLog`.`status`, ".
+			"SELECT `tblDocumentStatus`.*, `tblDocumentStatusLog`.`statusLogID`,`tblDocumentStatusLog`.`status`, ".
 			"`tblDocumentStatusLog`.`comment`, `tblDocumentStatusLog`.`date`, ".
 			"`tblDocumentStatusLog`.`userID` ".
 			"FROM `tblDocumentStatus` ".
@@ -2136,7 +2136,7 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		foreach ($resArr as $row) {
 			if($row['date']) {
 				$date = $row['date'];
-				$timeline[] = array('date'=>$date, 'msg'=>'Version '.$row['version'].': Status change to '.$row['status'], 'type'=>'status_change', 'version'=>$row['version'], 'document'=>$this, 'status'=>$row['status'], 'params'=>array($row['version'], $row['status']));
+				$timeline[] = array('date'=>$date, 'msg'=>'Version '.$row['version'].': Status change to '.$row['status'], 'type'=>'status_change', 'version'=>$row['version'], 'document'=>$this, 'status'=>$row['status'], 'statusid'=>$row['statusID'], 'statuslogid'=>$row['statusLogID']);
 			}
 		}
 		return $timeline;
