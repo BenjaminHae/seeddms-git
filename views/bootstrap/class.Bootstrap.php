@@ -2018,34 +2018,13 @@ mayscript>
 	 *
 	 * @param object $document document
 	 */
-	protected function printTimeline($timeline, $height=300, $start='', $end='', $skip=array()) { /* {{{ */
-		if(!$timeline)
+	protected function printTimeline($timelineurl, $height=300, $start='', $end='', $skip=array()) { /* {{{ */
+		if(!$timelineurl)
 			return;
 ?>
 	<script type="text/javascript">
 		var timeline;
 		var data;
-
-		data = [
-<?php 
-		foreach($timeline as $item) {
-			if($item['type'] == 'status_change')
-				$classname = $item['type']."_".$item['status'];
-			else
-				$classname = $item['type'];
-			if(!$skip || !in_array($classname, $skip)) {
-				$s = explode(' ', $item['date']);
-				$d = explode('-', $s[0]);
-				$t = explode(':', $s[1]);
-				echo "{'start': new Date(".$d[0].",".($d[1]-1).",".$d[2].",".$t[0].",".$t[1].",".$t[2]."), 'content': '".$item['msg']."', 'className': '".$classname."'},\n";
-			}
-		}
-?>
-			/* {
-				'start': new Date(),
-				'content': 'Today'
-	} */
-		];
 
 		// specify options
 		var options = {
@@ -2061,17 +2040,36 @@ mayscript>
 			echo "'\t\t\tmax': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),\n";
 		}
 ?>
-			'_editable': false,
-			'selectable': false,
+			'editable': false,
+			'selectable': true,
 			'style': 'box',
 			'locale': 'de_DE'
 		};
 
+		function onselect() {
+			var sel = timeline.getSelection();
+			if (sel.length) {
+				if (sel[0].row != undefined) {
+					var row = sel[0].row;
+					console.log(timeline.getItem(sel[0].row));
+					item = timeline.getItem(sel[0].row);
+					$('div.ajax').trigger('update', {documentid: item.docid, version: item.version, statusid: item.statusid, statuslogid: item.statuslogid, fileid: item.fileid});
+				}
+			}
+		}
 		$(document).ready(function () {
 		// Instantiate our timeline object.
 		timeline = new links.Timeline(document.getElementById('timeline'), options);
-
-		timeline.draw(data);
+		links.events.addListener(timeline, 'select', onselect);
+		$.getJSON(
+			'<?= $timelineurl ?>', 
+			function(data) {
+				$.each( data, function( key, val ) {
+					val.start = new Date(val.start);
+				});
+				timeline.draw(data);
+			}
+		);
 		});
 
 	</script>
