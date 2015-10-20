@@ -80,7 +80,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		if($user->isAdmin()) {
 			$data = $document->getTimeline();
 
-			foreach($data as &$item) {
+			foreach($data as $i=>$item) {
 				switch($item['type']) {
 				case 'add_version':
 					$msg = getMLText('timeline_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
@@ -94,7 +94,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 				default:
 					$msg = '???';
 				}
-				$item['msg'] = $msg;
+				$data[$i]['msg'] = $msg;
 			}
 
 			foreach($data as $item) {
