@@ -669,6 +669,7 @@ function onAddClipboard(ev) {
 					fd.append('folderid', target);
 					fd.append('formtoken', obj.data('formtoken'));
 					fd.append('userfile', files[i]);
+//					fd.append('path', files[i].webkitRelativePath);
 
 					var status = new createStatusbar(obj);
 					status.setFileNameSize(files[i].name,files[i].size);
