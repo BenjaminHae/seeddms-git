@@ -39,8 +39,10 @@ class SeedDMS_View_Timeline extends SeedDMS_Bootstrap_Style {
 	function iteminfo() { /* {{{ */
 		$dms = $this->params['dms'];
 		$document = $this->params['document'];
-		$this->contentHeading(getMLText("selected_item"));
-		echo $document->getName();
+		if($document) {
+			$this->contentHeading(getMLText("selected_item"));
+			echo $document->getName();
+		}
 	} /* }}} */
 
 	function data() { /* {{{ */
@@ -189,6 +191,7 @@ $(document).ready(function () {
 				});
 				timeline.setData(data);
 				timeline.redraw();
+//				timeline.setVisibleChartRange(0,0);
 			}
 		);
 	});
@@ -201,7 +204,7 @@ echo "</div>\n";
 
 echo "<div class=\"span9\">\n";
 $this->contentHeading(getMLText("timeline"));
-$this->printTimeline($timelineurl, 550, date('Y-m-d', $from), date('Y-m-d', $to+1), $skip);
+$this->printTimeline($timelineurl, 550, ''/*date('Y-m-d', $from)*/, ''/*date('Y-m-d', $to+1)*/, $skip);
 echo "</div>\n";
 echo "</div>\n";
 
