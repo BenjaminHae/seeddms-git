@@ -45,6 +45,10 @@ ul.tree, ul.tree ul {
 	margin-left: 20px;
 }
 
+.wordbreak {
+	word-break: break-word;
+}
+
 .btn-file {
 	position: relative;
 	overflow: hidden;

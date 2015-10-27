@@ -377,7 +377,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		print "</td>\n";
 
 		print "<td><ul class=\"actions unstyled\">\n";
-		print "<li>".$latestContent->getOriginalFileName() ."</li>\n";
+		print "<li class=\"wordbreak\">".$latestContent->getOriginalFileName() ."</li>\n";
 		print "<li>".getMLText('version').": ".$latestContent->getVersion()."</li>\n";
 
 		if ($file_exists)
