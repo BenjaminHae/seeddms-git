@@ -2,7 +2,8 @@
                      Changes in version 4.3.22
 --------------------------------------------------------------------------------
 - fix lots of HTTP-Headers in op.Ajax.php (Closes: #233)
-- Timeline will be updated by ajax call
+- Timeline will be updated by ajax call, clicking on an item in the timeline
+  will output some document information
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.21
