@@ -2047,7 +2047,7 @@ mayscript>
 			'editable': false,
 			'selectable': true,
 			'style': 'box',
-			'locale': 'de_DE'
+			'locale': '<?= $this->params['session']->getLanguage() ?>'
 		};
 
 		function onselect() {
