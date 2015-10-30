@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2131), dgrutsch (18)
+//    Translators: Admin (2132), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -138,6 +138,7 @@ URL: [url]',
 'attrdef_regex' => 'Regulärer Ausdruck',
 'attrdef_type' => 'Typ',
 'attrdef_type_boolean' => 'Boolean',
+'attrdef_type_date' => 'Datum',
 'attrdef_type_email' => 'E-Mail',
 'attrdef_type_float' => 'Dezimalzahl',
 'attrdef_type_int' => 'Ganzahlig',

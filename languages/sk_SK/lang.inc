@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (479)
+//    Translators: Admin (481)
 
 $text = array(
 'accept' => 'Prijať',
@@ -117,6 +117,7 @@ $text = array(
 'attrdef_regex' => '',
 'attrdef_type' => '',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'Dátum',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -309,7 +310,7 @@ $text = array(
 'edit' => 'upraviť',
 'edit_attributes' => '',
 'edit_comment' => 'Upraviť komentár',
-'edit_default_keywords' => '',
+'edit_default_keywords' => 'Uprav kľúčové slová',
 'edit_document_access' => 'Upraviť prístup',
 'edit_document_notify' => 'Zoznam upozornení',
 'edit_document_props' => 'Upraviť dokument',

@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1253)
+//    Translators: Admin (1254)
 
 $text = array(
 'accept' => 'وافق',
@@ -126,6 +126,7 @@ URL: [url]',
 'attrdef_regex' => '',
 'attrdef_type' => 'نوع',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'التاريخ',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',

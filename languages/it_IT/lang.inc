@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1502), s.pnt (26)
+//    Translators: Admin (1504), s.pnt (26)
 
 $text = array(
 'accept' => 'Accetta',
@@ -138,6 +138,7 @@ URL: [url]',
 'attrdef_regex' => 'Espressione regolare',
 'attrdef_type' => 'Tipo',
 'attrdef_type_boolean' => 'Booleano',
+'attrdef_type_date' => 'Data',
 'attrdef_type_email' => 'Email',
 'attrdef_type_float' => 'Virgola mobile',
 'attrdef_type_int' => 'Intero',
@@ -1260,7 +1261,7 @@ URL: [url]',
 'theme' => 'Tema',
 'thursday' => 'Giovedì',
 'thursday_abbr' => 'Gio',
-'timeline' => '',
+'timeline' => 'Linea del Tempo',
 'timeline_add_file' => '',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',

@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1011), aydin (83)
+//    Translators: Admin (1012), aydin (83)
 
 $text = array(
 'accept' => 'Kabul',
@@ -132,6 +132,7 @@ URL: [url]',
 'attrdef_regex' => 'Düzenli ifade (Regular expression)',
 'attrdef_type' => 'Tür',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'Tarih',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',

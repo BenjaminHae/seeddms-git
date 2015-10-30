@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (896), flaviove (627), lfcristofoli (352)
+//    Translators: Admin (899), flaviove (627), lfcristofoli (352)
 
 $text = array(
 'accept' => 'Aceitar',
@@ -133,6 +133,7 @@ URL: [url]',
 'attrdef_regex' => 'Expressão regular',
 'attrdef_type' => 'Tipo',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => '',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -406,7 +407,7 @@ URL: [url]',
 'files' => 'Arquivos',
 'files_deletion' => 'Arquivos deletados',
 'files_deletion_warning' => 'With this option you can delete all files of entire DMS folders. The versioning information will remain visible.',
-'files_loading' => '',
+'files_loading' => 'Pro favor aguarde ate a lista de ficheiros é carregado...',
 'file_size' => 'Tamanho',
 'filter_for_documents' => 'Filtro adicional para documentos',
 'filter_for_folders' => 'Filtro adicional para pasta',
@@ -537,7 +538,7 @@ URL: [url]',
 'keep' => 'Não altere',
 'keep_doc_status' => 'Mantenha status do documento',
 'keywords' => 'Palavras-chave',
-'keywords_loading' => '',
+'keywords_loading' => 'Pro favor aguarde ate a lista de Keyword é carregada...',
 'keyword_exists' => 'Keyword already exists',
 'ko_KR' => 'Coreano',
 'language' => 'Idioma',
@@ -1009,7 +1010,7 @@ URL: [url]',
 'settings_footNote' => 'Nota de Pé',
 'settings_footNote_desc' => 'Mensagem a ser exibida na parte inferior de cada página',
 'settings_fullSearchEngine' => '',
-'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine_desc' => 'Selecione o método utilizado para a busca textual',
 'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
 'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'ID convidado',

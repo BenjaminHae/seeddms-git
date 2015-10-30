@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (706), pepijn (45), reinoutdijkstra@hotmail.com (270)
+//    Translators: Admin (709), pepijn (45), reinoutdijkstra@hotmail.com (270)
 
 $text = array(
 'accept' => 'Accept',
@@ -126,6 +126,7 @@ URL: [url]',
 'attrdef_regex' => 'Veelgebruikte uitdrukking',
 'attrdef_type' => 'Type',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => '',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -400,7 +401,7 @@ URL: [url]',
 'files' => 'Bestanden',
 'files_deletion' => 'Bestanden verwijderen',
 'files_deletion_warning' => 'Met deze handeling verwijdert U ALLE bestanden uit het DMS. Versie informatie blijft beschikbaar',
-'files_loading' => '',
+'files_loading' => 'Even geduld. De lijst met bestanden wordt geladen ...',
 'file_size' => 'Bestandsomvang',
 'filter_for_documents' => 'Extra filter voor documenten',
 'filter_for_folders' => 'Extra filter voor mappen',
@@ -531,7 +532,7 @@ URL: [url]',
 'keep' => '',
 'keep_doc_status' => 'Behoud document status',
 'keywords' => 'Sleutelwoorden',
-'keywords_loading' => '',
+'keywords_loading' => 'Even geduld. De lijst met keywords wordt geladen ...',
 'keyword_exists' => 'Sleutelwoord bestaat al',
 'ko_KR' => 'Koreaans',
 'language' => 'Talen',
@@ -1228,7 +1229,7 @@ URL: [url]',
 'theme' => 'Thema',
 'thursday' => 'Donderdag',
 'thursday_abbr' => 'Th',
-'timeline' => '',
+'timeline' => 'Tijdlijn',
 'timeline_add_file' => '',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',

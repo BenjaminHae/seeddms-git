@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (715), netixw (84), romi (93), uGn (112)
+//    Translators: Admin (719), netixw (84), romi (93), uGn (112)
 
 $text = array(
 'accept' => 'Akceptuj',
@@ -126,6 +126,7 @@ URL: [url]',
 'attrdef_regex' => 'Wyrażenie regularne',
 'attrdef_type' => 'Typ',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => '',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -1216,7 +1217,7 @@ URL: [url]',
 'theme' => 'Wygląd',
 'thursday' => 'Czwartek',
 'thursday_abbr' => 'Cz',
-'timeline' => '',
+'timeline' => 'Zakres czasowy',
 'timeline_add_file' => '',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',
@@ -1229,7 +1230,7 @@ URL: [url]',
 'timeline_skip_status_change_1' => '',
 'timeline_skip_status_change_2' => '',
 'timeline_skip_status_change_3' => '',
-'timeline_status_change' => '',
+'timeline_status_change' => 'Wersja [wersja]: [status]',
 'to' => 'Do',
 'toggle_manager' => 'Przełączanie zarządcy',
 'to_before_from' => '',
@@ -1251,7 +1252,7 @@ URL: [url]',
 'transmittal_comment' => '',
 'transmittal_name' => '',
 'transmittal_size' => '',
-'tree_loading' => '',
+'tree_loading' => 'Czekaj, trwa ładowanie...',
 'trigger_workflow' => 'Proces',
 'tr_TR' => 'Turecki',
 'tuesday' => 'Wtorek',

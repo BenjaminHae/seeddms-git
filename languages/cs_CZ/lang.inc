@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (692), kreml (455)
+//    Translators: Admin (696), kreml (455)
 
 $text = array(
 'accept' => 'Přijmout',
@@ -133,6 +133,7 @@ URL: [url]',
 'attrdef_regex' => 'Regulární výraz',
 'attrdef_type' => 'Typ',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'Datum',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -932,7 +933,7 @@ URL: [url]',
 'settings_disableSelfEdit' => '',
 'settings_disableSelfEdit_desc' => '',
 'settings_disable_install' => 'Delete file ENABLE_INSTALL_TOOL if possible',
-'settings_Display' => '',
+'settings_Display' => 'Nastavení zobrazení',
 'settings_dropFolderDir' => 'Adresář pro přetažení složky',
 'settings_dropFolderDir_desc' => 'Tento adresář může být použit k ukládání souborů do souborového systému serveru a jejich importování odtud, místo natahování přes prohlížeč. Adresář musí obsahovat podadresář pro každého uživatele, kterému je povoleno importovat soubory touto cestou.',
 'settings_Edition' => '',
@@ -1135,7 +1136,7 @@ URL: [url]',
 'settings_updateNotifyTime' => 'Update Notify Time',
 'settings_updateNotifyTime_desc' => 'Users are notified about document-changes that took place within the last \'Update Notify Time\' seconds',
 'settings_upgrade_php' => 'Aktualizujte PHP alespoň na verzi 5.2.0',
-'settings_versioningFileName' => 'Versioning FileName',
+'settings_versioningFileName' => '',
 'settings_versioningFileName_desc' => 'The name of the versioning info file created by the backup tool',
 'settings_versiontolow' => 'Příliš nízká verze',
 'settings_viewOnlineFileTypes' => 'View Online File Types',
@@ -1266,7 +1267,7 @@ URL: [url]',
 'transmittal_comment' => '',
 'transmittal_name' => '',
 'transmittal_size' => '',
-'tree_loading' => '',
+'tree_loading' => 'Prosím čekejte, nahrává se strom dokumentů...',
 'trigger_workflow' => 'Pracovní postup',
 'tr_TR' => 'Turecky',
 'tuesday' => 'Úterý',

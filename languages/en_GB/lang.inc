@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1266), dgrutsch (3), netixw (14)
+//    Translators: Admin (1267), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -138,6 +138,7 @@ URL: [url]',
 'attrdef_regex' => 'Regular expression',
 'attrdef_type' => 'Type',
 'attrdef_type_boolean' => 'Boolean',
+'attrdef_type_date' => 'Date',
 'attrdef_type_email' => 'Email',
 'attrdef_type_float' => 'Float',
 'attrdef_type_int' => 'Integer',

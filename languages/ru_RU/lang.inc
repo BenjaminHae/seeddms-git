@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1264)
+//    Translators: Admin (1268)
 
 $text = array(
 'accept' => 'Принять',
@@ -126,6 +126,7 @@ URL: [url]',
 'attrdef_regex' => 'Регулярное выражение',
 'attrdef_type' => 'Тип',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'Дата',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -400,7 +401,7 @@ URL: [url]',
 'files' => 'Файлы',
 'files_deletion' => 'Удалить файлы',
 'files_deletion_warning' => 'Эта операция удалит все файлы во всех каталогах. Информация о версиях останется доступна',
-'files_loading' => '',
+'files_loading' => 'Пожалуйста подождите, идет загрузка файла...',
 'file_size' => 'Размер',
 'filter_for_documents' => 'Дополнительный фильтр по документам',
 'filter_for_folders' => 'Дополнительный фильтр по папкам',
@@ -531,7 +532,7 @@ URL: [url]',
 'keep' => '',
 'keep_doc_status' => 'Сохранить статус документа',
 'keywords' => 'Метки',
-'keywords_loading' => '',
+'keywords_loading' => 'Пожалуйста подождите, идет загрузка списка...',
 'keyword_exists' => 'Метка существует',
 'ko_KR' => 'Корейский',
 'language' => 'Язык',
@@ -1227,7 +1228,7 @@ URL: [url]',
 'theme' => 'Тема',
 'thursday' => 'Четверг',
 'thursday_abbr' => 'Чт',
-'timeline' => '',
+'timeline' => 'Период',
 'timeline_add_file' => '',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',

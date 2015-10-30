@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (781)
+//    Translators: Admin (782)
 
 $text = array(
 'accept' => 'Приеми',
@@ -117,6 +117,7 @@ $text = array(
 'attrdef_regex' => '',
 'attrdef_type' => 'Тип',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'Дата',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',

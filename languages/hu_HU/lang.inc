@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (571), ribaz (1019)
+//    Translators: Admin (572), ribaz (1019)
 
 $text = array(
 'accept' => 'Elfogad',
@@ -133,6 +133,7 @@ URL: [url]',
 'attrdef_regex' => 'Szabályos kifejezés',
 'attrdef_type' => 'Típus',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'Dátum',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',

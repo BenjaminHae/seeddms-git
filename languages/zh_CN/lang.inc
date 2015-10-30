@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (591), fengjohn (5)
+//    Translators: Admin (592), fengjohn (5)
 
 $text = array(
 'accept' => '接受',
@@ -121,6 +121,7 @@ URL: [url]',
 'attrdef_regex' => '正则表达式',
 'attrdef_type' => '类型',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => '日期',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
