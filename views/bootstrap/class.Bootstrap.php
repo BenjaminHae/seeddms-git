@@ -1006,34 +1006,49 @@ function folderSelected<?php echo $formName ?>(id, name) {
 	} /* }}} */
 
 	function printAttributeEditField($attrdef, $objvalue, $fieldname='attributes') { /* {{{ */
-		if($valueset = $attrdef->getValueSetAsArray()) {
-			echo "<select name=\"".$fieldname."[".$attrdef->getId()."]";
-			if($attrdef->getMultipleValues()) {
-				echo "[]\" multiple";
+		switch($attrdef->getType()) {
+		case SeedDMS_Core_AttributeDefinition::type_boolean:
+			echo "<input type=\"checkbox\" name=\"".$fieldname."[".$attrdef->getId()."]\" value=\"1\" ".($objvalue ? 'checked' : '')." />";
+			break;
+		case SeedDMS_Core_AttributeDefinition::type_date:
+?>
+        <span class="input-append date datepicker" style="display: inline;" data-date="<?php echo date('Y-m-d'); ?>" data-date-format="yyyy-mm-dd" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
+					<input class="span4" size="16" name="<?= $fieldname ?>[<?= $attrdef->getId() ?>]" type="text" value="<?php if($objvalue) echo $objvalue; else echo "" /*date('Y-m-d')*/; ?>">
+          <span class="add-on"><i class="icon-calendar"></i></span>
+				</span>
+<?php
+			break;
+		default:
+			if($valueset = $attrdef->getValueSetAsArray()) {
+				echo "<select name=\"".$fieldname."[".$attrdef->getId()."]";
+				if($attrdef->getMultipleValues()) {
+					echo "[]\" multiple";
+				} else {
+					echo "\"";
+				}
+				echo ">";
+				if(!$attrdef->getMultipleValues()) {
+					echo "<option value=\"\"></option>";
+				}
+				foreach($valueset as $value) {
+					if($value) {
+						echo "<option value=\"".htmlspecialchars($value)."\"";
+						if(is_array($objvalue) && in_array($value, $objvalue))
+							echo " selected";
+						elseif($value == $objvalue)
+							echo " selected";
+						echo ">".htmlspecialchars($value)."</option>";
+					}
+				}
+				echo "</select>";
 			} else {
-				echo "\"";
-			}
-			echo ">";
-			if(!$attrdef->getMultipleValues()) {
-				echo "<option value=\"\"></option>";
-			}
-			foreach($valueset as $value) {
-				if($value) {
-					echo "<option value=\"".htmlspecialchars($value)."\"";
-					if(is_array($objvalue) && in_array($value, $objvalue))
-						echo " selected";
-					elseif($value == $objvalue)
-						echo " selected";
-					echo ">".htmlspecialchars($value)."</option>";
+				if (strlen($objvalue) > 80) {
+					echo '<textarea class="input-xxlarge" name="'.$fieldname.'['.$attrdef->getId().']">'.htmlspecialchars($objvalue).'</textarea>';
+				} else {
+					echo "<input type=\"text\" name=\"".$fieldname."[".$attrdef->getId()."]\" value=\"".htmlspecialchars($objvalue)."\" />";
 				}
 			}
-			echo "</select>";
-		} else {
-			if (strlen($objvalue) > 80) {
-				echo '<textarea class="input-xxlarge" name="'.$fieldname.'['.$attrdef->getId().']">'.htmlspecialchars($objvalue).'</textarea>';
-			} else {
-				echo "<input type=\"text\" name=\"".$fieldname."[".$attrdef->getId()."]\" value=\"".htmlspecialchars($objvalue)."\" />";
-			}
+			break;
 		}
 	} /* }}} */
 
