@@ -15,7 +15,7 @@ $(document).ready( function() {
 
 	$('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropagation(); });
 
-	$('#expirationdate, #fromdate, #todate, #createstartdate, #createenddate, #expirationstartdate, #expirationenddate')
+	$('.datepicker, #expirationdate, #fromdate, #todate, #createstartdate, #createenddate, #expirationstartdate, #expirationenddate')
 		.datepicker()
 		.on('changeDate', function(ev){
 			$(ev.currentTarget).datepicker('hide');
