@@ -4,6 +4,8 @@
 - fix lots of HTTP-Headers in op.Ajax.php (Closes: #233)
 - Timeline will be updated by ajax call, clicking on an item in the timeline
   will output some document information
+- new attribute type 'date'
+- all dates are now in format 'yyyy-mm-dd'
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.21
