@@ -277,7 +277,7 @@ class SeedDMS_Core_AttributeDefinition { /* {{{ */
 	const type_float = '2';
 	const type_string = '3';
 	const type_boolean = '4';
-	const type_date = '6';
+	const type_date = '7';
 
 	/*
 	 * The object type for which a attribute may be used
