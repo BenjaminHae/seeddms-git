@@ -181,7 +181,7 @@ $expires = false;
 if (!isset($_POST["expires"]) || $_POST["expires"] != "false") {
 	if(isset($_POST["expdate"]) && $_POST["expdate"]) {
 		$tmp = explode('-', $_POST["expdate"]);
-		$expires = mktime(0,0,0, $tmp[1], $tmp[0], $tmp[2]);
+		$expires = mktime(0,0,0, $tmp[1], $tmp[2], $tmp[0]);
 	} else {
 		$expires = mktime(0,0,0, $_POST["expmonth"], $_POST["expday"], $_POST["expyear"]);
 	}
