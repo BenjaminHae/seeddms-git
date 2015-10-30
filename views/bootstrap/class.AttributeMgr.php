@@ -110,7 +110,7 @@ function showAttributeDefinitions(selectObj) {
 					<td><?php printMLText("attrdef_objtype");?>:</td><td><select name="objtype"><option value="<?php echo SeedDMS_Core_AttributeDefinition::objtype_all ?>">All</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::objtype_folder ?>">Folder</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::objtype_document ?>"><?php printMLText("document"); ?></option><option value="<?php echo SeedDMS_Core_AttributeDefinition::objtype_documentcontent ?>"><?php printMLText("version"); ?></option></select>
 				</tr>
 				<tr>
-					<td><?php printMLText("attrdef_type");?>:</td><td><select name="type"><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_int ?>">Integer</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_float ?>">Float</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_string ?>">String</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_boolean ?>">Boolean</option></select></td>
+					<td><?php printMLText("attrdef_type");?>:</td><td><select name="type"><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_int ?>">Integer</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_float ?>">Float</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_string ?>">String</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_boolean ?>">Boolean</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_date ?>">Date</option></select></td>
 				</tr>
 				<tr>
 					<td><?php printMLText("attrdef_multiple");?>:</td><td><input type="checkbox" value="1" name="multiple" /></td>
@@ -276,18 +276,18 @@ function showAttributeDefinitions(selectObj) {
 					</tr>
 					<tr>
 						<td>
-							<?php printMLText("attrdef_type");?>:
-						</td>
-						<td>
-							<select name="type"><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_int ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_int) echo "selected"; ?>>Integer</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_float ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_float) echo "selected"; ?>>Float</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_string ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_string) echo "selected"; ?>>String</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_boolean ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_boolean) echo "selected"; ?>>Boolean</option></select>
-						</td>
-					</tr>
-					<tr>
-						<td>
 							<?php printMLText("attrdef_objtype");?>:
 						</td>
 						<td>
 							<select name="objtype"><option value="<?php echo SeedDMS_Core_AttributeDefinition::objtype_all ?>">All</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::objtype_folder ?>" <?php if($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_folder) echo "selected"; ?>>Folder</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::objtype_document ?>" <?php if($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_document) echo "selected"; ?>>Document</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::objtype_documentcontent ?>" <?php if($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_documentcontent) echo "selected"; ?>>Document content</option></select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<?php printMLText("attrdef_type");?>:
+						</td>
+						<td>
+							<select name="type"><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_int ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_int) echo "selected"; ?>>Integer</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_float ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_float) echo "selected"; ?>>Float</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_string ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_string) echo "selected"; ?>>String</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_boolean ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_boolean) echo "selected"; ?>>Boolean</option><option value="<?php echo SeedDMS_Core_AttributeDefinition::type_date ?>" <?php if($attrdef->getType() == SeedDMS_Core_AttributeDefinition::type_date) echo "selected"; ?>>Date</option></select>
 						</td>
 					</tr>
 					<tr>
