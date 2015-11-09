@@ -6,6 +6,8 @@
   will output some document information
 - new attribute type 'date'
 - all dates are now in format 'yyyy-mm-dd'
+- fix fatal error when requesting new password
+- send emails to reviewers/approvers if new document or version was uploaded
 
 --------------------------------------------------------------------------------
                      Changes in version 4.3.21
