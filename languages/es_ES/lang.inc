@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: acabello (20), Admin (975), angel (123), francisco (2), jaimem (14)
+//    Translators: acabello (20), Admin (979), angel (123), francisco (2), jaimem (14)
 
 $text = array(
 'accept' => 'Aceptar',
@@ -1012,8 +1012,8 @@ URL: [url]',
 'settings_firstDayOfWeek_desc' => 'Primer día de la semana',
 'settings_footNote' => 'Nota del pie',
 'settings_footNote_desc' => 'Mensaje para mostrar en la parte inferior de cada página',
-'settings_fullSearchEngine' => '',
-'settings_fullSearchEngine_desc' => '',
+'settings_fullSearchEngine' => 'Motor de texto completo',
+'settings_fullSearchEngine_desc' => 'Establece el metodo utilizado para la busqueda de texto completa',
 'settings_fullSearchEngine_vallucene' => 'Zend Lucene',
 'settings_fullSearchEngine_valsqlitefts' => 'SQLiteFTS',
 'settings_guestID' => 'ID de invitado',
@@ -1057,7 +1057,7 @@ URL: [url]',
 'settings_Notification' => 'Parámetros de notificación',
 'settings_notwritable' => 'La configuración no se puede guardar porque el fichero de configuración no es escribible.',
 'settings_no_content_dir' => 'Carpeta de contenidos',
-'settings_overrideMimeType' => '',
+'settings_overrideMimeType' => 'Anular MimeType',
 'settings_overrideMimeType_desc' => '',
 'settings_partitionSize' => 'Tamaño de fichero parcial',
 'settings_partitionSize_desc' => 'Tamaño de ficheros parciales en bytes, subidos por jumploader. No configurar un valor mayor que el tamaño máximo de subida configurado en el servidor.',
@@ -1151,7 +1151,7 @@ URL: [url]',
 'settings_workflowMode_desc' => 'El flujo de trabajo avanzado permite especificar su propia versión de flujo para las versiones de documento.',
 'settings_workflowMode_valadvanced' => 'avanzado',
 'settings_workflowMode_valtraditional' => 'tradicional',
-'settings_workflowMode_valtraditional_only_approval' => '',
+'settings_workflowMode_valtraditional_only_approval' => 'Tradicional(sin revisión)',
 'settings_zendframework' => 'Zend Framework',
 'set_expiry' => 'Establecer caducidad',
 'set_owner' => 'Establecer propietario',

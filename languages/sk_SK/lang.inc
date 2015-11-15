@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (481)
+//    Translators: Admin (488)
 
 $text = array(
 'accept' => 'Prijať',
@@ -308,7 +308,7 @@ $text = array(
 'dump_remove' => 'Odstrániť vystup',
 'duplicate_content' => '',
 'edit' => 'upraviť',
-'edit_attributes' => '',
+'edit_attributes' => 'Uprav parametre',
 'edit_comment' => 'Upraviť komentár',
 'edit_default_keywords' => 'Uprav kľúčové slová',
 'edit_document_access' => 'Upraviť prístup',
@@ -329,11 +329,11 @@ $text = array(
 'email_footer' => 'Nastavenia e-mailu si kedykoľvek môžete zmeniť cez \'Môj účet\'',
 'email_header' => 'Toto je automatická správa od DMS servera.',
 'email_not_given' => '',
-'empty_folder_list' => '',
+'empty_folder_list' => 'Žiadne dokumenty alebo priečinky',
 'empty_notify_list' => 'Žiadne položky',
 'en_GB' => 'Angličtina (UK)',
 'equal_transition_states' => '',
-'error' => '',
+'error' => 'Chyba',
 'error_no_document_selected' => '',
 'error_no_folder_selected' => '',
 'error_occured' => 'Vyskytla sa chyba',
@@ -401,7 +401,7 @@ $text = array(
 'home_folder' => '',
 'hourly' => '',
 'hours' => '',
-'hr_HR' => '',
+'hr_HR' => 'Chorváčtina',
 'human_readable' => 'Použivateľský archív',
 'hu_HU' => 'Maďarčina',
 'id' => 'ID',
@@ -412,7 +412,7 @@ $text = array(
 'index_converters' => '',
 'index_folder' => 'Indexovať zložku',
 'individuals' => 'Jednotlivci',
-'inherited' => '',
+'inherited' => 'zdedené',
 'inherits_access_copy_msg' => 'Skopírovať zdedený zoznam riadenia prístupu',
 'inherits_access_empty_msg' => 'Založiť nový zoznam riadenia prístupu',
 'inherits_access_msg' => 'Prístup sa dedí.',
@@ -465,7 +465,7 @@ $text = array(
 'keywords' => 'Kľúčové slová',
 'keywords_loading' => '',
 'keyword_exists' => 'Kľúčové slovo už existuje',
-'ko_KR' => '',
+'ko_KR' => 'Kórejčina',
 'language' => 'Jazyk',
 'lastaccess' => '',
 'last_update' => 'Posledná aktualizácia',
@@ -574,7 +574,7 @@ $text = array(
 'no_update_cause_locked' => 'Preto nemôžete aktualizovať tento dokument. Prosím, kontaktujte používateľa, ktorý ho zamkol.',
 'no_user_image' => 'nebol nájdený žiadny obrázok',
 'no_version_check' => '',
-'no_version_modification' => '',
+'no_version_modification' => 'Žiadne zmeny',
 'no_workflow_available' => '',
 'objectcheck' => '',
 'obsolete' => 'Zastaralé',

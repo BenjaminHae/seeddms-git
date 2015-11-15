@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1504), s.pnt (26)
+//    Translators: Admin (1506), s.pnt (26)
 
 $text = array(
 'accept' => 'Accetta',
@@ -414,7 +414,7 @@ URL: [url]',
 'files' => 'Files',
 'files_deletion' => 'Cancellazione files',
 'files_deletion_warning' => 'Con questa operazione è possible cancellare i file di intere cartelle. Dopo la cancellazione lo storico delle versioni rimarrà comunque disponibile.',
-'files_loading' => '',
+'files_loading' => 'Attendi che il file venga caricato per favore ...',
 'file_size' => 'Grandezza del file',
 'filter_for_documents' => 'Filtro aggiuntivo per i documenti',
 'filter_for_folders' => 'Filtro aggiuntivo per le cartelle',
@@ -545,7 +545,7 @@ URL: [url]',
 'keep' => 'Non cambiare',
 'keep_doc_status' => 'Mantieni lo stato del documento',
 'keywords' => 'Parole-chiave',
-'keywords_loading' => '',
+'keywords_loading' => 'Attendi che la lista delle parole chiave venga caricata per favore',
 'keyword_exists' => 'Parola-chiave già presente',
 'ko_KR' => 'Coreano',
 'language' => 'Lingua',

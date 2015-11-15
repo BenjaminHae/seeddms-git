@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (998), jeromerobert (50), lonnnew (9)
+//    Translators: Admin (999), jeromerobert (50), lonnnew (9)
 
 $text = array(
 'accept' => 'Accepter',
@@ -673,7 +673,7 @@ URL: [url]',
 'no_update_cause_locked' => 'Vous ne pouvez actuellement pas mettre à jour ce document. Contactez l\'utilisateur qui l\'a verrouillé.',
 'no_user_image' => 'Aucune image trouvée',
 'no_version_check' => '',
-'no_version_modification' => '',
+'no_version_modification' => 'Pas de modification de version',
 'no_workflow_available' => '',
 'objectcheck' => 'Vérification des dossiers et documents',
 'obsolete' => 'Obsolète',

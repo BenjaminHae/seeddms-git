@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (696), kreml (455)
+//    Translators: Admin (697), kreml (455)
 
 $text = array(
 'accept' => 'Přijmout',
@@ -1232,7 +1232,7 @@ URL: [url]',
 'theme' => 'Vzhled',
 'thursday' => 'Čtvrtek',
 'thursday_abbr' => 'Čt',
-'timeline' => '',
+'timeline' => 'časová os',
 'timeline_add_file' => '',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',

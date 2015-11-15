@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1268)
+//    Translators: Admin (1274)
 
 $text = array(
 'accept' => 'Принять',
@@ -86,7 +86,7 @@ URL: [url]',
 'approval_deletion_email_subject' => '',
 'approval_file' => '',
 'approval_group' => 'Утверждающая группа',
-'approval_log' => '',
+'approval_log' => 'Лог одобрения',
 'approval_request_email' => 'Запрос на утверждение',
 'approval_request_email_body' => 'Запрос на утверждение
 Имя: [name]
@@ -770,7 +770,7 @@ URL: [url]',
 'review_deletion_email_subject' => '',
 'review_file' => '',
 'review_group' => 'Рецензирующая группа',
-'review_log' => '',
+'review_log' => 'Лог рецензирования',
 'review_request_email' => 'Запрос на рецензию',
 'review_request_email_body' => '',
 'review_request_email_subject' => '',
@@ -1229,7 +1229,7 @@ URL: [url]',
 'thursday' => 'Четверг',
 'thursday_abbr' => 'Чт',
 'timeline' => 'Период',
-'timeline_add_file' => '',
+'timeline_add_file' => 'Новое Приложение',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',
 'timeline_full_add_version' => '',
@@ -1263,7 +1263,7 @@ URL: [url]',
 'transmittal_comment' => '',
 'transmittal_name' => '',
 'transmittal_size' => '',
-'tree_loading' => '',
+'tree_loading' => 'Пожалуйста, подождите пока дерево документов загрузится ...',
 'trigger_workflow' => 'Процесс',
 'tr_TR' => 'Турецкий',
 'tuesday' => 'Вторник',
