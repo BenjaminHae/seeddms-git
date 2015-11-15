@@ -63,7 +63,7 @@ if (isset($_GET["version"])) {
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($dms->contentDir . $content->getPath() ));
 	$efilename = rawurlencode($content->getOriginalFileName());
-	header("Content-Disposition: attachment; filename=\"" . $efilename . "\"");
+	header("Content-Disposition: attachment; filename=\"" . $efilename . "\"; filename*=UTF-8''".$efilename);
 	//header("Expires: 0");
 	header("Content-Type: " . $content->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");
@@ -108,7 +108,7 @@ if (isset($_GET["version"])) {
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($dms->contentDir . $file->getPath() ));
 	$efilename = rawurlencode($file->getOriginalFileName());
-	header("Content-Disposition: attachment; filename=\"" . $efilename . "\"");
+	header("Content-Disposition: attachment; filename=\"" . $efilename . "\"; filename*=UTF-8''".$efilename);
 	//header("Expires: 0");
 	header("Content-Type: " . $file->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");
@@ -137,7 +137,7 @@ if (isset($_GET["version"])) {
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($settings->_contentDir . $filename ));
 	$efilename = rawurlencode($filename);
-	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"");
+	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"; filename*=UTF-8''".$efilename);
 //	header("Expires: 0");
 	//header("Content-Type: " . $content->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");
@@ -164,7 +164,7 @@ if (isset($_GET["version"])) {
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($settings->_contentDir . $filename ));
 	$efilename = rawurlencode($filename);
-	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"");
+	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"; filename*=UTF-8''".$efilename);
 	header("Cache-Control: must-revalidate");
 	
 	readfile($settings->_contentDir .$filename );
@@ -216,7 +216,7 @@ if (isset($_GET["version"])) {
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($settings->_contentDir . $filename ));
 	$efilename = rawurlencode($filename);
-	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"");
+	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"; filename*=UTF-8''".$efilename);
 	//header("Expires: 0");
 	//header("Content-Type: " . $content->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");
