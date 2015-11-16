@@ -11,11 +11,11 @@
   <email>uwe@steinmann.cx</email>
   <active>yes</active>
  </lead>
- <date>2015-08-10</date>
- <time>21:13:13</time>
+ <date>2015-11-16</date>
+ <time>09:07:07</time>
  <version>
-  <release>1.0.0</release>
-  <api>1.0.0</api>
+  <release>1.0.1</release>
+  <api>1.0.1</api>
  </version>
  <stability>
   <release>stable</release>
@@ -23,7 +23,7 @@
  </stability>
  <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
  <notes>
-initial release
+add __get() to SQLiteFTS_Document because class.IndexInfo.php access class variable title which doesn't exists
  </notes>
  <contents>
   <dir baseinstalldir="SeedDMS" name="/">
@@ -66,5 +66,21 @@ initial release
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2015-08-10</date>
+   <time>21:13:13</time>
+   <version>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
+   <notes>
+initial release
+   </notes>
+  </release>
  </changelog>
 </package>
