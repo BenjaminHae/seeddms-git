@@ -36,6 +36,13 @@ class SeedDMS_SQLiteFTS_Document {
 	 */
 	protected $fields;
 
+	public function __get($key) { /* {{{ */
+		if(isset($this->fields[$key]))
+			return $this->fields[$key];
+		else
+			return false;
+	} /* }}} */
+
 	public function addField($key, $value) { /* {{{ */
 		if($key == 'document_id') {
 			$this->id = $this->fields[$key] = (int) $value;
