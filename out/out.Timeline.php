@@ -23,6 +23,11 @@ include("../inc/inc.Language.php");
 include("../inc/inc.ClassUI.php");
 include("../inc/inc.Authentication.php");
 
+/**
+ * Include class to preview documents
+ */
+require_once("SeedDMS/Preview.php");
+
 if (!$user->isAdmin()) {
 	UI::exitError(getMLText("admin_tools"),getMLText("access_denied"));
 }
@@ -65,6 +70,9 @@ if($view) {
 	$view->setParam('skip', $skip);
 	$view->setParam('document', $document);
 	$view->setParam('version', $content);
+	$view->setParam('cachedir', $settings->_cacheDir);
+	$view->setParam('previewWidthList', $settings->_previewWidthList);
+	$view->setParam('previewWidthDetail', $settings->_previewWidthDetail);
 	$view($_GET);
 	exit;
 }
