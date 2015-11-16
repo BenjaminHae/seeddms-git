@@ -214,7 +214,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 		$startFolder = $dms->getFolder($targetid);
 	}
 	if (!is_object($startFolder)) {
-		UI::exitError(getMLText("search_results"),getMLText("invalid_folder_id"));
+		UI::exitError(getMLText("search"),getMLText("invalid_folder_id"));
 	}
 
 	// Check to see if the search has been restricted to a particular
@@ -223,10 +223,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 	if (isset($_GET["ownerid"]) && is_numeric($_GET["ownerid"]) && $_GET["ownerid"]!=-1) {
 		$owner = $dms->getUser($_GET["ownerid"]);
 		if (!is_object($owner)) {
-			UI::htmlStartPage(getMLText("search_results"));
-			UI::contentContainer(getMLText("unknown_owner"));
-			UI::htmlEndPage();
-			exit;
+			UI::exitError(getMLText("search"),getMLText("unknown_owner"));
 		}
 	}
 
