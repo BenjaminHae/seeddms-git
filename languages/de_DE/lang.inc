@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (2136), dgrutsch (18)
+//    Translators: Admin (2137), dgrutsch (18)
 
 $text = array(
 'accept' => 'Übernehmen',
@@ -1260,6 +1260,7 @@ URL: [url]',
 'timeline_full_add_file' => '[document]<br />Neuer Anhang',
 'timeline_full_add_version' => '[document]<br />Neue Version [version]',
 'timeline_full_status_change' => '[document]<br />Version [version]: [status]',
+'timeline_selected_item' => 'Ausgewähltes Dokument',
 'timeline_skip_add_file' => 'Anhang hinzugefügt',
 'timeline_skip_status_change_-1' => 'abgelehnt',
 'timeline_skip_status_change_-3' => 'abgelaufen',
