@@ -276,7 +276,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 
 	if(isset($_GET["expirationstart"]) && $_GET["expirationstart"]) {
 		$tmp = explode("-", $_GET["expirationstart"]);
-		$expstartdate = array('year'=>(int)$tmp[2], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[0], 'hour'=>0, 'minute'=>0, 'second'=>0);
+		$expstartdate = array('year'=>(int)$tmp[0], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[2], 'hour'=>0, 'minute'=>0, 'second'=>0);
 		if (!checkdate($expstartdate['month'], $expstartdate['day'], $expstartdate['year'])) {
 			UI::exitError(getMLText("search"),getMLText("invalid_expiration_date_start"));
 		}
@@ -286,7 +286,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 	}
 	if(isset($_GET["expirationend"]) && $_GET["expirationend"]) {
 		$tmp = explode("-", $_GET["expirationend"]);
-		$expstopdate = array('year'=>(int)$tmp[2], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[0], 'hour'=>0, 'minute'=>0, 'second'=>0);
+		$expstopdate = array('year'=>(int)$tmp[0], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[2], 'hour'=>0, 'minute'=>0, 'second'=>0);
 		if (!checkdate($expstopdate['month'], $expstopdate['day'], $expstopdate['year'])) {
 			UI::exitError(getMLText("search"),getMLText("invalid_expiration_date_end"));
 		}
