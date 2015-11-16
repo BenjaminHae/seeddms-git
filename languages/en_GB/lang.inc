@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1267), dgrutsch (3), netixw (14)
+//    Translators: Admin (1271), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -505,6 +505,8 @@ URL: [url]',
 'invalid_create_date_end' => 'Invalid end date for creation date range.',
 'invalid_create_date_start' => 'Invalid start date for creation date range.',
 'invalid_doc_id' => 'Invalid Document ID',
+'invalid_expiration_date_end' => 'Invalid end date for expiration date range.',
+'invalid_expiration_date_start' => 'Invalid start date for expiration date range.',
 'invalid_file_id' => 'Invalid file ID',
 'invalid_folder_id' => 'Invalid Folder ID',
 'invalid_group_id' => 'Invalid Group ID',
