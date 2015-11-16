@@ -247,10 +247,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 			$startdate = array('year'=>$_GET["createstartyear"], 'month'=>$_GET["createstartmonth"], 'day'=>$_GET["createstartday"], 'hour'=>0, 'minute'=>0, 'second'=>0);
 	}
 	if ($startdate && !checkdate($startdate['month'], $startdate['day'], $startdate['year'])) {
-		UI::htmlStartPage(getMLText("search_results"));
-		UI::contentContainer(getMLText("invalid_create_date_start"));
-		UI::htmlEndPage();
-		exit;
+		UI::exitError(getMLText("search"),getMLText("invalid_create_date_end"));
 	}
 	if(isset($_GET["createend"])) {
 		$tmp = explode("-", $_GET["createend"]);
@@ -260,10 +257,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 			$stopdate = array('year'=>$_GET["createendyear"], 'month'=>$_GET["createendmonth"], 'day'=>$_GET["createendday"], 'hour'=>23, 'minute'=>59, 'second'=>59);
 	}
 	if ($stopdate && !checkdate($stopdate['month'], $stopdate['day'], $stopdate['year'])) {
-		UI::htmlStartPage(getMLText("search_results"));
-		UI::contentContainer(getMLText("invalid_create_date_end"));
-		UI::htmlEndPage();
-		exit;
+		UI::exitError(getMLText("search"),getMLText("invalid_create_date_end"));
 	}
 
 	$expstartdate = array();
