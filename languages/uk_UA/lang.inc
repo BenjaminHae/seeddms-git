@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1131)
+//    Translators: Admin (1132)
 
 $text = array(
 'accept' => 'Прийняти',
@@ -138,6 +138,7 @@ URL: [url]',
 'attrdef_regex' => 'Регулярний вираз',
 'attrdef_type' => 'Тип',
 'attrdef_type_boolean' => 'Логічне',
+'attrdef_type_date' => 'Дата',
 'attrdef_type_email' => 'Електронна пошта',
 'attrdef_type_float' => 'З плаваючою комою',
 'attrdef_type_int' => 'Ціле',
@@ -504,6 +505,8 @@ URL: [url]',
 'invalid_create_date_end' => 'Невірна кінцева дата діапазону дати створення',
 'invalid_create_date_start' => 'Невірна початкова дата діапазону дати створення',
 'invalid_doc_id' => 'Невірний ідентифікатор документа',
+'invalid_expiration_date_end' => '',
+'invalid_expiration_date_start' => '',
 'invalid_file_id' => 'Невірний ідентифікатор файлу',
 'invalid_folder_id' => 'Невірний ідентифікатор каталога',
 'invalid_group_id' => 'Невірний ідентифікатор групи',
@@ -1255,6 +1258,7 @@ URL: [url]',
 'timeline_full_add_file' => '',
 'timeline_full_add_version' => '',
 'timeline_full_status_change' => '',
+'timeline_selected_item' => '',
 'timeline_skip_add_file' => '',
 'timeline_skip_status_change_-1' => '',
 'timeline_skip_status_change_-3' => '',

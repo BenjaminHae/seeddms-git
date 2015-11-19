@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1266), dgrutsch (3), netixw (14)
+//    Translators: Admin (1272), dgrutsch (3), netixw (14)
 
 $text = array(
 'accept' => 'Accept',
@@ -138,6 +138,7 @@ URL: [url]',
 'attrdef_regex' => 'Regular expression',
 'attrdef_type' => 'Type',
 'attrdef_type_boolean' => 'Boolean',
+'attrdef_type_date' => 'Date',
 'attrdef_type_email' => 'Email',
 'attrdef_type_float' => 'Float',
 'attrdef_type_int' => 'Integer',
@@ -504,6 +505,8 @@ URL: [url]',
 'invalid_create_date_end' => 'Invalid end date for creation date range.',
 'invalid_create_date_start' => 'Invalid start date for creation date range.',
 'invalid_doc_id' => 'Invalid Document ID',
+'invalid_expiration_date_end' => 'Invalid end date for expiration date range.',
+'invalid_expiration_date_start' => 'Invalid start date for expiration date range.',
 'invalid_file_id' => 'Invalid file ID',
 'invalid_folder_id' => 'Invalid Folder ID',
 'invalid_group_id' => 'Invalid Group ID',
@@ -1264,6 +1267,7 @@ URL: [url]',
 'timeline_full_add_file' => '[document]<br />New Attachment',
 'timeline_full_add_version' => '[document]<br />New version [version]',
 'timeline_full_status_change' => '[document]<br />Version [version]: [status]',
+'timeline_selected_item' => 'Selected document',
 'timeline_skip_add_file' => 'attachment added',
 'timeline_skip_status_change_-1' => 'rejected',
 'timeline_skip_status_change_-3' => 'expired',

@@ -30,19 +30,124 @@ require_once("class.Bootstrap.php");
  * @version    Release: @package_version@
  */
 class SeedDMS_View_Timeline extends SeedDMS_Bootstrap_Style {
-		var $dms;
-		var $folder_count;
-		var $document_count;
-		var $file_count;
-		var $storage_size;
+	var $dms;
+	var $folder_count;
+	var $document_count;
+	var $file_count;
+	var $storage_size;
+
+	function iteminfo() { /* {{{ */
+		$dms = $this->params['dms'];
+		$document = $this->params['document'];
+		$version = $this->params['version'];
+		$cachedir = $this->params['cachedir'];
+		$previewwidthlist = $this->params['previewWidthList'];
+		$previewwidthdetail = $this->params['previewWidthDetail'];
+		if($document) {
+			$previewer = new SeedDMS_Preview_Previewer($cachedir, $previewwidthdetail);
+			$previewer->createPreview($version);
+
+			$this->contentHeading(getMLText("timeline_selected_item"));
+			$folder = $document->getFolder();
+			$path = $folder->getPath();
+			print "<div>";
+			print "<a href=\"../out/out.ViewDocument.php?documentid=".$document->getID()."\">/";
+			for ($i = 1; $i  < count($path); $i++) {
+				print htmlspecialchars($path[$i]->getName())."/";
+			}
+			echo $document->getName();
+			print "</a>";
+			print "</div>";
+
+			print "<div>";
+			if($previewer->hasPreview($version)) {
+				print("<img class=\"mimeicon\" width=\"".$previewwidthdetail."\" src=\"../op/op.Preview.php?documentid=".$document->getID()."&version=".$version->getVersion()."&width=".$previewwidthdetail."\" title=\"".htmlspecialchars($version->getMimeType())."\">");
+			} else {
+				print "<img class=\"mimeicon\" src=\"".$this->getMimeIcon($version->getFileType())."\" title=\"".htmlspecialchars($version->getMimeType())."\">";
+			}
+			print "</div>";
+		}
+	} /* }}} */
+
+	function data() { /* {{{ */
+		$dms = $this->params['dms'];
+		$skip = $this->params['skip'];
+		$fromdate = $this->params['fromdate'];
+		$todate = $this->params['todate'];
+
+		if($fromdate) {
+			$from = makeTsFromLongDate($fromdate.' 00:00:00');
+		} else {
+			$from = time()-7*86400;
+		}
+
+		if($todate) {
+			$to = makeTsFromLongDate($todate.' 23:59:59');
+		} else {
+			$to = time()-7*86400;
+		}
+
+		if($data = $dms->getTimeline($from, $to)) {
+			foreach($data as $i=>$item) {
+				switch($item['type']) {
+				case 'add_version':
+					$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
+					break;
+				case 'add_file':
+					$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName())));
+					break;
+				case 'status_change':
+					$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
+					break;
+				default:
+					$msg = '???';
+				}
+				$data[$i]['msg'] = $msg;
+			}
+		}
+
+		$jsondata = array();
+		foreach($data as $item) {
+			if($item['type'] == 'status_change')
+				$classname = $item['type']."_".$item['status'];
+			else
+				$classname = $item['type'];
+			if(!$skip || !in_array($classname, $skip)) {
+				$d = makeTsFromLongDate($item['date']);
+				$jsondata[] = array(
+					'start'=>date('c', $d),
+					'content'=>$item['msg'],
+					'className'=>$classname,
+					'docid'=>$item['document']->getID(),
+					'version'=>isset($item['version']) ? $item['version'] : '',
+					'statusid'=>isset($item['statusid']) ? $item['statusid'] : '',
+					'statuslogid'=>isset($item['statuslogid']) ? $item['statuslogid'] : '',
+					'fileid'=>isset($item['fileid']) ? $item['fileid'] : ''
+				);
+			}
+		}
+		header('Content-Type: application/json');
+		echo json_encode($jsondata);
+	} /* }}} */
 
 	function show() { /* {{{ */
-		$this->dms = $this->params['dms'];
+		$dms = $this->params['dms'];
 		$user = $this->params['user'];
-		$data = $this->params['data'];
-		$from = $this->params['from'];
-		$to = $this->params['to'];
+		$fromdate = $this->params['fromdate'];
+		$todate = $this->params['todate'];
 		$skip = $this->params['skip'];
+
+		if($fromdate) {
+			$from = makeTsFromLongDate($fromdate.' 00:00:00');
+		} else {
+			$from = time()-7*86400;
+		}
+
+		if($todate) {
+			$to = makeTsFromLongDate($todate.' 23:59:59');
+		} else {
+			$to = time();
+		}
 
 		$this->htmlAddHeader('<link href="../styles/'.$this->theme.'/timeline/timeline.css" rel="stylesheet">'."\n", 'css');
 		$this->htmlAddHeader('<script type="text/javascript" src="../styles/'.$this->theme.'/timeline/timeline-min.js"></script>'."\n", 'js');
@@ -61,7 +166,7 @@ echo "<div class=\"span3\">\n";
 $this->contentHeading(getMLText("timeline"));
 echo "<div class=\"well\">\n";
 ?>
-<form action="../out/out.Timeline.php" class="form form-inline" name="form1">
+<form action="../out/out.Timeline.php" class="form form-inline" name="form1" id="form1">
 	<div class="control-group">
 		<label class="control-label" for="startdate"><?= getMLText('date') ?></label>
 		<div class="controls">
@@ -90,35 +195,39 @@ echo "<div class=\"well\">\n";
 	<div class="control-group">
 		<label class="control-label" for="enddate"></label>
 		<div class="controls">
-			<button type="submit" class="btn"><i class="icon-search"></i> <?php printMLText("action"); ?></button>
+			<button id="update" type="_submit" class="btn"><i class="icon-search"></i> <?php printMLText("update"); ?></button>
 		</div>
 	</div>
 </form>
 <?php
+ $timelineurl = 'out.Timeline.php?action=data&fromdate='.date('Y-m-d', $from).'&todate='.date('Y-m-d', $to).'&skip='.urldecode(http_build_query(array('skip'=>$skip)));
+?>
+<script type="text/javascript">
+$(document).ready(function () {
+	$('#update').click(function(ev){
+		ev.preventDefault();
+		$.getJSON(
+			'out.Timeline.php?action=data&' + $('#form1').serialize(), 
+			function(data) {
+				$.each( data, function( key, val ) {
+					val.start = new Date(val.start);
+				});
+				timeline.setData(data);
+				timeline.redraw();
+//				timeline.setVisibleChartRange(0,0);
+			}
+		);
+	});
+});
+</script>
+<?php
 echo "</div>\n";
+echo "<div class=\"ajax\" data-view=\"Timeline\" data-action=\"iteminfo\" ></div>";
 echo "</div>\n";
 
 echo "<div class=\"span9\">\n";
 $this->contentHeading(getMLText("timeline"));
-if($data) {
-	foreach($data as &$item) {
-		switch($item['type']) {
-		case 'add_version':
-			$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
-			break;
-		case 'add_file':
-			$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName())));
-			break;
-		case 'status_change':
-			$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
-			break;
-		default:
-			$msg = '???';
-		}
-		$item['msg'] = $msg;
-	}
-	$this->printTimeline($data, 550, date('Y-m-d', $from), date('Y-m-d', $to+1), $skip);
-}
+$this->printTimeline($timelineurl, 550, ''/*date('Y-m-d', $from)*/, ''/*date('Y-m-d', $to+1)*/, $skip);
 echo "</div>\n";
 echo "</div>\n";
 

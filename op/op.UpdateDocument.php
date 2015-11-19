@@ -270,13 +270,58 @@ if ($_FILES['userfile']['error'] == 0) {
 					}
 				}
 			}
+
+			if($settings->_enableNotificationAppRev) {
+				/* Reviewers and approvers will be informed about the new document */
+				if($reviewers['i'] || $reviewers['g']) {
+					$subject = "review_request_email_subject";
+					$message = "review_request_email_body";
+					$params = array();
+					$params['name'] = $document->getName();
+					$params['folder_path'] = $folder->getFolderPathPlain();
+					$params['version'] = $contentResult->getContent()->getVersion();
+					$params['comment'] = $contentResult->getContent()->getComment();
+					$params['username'] = $user->getFullName();
+					$params['url'] = "http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'].$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
+					$params['sitename'] = $settings->_siteName;
+					$params['http_root'] = $settings->_httpRoot;
+
+					foreach($reviewers['i'] as $reviewerid) {
+						$notifier->toIndividual($user, $dms->getUser($reviewerid), $subject, $message, $params);
+					}
+					foreach($reviewers['g'] as $reviewergrpid) {
+						$notifier->toGroup($user, $dms->getGroup($reviewergrpid), $subject, $message, $params);
+					}
+				}
+
+				if($approvers['i'] || $approvers['g']) {
+					$subject = "approval_request_email_subject";
+					$message = "approval_request_email_body";
+					$params = array();
+					$params['name'] = $document->getName();
+					$params['folder_path'] = $folder->getFolderPathPlain();
+					$params['version'] = $contentResult->getContent()->getVersion();
+					$params['comment'] = $contentResult->getContent()->getComment();
+					$params['username'] = $user->getFullName();
+					$params['url'] = "http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'].$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
+					$params['sitename'] = $settings->_siteName;
+					$params['http_root'] = $settings->_httpRoot;
+
+					foreach($approvers['i'] as $approverid) {
+						$notifier->toIndividual($user, $dms->getUser($approverid), $subject, $message, $params);
+					}
+					foreach($approvers['g'] as $approvergrpid) {
+						$notifier->toGroup($user, $dms->getGroup($approvergrpid), $subject, $message, $params);
+					}
+				}
+			}
 		}
 
 		$expires = false;
 		if (!isset($_POST['expires']) || $_POST["expires"] != "false") {
 			if($_POST["expdate"]) {
 				$tmp = explode('-', $_POST["expdate"]);
-				$expires = mktime(0,0,0, $tmp[1], $tmp[0], $tmp[2]);
+				$expires = mktime(0,0,0, $tmp[1], $tmp[2], $tmp[0]);
 			} else {
 				$expires = mktime(0,0,0, $_POST["expmonth"], $_POST["expday"], $_POST["expyear"]);
 			}

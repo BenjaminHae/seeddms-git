@@ -23,33 +23,46 @@ include("../inc/inc.Language.php");
 include("../inc/inc.ClassUI.php");
 include("../inc/inc.Authentication.php");
 
+/**
+ * Include class to preview documents
+ */
+require_once("SeedDMS/Preview.php");
+
 if (!$user->isAdmin()) {
 	UI::exitError(getMLText("admin_tools"),getMLText("access_denied"));
 }
 $rootfolder = $dms->getFolder($settings->_rootFolderID);
-
-if(!empty($_GET['fromdate'])) {
-	$from = makeTsFromLongDate($_GET['fromdate'].' 00:00:00');
-} else {
-	$from = time()-7*86400;
-}
-if(!empty($_GET['todate'])) {
-	$to = makeTsFromLongDate($_GET['todate'].' 23:59:59');
-} else {
-	$to = time();
-}
 
 if(isset($_GET['skip']))
 	$skip = $_GET['skip'];
 else
 	$skip = array();
 
-$data = $dms->getTimeline($from, $to);
+if(isset($_GET['documentid']) && $_GET['documentid'] && is_numeric($_GET['documentid'])) {
+	$document = $dms->getDocument($_GET["documentid"]);
+	if (!is_object($document)) {
+		$view->exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));
+	}
+} else
+	$document = null;
+
+if(isset($_GET['version']) && $_GET['version'] && is_numeric($_GET['version'])) {
+	$content = $document->getContentByVersion($_GET['version']);
+} else
+	$content = null;
 
 $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
-$view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user, 'rootfolder'=>$rootfolder, 'from'=>$from, 'to'=>$to, 'skip'=>$_GET['skip'], 'data'=>$data));
+$view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user));
 if($view) {
-	$view->show();
+	$view->setParam('fromdate', isset($_GET['fromdate']) ? $_GET['fromdate'] : '');
+	$view->setParam('todate', isset($_GET['todate']) ? $_GET['todate'] : '');
+	$view->setParam('skip', $skip);
+	$view->setParam('document', $document);
+	$view->setParam('version', $content);
+	$view->setParam('cachedir', $settings->_cacheDir);
+	$view->setParam('previewWidthList', $settings->_previewWidthList);
+	$view->setParam('previewWidthDetail', $settings->_previewWidthDetail);
+	$view($_GET);
 	exit;
 }
 

@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (1253)
+//    Translators: Admin (1254)
 
 $text = array(
 'accept' => 'وافق',
@@ -126,6 +126,7 @@ URL: [url]',
 'attrdef_regex' => '',
 'attrdef_type' => 'نوع',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'التاريخ',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -492,6 +493,8 @@ URL: [url]',
 'invalid_create_date_end' => 'تاريخ نهائي خاطىء لانشاء مدى تاريخي',
 'invalid_create_date_start' => 'تاريخ ابتدائي خاطيء لانشاء مدى تاريخي',
 'invalid_doc_id' => 'معرف مستند خاطىء',
+'invalid_expiration_date_end' => '',
+'invalid_expiration_date_start' => '',
 'invalid_file_id' => 'معرف ملف خاطىء',
 'invalid_folder_id' => 'معرف مجلد خاطىء',
 'invalid_group_id' => 'معرف مجموعة خاطىء',
@@ -1228,6 +1231,7 @@ URL: [url]',
 'timeline_full_add_file' => '',
 'timeline_full_add_version' => '',
 'timeline_full_status_change' => '',
+'timeline_selected_item' => '',
 'timeline_skip_add_file' => '',
 'timeline_skip_status_change_-1' => '',
 'timeline_skip_status_change_-3' => '',

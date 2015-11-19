@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (591), fengjohn (5)
+//    Translators: Admin (593), fengjohn (5)
 
 $text = array(
 'accept' => '接受',
@@ -121,6 +121,7 @@ URL: [url]',
 'attrdef_regex' => '正则表达式',
 'attrdef_type' => '类型',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => '日期',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -429,6 +430,8 @@ URL: [url]',
 'invalid_create_date_end' => '无效截止日期,不在创建日期范围内',
 'invalid_create_date_start' => '无效开始日期,不在创建日期范围内',
 'invalid_doc_id' => '无效文档ID号',
+'invalid_expiration_date_end' => '',
+'invalid_expiration_date_start' => '',
 'invalid_file_id' => '无效文件ID号',
 'invalid_folder_id' => '无效文件夹ID号',
 'invalid_group_id' => '无效组别ID号',
@@ -1099,6 +1102,7 @@ URL: [url]',
 'timeline_full_add_file' => '',
 'timeline_full_add_version' => '',
 'timeline_full_status_change' => '',
+'timeline_selected_item' => '',
 'timeline_skip_add_file' => '',
 'timeline_skip_status_change_-1' => '',
 'timeline_skip_status_change_-3' => '',
@@ -1106,7 +1110,7 @@ URL: [url]',
 'timeline_skip_status_change_1' => '',
 'timeline_skip_status_change_2' => '',
 'timeline_skip_status_change_3' => '',
-'timeline_status_change' => '',
+'timeline_status_change' => '版本 [版本]: [状态]',
 'to' => '到',
 'toggle_manager' => '角色切换',
 'to_before_from' => '',

@@ -15,7 +15,7 @@ $(document).ready( function() {
 
 	$('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropagation(); });
 
-	$('#expirationdate, #fromdate, #todate, #createstartdate, #createenddate, #expirationstartdate, #expirationenddate')
+	$('.datepicker, #expirationdate, #fromdate, #todate, #createstartdate, #createenddate, #expirationstartdate, #expirationenddate')
 		.datepicker()
 		.on('changeDate', function(ev){
 			$(ev.currentTarget).datepicker('hide');
@@ -669,6 +669,7 @@ function onAddClipboard(ev) {
 					fd.append('folderid', target);
 					fd.append('formtoken', obj.data('formtoken'));
 					fd.append('userfile', files[i]);
+//					fd.append('path', files[i].webkitRelativePath);
 
 					var status = new createStatusbar(obj);
 					status.setFileNameSize(files[i].name,files[i].size);

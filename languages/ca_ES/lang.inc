@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (658)
+//    Translators: Admin (660)
 
 $text = array(
 'accept' => 'Acceptar',
@@ -122,6 +122,7 @@ URL: [url]',
 'attrdef_regex' => '',
 'attrdef_type' => '',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'Data',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -428,6 +429,8 @@ URL: [url]',
 'invalid_create_date_end' => 'La data de final no és vàlida per a la creació de rangs de dates.',
 'invalid_create_date_start' => 'La data d\'inici no és vàlida per a la creació de rangs de dates.',
 'invalid_doc_id' => 'ID de document no vàlid',
+'invalid_expiration_date_end' => '',
+'invalid_expiration_date_start' => '',
 'invalid_file_id' => 'ID de fitxer no vàlid',
 'invalid_folder_id' => 'ID de carpeta no vàlid',
 'invalid_group_id' => 'ID de grup no vàlid',
@@ -996,7 +999,7 @@ URL: [url]',
 'settings_updateNotifyTime' => 'Update Notify Time',
 'settings_updateNotifyTime_desc' => 'Users are notified about document-changes that took place within the last \'Update Notify Time\' seconds',
 'settings_upgrade_php' => '',
-'settings_versioningFileName' => 'Versioning FileName',
+'settings_versioningFileName' => 'Versioning filename',
 'settings_versioningFileName_desc' => 'The name of the versioning info file created by the backup tool',
 'settings_versiontolow' => '',
 'settings_viewOnlineFileTypes' => 'View Online File Types',
@@ -1098,6 +1101,7 @@ URL: [url]',
 'timeline_full_add_file' => '',
 'timeline_full_add_version' => '',
 'timeline_full_status_change' => '',
+'timeline_selected_item' => '',
 'timeline_skip_add_file' => '',
 'timeline_skip_status_change_-1' => '',
 'timeline_skip_status_change_-3' => '',

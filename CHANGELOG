@@ -1,4 +1,16 @@
 --------------------------------------------------------------------------------
+                     Changes in version 4.3.22
+--------------------------------------------------------------------------------
+- fix lots of HTTP-Headers in op.Ajax.php (Closes: #233)
+- Timeline will be updated by ajax call, clicking on an item in the timeline
+  will output some document information
+- Timeline now ends at end of the last day. Previously this day wasn't included
+- new attribute type 'date'
+- all dates are now in format 'yyyy-mm-dd'
+- fix fatal error when requesting new password
+- send emails to reviewers/approvers if new document or version was uploaded
+
+--------------------------------------------------------------------------------
                      Changes in version 4.3.21
 --------------------------------------------------------------------------------
 - fix sql statement when searching for attributes (SeedDMS_Core, Closes: 227)

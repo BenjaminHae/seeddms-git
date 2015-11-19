@@ -214,7 +214,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 		$startFolder = $dms->getFolder($targetid);
 	}
 	if (!is_object($startFolder)) {
-		UI::exitError(getMLText("search_results"),getMLText("invalid_folder_id"));
+		UI::exitError(getMLText("search"),getMLText("invalid_folder_id"));
 	}
 
 	// Check to see if the search has been restricted to a particular
@@ -223,10 +223,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 	if (isset($_GET["ownerid"]) && is_numeric($_GET["ownerid"]) && $_GET["ownerid"]!=-1) {
 		$owner = $dms->getUser($_GET["ownerid"]);
 		if (!is_object($owner)) {
-			UI::htmlStartPage(getMLText("search_results"));
-			UI::contentContainer(getMLText("unknown_owner"));
-			UI::htmlEndPage();
-			exit;
+			UI::exitError(getMLText("search"),getMLText("unknown_owner"));
 		}
 	}
 
@@ -241,29 +238,23 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 
 	if(isset($_GET["createstart"])) {
 		$tmp = explode("-", $_GET["createstart"]);
-		$startdate = array('year'=>(int)$tmp[2], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[0], 'hour'=>0, 'minute'=>0, 'second'=>0);
+		$startdate = array('year'=>(int)$tmp[0], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[2], 'hour'=>0, 'minute'=>0, 'second'=>0);
 	} else {
 		if(isset($_GET["createstartyear"]))
 			$startdate = array('year'=>$_GET["createstartyear"], 'month'=>$_GET["createstartmonth"], 'day'=>$_GET["createstartday"], 'hour'=>0, 'minute'=>0, 'second'=>0);
 	}
 	if ($startdate && !checkdate($startdate['month'], $startdate['day'], $startdate['year'])) {
-		UI::htmlStartPage(getMLText("search_results"));
-		UI::contentContainer(getMLText("invalid_create_date_start"));
-		UI::htmlEndPage();
-		exit;
+		UI::exitError(getMLText("search"),getMLText("invalid_create_date_end"));
 	}
 	if(isset($_GET["createend"])) {
 		$tmp = explode("-", $_GET["createend"]);
-		$stopdate = array('year'=>(int)$tmp[2], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[0], 'hour'=>23, 'minute'=>59, 'second'=>59);
+		$stopdate = array('year'=>(int)$tmp[0], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[2], 'hour'=>23, 'minute'=>59, 'second'=>59);
 	} else {
 		if(isset($_GET["createendyear"]))
 			$stopdate = array('year'=>$_GET["createendyear"], 'month'=>$_GET["createendmonth"], 'day'=>$_GET["createendday"], 'hour'=>23, 'minute'=>59, 'second'=>59);
 	}
 	if ($stopdate && !checkdate($stopdate['month'], $stopdate['day'], $stopdate['year'])) {
-		UI::htmlStartPage(getMLText("search_results"));
-		UI::contentContainer(getMLText("invalid_create_date_end"));
-		UI::htmlEndPage();
-		exit;
+		UI::exitError(getMLText("search"),getMLText("invalid_create_date_end"));
 	}
 
 	$expstartdate = array();
@@ -276,7 +267,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 
 	if(isset($_GET["expirationstart"]) && $_GET["expirationstart"]) {
 		$tmp = explode("-", $_GET["expirationstart"]);
-		$expstartdate = array('year'=>(int)$tmp[2], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[0], 'hour'=>0, 'minute'=>0, 'second'=>0);
+		$expstartdate = array('year'=>(int)$tmp[0], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[2], 'hour'=>0, 'minute'=>0, 'second'=>0);
 		if (!checkdate($expstartdate['month'], $expstartdate['day'], $expstartdate['year'])) {
 			UI::exitError(getMLText("search"),getMLText("invalid_expiration_date_start"));
 		}
@@ -286,7 +277,7 @@ if(isset($_GET["fullsearch"]) && $_GET["fullsearch"]) {
 	}
 	if(isset($_GET["expirationend"]) && $_GET["expirationend"]) {
 		$tmp = explode("-", $_GET["expirationend"]);
-		$expstopdate = array('year'=>(int)$tmp[2], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[0], 'hour'=>0, 'minute'=>0, 'second'=>0);
+		$expstopdate = array('year'=>(int)$tmp[0], 'month'=>(int)$tmp[1], 'day'=>(int)$tmp[2], 'hour'=>0, 'minute'=>0, 'second'=>0);
 		if (!checkdate($expstopdate['month'], $expstopdate['day'], $expstopdate['year'])) {
 			UI::exitError(getMLText("search"),getMLText("invalid_expiration_date_end"));
 		}

@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (781)
+//    Translators: Admin (782)
 
 $text = array(
 'accept' => 'Приеми',
@@ -117,6 +117,7 @@ $text = array(
 'attrdef_regex' => '',
 'attrdef_type' => 'Тип',
 'attrdef_type_boolean' => '',
+'attrdef_type_date' => 'Дата',
 'attrdef_type_email' => '',
 'attrdef_type_float' => '',
 'attrdef_type_int' => '',
@@ -423,6 +424,8 @@ $text = array(
 'invalid_create_date_end' => 'Неправилна крайна дата за диапазаона на датата на създаване',
 'invalid_create_date_start' => 'Неправилна начална дата за диапазаона на датата на създаване',
 'invalid_doc_id' => 'Неправилен идентификатор на документа',
+'invalid_expiration_date_end' => '',
+'invalid_expiration_date_start' => '',
 'invalid_file_id' => 'Неправилен идентификатор на файла',
 'invalid_folder_id' => 'Неправилен идентификатор на папка',
 'invalid_group_id' => 'Неправилен идентификатор на група',
@@ -1093,6 +1096,7 @@ $text = array(
 'timeline_full_add_file' => '',
 'timeline_full_add_version' => '',
 'timeline_full_status_change' => '',
+'timeline_selected_item' => '',
 'timeline_skip_add_file' => '',
 'timeline_skip_status_change_-1' => '',
 'timeline_skip_status_change_-3' => '',

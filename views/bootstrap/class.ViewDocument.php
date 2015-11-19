@@ -71,6 +71,45 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		}
 	} /* }}} */
 
+	function timelinedata() { /* {{{ */
+		$dms = $this->params['dms'];
+		$user = $this->params['user'];
+		$document = $this->params['document'];
+
+		$jsondata = array();
+		if($user->isAdmin()) {
+			$data = $document->getTimeline();
+
+			foreach($data as $i=>$item) {
+				switch($item['type']) {
+				case 'add_version':
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
+					break;
+				case 'add_file':
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName())));
+					break;
+				case 'status_change':
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
+					break;
+				default:
+					$msg = '???';
+				}
+				$data[$i]['msg'] = $msg;
+			}
+
+			foreach($data as $item) {
+				if($item['type'] == 'status_change')
+					$classname = $item['type']."_".$item['status'];
+				else
+					$classname = $item['type'];
+				$d = makeTsFromLongDate($item['date']);
+				$jsondata[] = array('start'=>date('c', $d)/*$item['date']*/, 'content'=>$item['msg'], 'className'=>$classname);
+			}
+		}
+		header('Content-Type: application/json');
+		echo json_encode($jsondata);
+	} /* }}} */
+
 	function show() { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
@@ -338,7 +377,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		print "</td>\n";
 
 		print "<td><ul class=\"actions unstyled\">\n";
-		print "<li>".$latestContent->getOriginalFileName() ."</li>\n";
+		print "<li class=\"wordbreak\">".$latestContent->getOriginalFileName() ."</li>\n";
 		print "<li>".getMLText('version').": ".$latestContent->getVersion()."</li>\n";
 
 		if ($file_exists)
@@ -1132,7 +1171,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 					}
 					$item['msg'] = $msg;
 				}
-				$this->printTimeline($timeline, 300, '', date('Y-m-d'));
+				$this->printTimeline('out.ViewDocument.php?action=timelinedata&documentid='.$document->getID(), 300, '', date('Y-m-d'));
 			}
 		}
 ?>

@@ -231,7 +231,15 @@ full text search engine support, you will also need to unpack
   but not accessible through the web.
 
 For security reason the data folder should not be inside the public folders
-or should be protected by a .htaccess file.
+or should be protected by a .htaccess file. The folder containing the
+configuration (settings.xml) must be protected by an .htaccess file like the
+following.
+
+	> <Files ~ "^settings\.xml">
+	> Order allow,deny
+	> Deny from all
+	> </Files>
+
 
 If you install SeedDMS for the first time continue with the database setup.
 
