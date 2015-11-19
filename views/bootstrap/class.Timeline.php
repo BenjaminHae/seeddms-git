@@ -87,23 +87,23 @@ class SeedDMS_View_Timeline extends SeedDMS_Bootstrap_Style {
 			$to = time()-7*86400;
 		}
 
-		$data = $dms->getTimeline($from, $to);
-
-		foreach($data as &$item) {
-			switch($item['type']) {
-			case 'add_version':
-				$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
-				break;
-			case 'add_file':
-				$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName())));
-				break;
-			case 'status_change':
-				$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
-				break;
-			default:
-				$msg = '???';
+		if($data = $dms->getTimeline($from, $to)) {
+			foreach($data as &$item) {
+				switch($item['type']) {
+				case 'add_version':
+					$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
+					break;
+				case 'add_file':
+					$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName())));
+					break;
+				case 'status_change':
+					$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
+					break;
+				default:
+					$msg = '???';
+				}
+				$item['msg'] = $msg;
 			}
-			$item['msg'] = $msg;
 		}
 
 		$jsondata = array();
