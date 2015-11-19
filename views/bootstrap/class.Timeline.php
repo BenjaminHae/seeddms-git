@@ -82,13 +82,13 @@ class SeedDMS_View_Timeline extends SeedDMS_Bootstrap_Style {
 		}
 
 		if($todate) {
-			$to = makeTsFromLongDate($todate.' 00:00:00');
+			$to = makeTsFromLongDate($todate.' 23:59:59');
 		} else {
 			$to = time()-7*86400;
 		}
 
 		if($data = $dms->getTimeline($from, $to)) {
-			foreach($data as &$item) {
+			foreach($data as $i=>$item) {
 				switch($item['type']) {
 				case 'add_version':
 					$msg = getMLText('timeline_full_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
@@ -102,7 +102,7 @@ class SeedDMS_View_Timeline extends SeedDMS_Bootstrap_Style {
 				default:
 					$msg = '???';
 				}
-				$item['msg'] = $msg;
+				$data[$i]['msg'] = $msg;
 			}
 		}
 
@@ -144,7 +144,7 @@ class SeedDMS_View_Timeline extends SeedDMS_Bootstrap_Style {
 		}
 
 		if($todate) {
-			$to = makeTsFromLongDate($todate.' 00:00:00');
+			$to = makeTsFromLongDate($todate.' 23:59:59');
 		} else {
 			$to = time();
 		}
@@ -206,7 +206,6 @@ echo "<div class=\"well\">\n";
 $(document).ready(function () {
 	$('#update').click(function(ev){
 		ev.preventDefault();
-		console.log($('#form1').serialize());
 		$.getJSON(
 			'out.Timeline.php?action=data&' + $('#form1').serialize(), 
 			function(data) {
