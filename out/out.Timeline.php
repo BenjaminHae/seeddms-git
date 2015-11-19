@@ -33,17 +33,6 @@ if (!$user->isAdmin()) {
 }
 $rootfolder = $dms->getFolder($settings->_rootFolderID);
 
-if(!empty($_GET['fromdate'])) {
-	$from = makeTsFromLongDate($_GET['fromdate'].' 00:00:00');
-} else {
-	$from = time()-7*86400;
-}
-if(!empty($_GET['todate'])) {
-	$to = makeTsFromLongDate($_GET['todate'].' 23:59:59');
-} else {
-	$to = time();
-}
-
 if(isset($_GET['skip']))
 	$skip = $_GET['skip'];
 else
