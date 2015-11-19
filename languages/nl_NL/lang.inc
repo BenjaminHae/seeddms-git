@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (709), pepijn (45), reinoutdijkstra@hotmail.com (270)
+//    Translators: Admin (710), pepijn (45), reinoutdijkstra@hotmail.com (270)
 
 $text = array(
 'accept' => 'Accept',
@@ -1245,7 +1245,7 @@ URL: [url]',
 'timeline_skip_status_change_1' => '',
 'timeline_skip_status_change_2' => '',
 'timeline_skip_status_change_3' => '',
-'timeline_status_change' => '',
+'timeline_status_change' => 'Versie [version]: [status]',
 'to' => 'Aan',
 'toggle_manager' => 'Wijzig Beheerder',
 'to_before_from' => 'De einddatum mag niet voor de startdatum liggen',

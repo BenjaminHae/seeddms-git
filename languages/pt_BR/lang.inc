@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (899), flaviove (627), lfcristofoli (352)
+//    Translators: Admin (902), flaviove (627), lfcristofoli (352)
 
 $text = array(
 'accept' => 'Aceitar',
@@ -1237,7 +1237,7 @@ URL: [url]',
 'theme' => 'Tema',
 'thursday' => 'Thursday',
 'thursday_abbr' => 'Th',
-'timeline' => '',
+'timeline' => 'Linha do Tempo',
 'timeline_add_file' => '',
 'timeline_add_version' => '',
 'timeline_full_add_file' => '',
@@ -1251,7 +1251,7 @@ URL: [url]',
 'timeline_skip_status_change_1' => '',
 'timeline_skip_status_change_2' => '',
 'timeline_skip_status_change_3' => '',
-'timeline_status_change' => '',
+'timeline_status_change' => 'Versão [versão]: [estado]',
 'to' => 'To',
 'toggle_manager' => 'Toggle manager',
 'to_before_from' => 'A data de término não pode ser anterior a data de início',
@@ -1273,7 +1273,7 @@ URL: [url]',
 'transmittal_comment' => '',
 'transmittal_name' => '',
 'transmittal_size' => '',
-'tree_loading' => '',
+'tree_loading' => 'Aguarde, a estrutura de diretórios está sendo carregada...',
 'trigger_workflow' => 'Fluxo de trabalho',
 'tr_TR' => 'Turco',
 'tuesday' => 'Tuesday',

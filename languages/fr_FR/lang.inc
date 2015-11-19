@@ -19,7 +19,7 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//    Translators: Admin (999), jeromerobert (50), lonnnew (9)
+//    Translators: Admin (1003), jeromerobert (50), lonnnew (9)
 
 $text = array(
 'accept' => 'Accepter',
@@ -569,13 +569,13 @@ URL: [url]',
 'manager' => 'Responsable',
 'manager_of_group' => 'Vous êtes le gestionnaire de ce groupe',
 'mandatory_approvergroups' => 'Obligatoire : groupes de valideurs',
-'mandatory_approvergroup_no_access' => '',
+'mandatory_approvergroup_no_access' => 'Groupe requis d\'approbateurs \'[group]\' ne dispose pas des droits suffisants',
 'mandatory_approvers' => '',
 'mandatory_approver_no_access' => '',
 'mandatory_reviewergroups' => 'Obligatoire : groupe des relecteurs',
-'mandatory_reviewergroup_no_access' => '',
-'mandatory_reviewers' => '',
-'mandatory_reviewer_no_access' => '',
+'mandatory_reviewergroup_no_access' => 'Groupe d\'examinateurs \'[group]\' ne dispose pas des droits suffisants',
+'mandatory_reviewers' => 'Examinateurs',
+'mandatory_reviewer_no_access' => 'Examinateur \'[user]\' ne dispose pas des droits suffisants',
 'march' => 'Mars',
 'max_upload_size' => 'Taille maximum de fichier déposé',
 'may' => 'Mai',
