@@ -2246,9 +2246,8 @@ class SeedDMS_Core_DMS {
 
 		$queryStr = "SELECT document FROM tblDocumentContent WHERE date > ".$startts." AND date < ".$endts;
 		$resArr = $this->db->getResultArray($queryStr);
-		if (!$resArr)
+		if ($resArr === false)
 			return false;
-		$resArr = $this->db->getResultArray($queryStr);
 		foreach($resArr as $rec) {
 			$document = $this->getDocument($rec['document']);
 			$timeline = array_merge($timeline, $document->getTimeline());
