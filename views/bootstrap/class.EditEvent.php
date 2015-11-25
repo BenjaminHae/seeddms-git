@@ -82,8 +82,8 @@ function checkForm()
 		<tr>
 			<td><?php printMLText("from");?>:</td>
 			<td><?php //$this->printDateChooser($event["start"], "from");?>
-    		<span class="input-append date span12" id="fromdate" data-date="<?php echo date('d-m-Y', $event["start"]); ?>" data-date-format="dd-mm-yyyy">
-      		<input class="span6" size="16" name="from" type="text" value="<?php echo date('d-m-Y', $event["start"]); ?>">
+    		<span class="input-append date span12" id="fromdate" data-date="<?php echo date('Y-m-d', $event["start"]); ?>" data-date-format="yyyy-mm-dd">
+      		<input class="span6" size="16" name="from" type="text" value="<?php echo date('Y-m-d', $event["start"]); ?>">
       		<span class="add-on"><i class="icon-calendar"></i></span>
     		</span>
 			</td>
@@ -91,8 +91,8 @@ function checkForm()
 		<tr>
 			<td><?php printMLText("to");?>:</td>
 			<td><?php //$this->printDateChooser($event["stop"], "to");?>
-    		<span class="input-append date span12" id="todate" data-date="<?php echo date('d-m-Y', $event["stop"]); ?>" data-date-format="dd-mm-yyyy">
-      		<input class="span6" size="16" name="to" type="text" value="<?php echo date('d-m-Y', $event["stop"]); ?>">
+    		<span class="input-append date span12" id="todate" data-date="<?php echo date('Y-m-d', $event["stop"]); ?>" data-date-format="yyyy-mm-dd">
+      		<input class="span6" size="16" name="to" type="text" value="<?php echo date('Y-m-d', $event["stop"]); ?>">
       		<span class="add-on"><i class="icon-calendar"></i></span>
     		</span>
 			</td>

@@ -25,15 +25,24 @@
  * @version    Release: @package_version@
  */
 class SeedDMS_View_Common {
-	var $theme;
+	protected $theme;
 
-	var $params;
-
-//	var $settings;
+	protected $params;
 
 	function __construct($params, $theme='blue') {
 		$this->theme = $theme;
 		$this->params = $params;
+	}
+
+	function __invoke($get=array()) {
+		if(isset($get['action']) && $get['action']) {
+			if(method_exists($this, $get['action'])) {
+				$this->{$get['action']}();
+			} else {
+				echo "Missing action '".$get['action']."'";
+			}
+		} else
+			$this->show();
 	}
 
 	function setParams($params) {
@@ -44,19 +53,18 @@ class SeedDMS_View_Common {
 		$this->params[$name] = $value;
 	}
 
+	function getParam($name) {
+		if(isset($this->params[$name]))
+			return $this->params[$name];
+		return null;
+	}
+
 	function unsetParam($name) {
 		if(isset($this->params[$name]))
 			unset($this->params[$name]);
 	}
 
-/*
-	function setConfiguration($conf) {
-		$this->settings = $conf;
-	}
-*/
-
 	function show() {
-
 	}
 }
 ?>

@@ -62,7 +62,8 @@ if (isset($_GET["version"])) {
 	//header("Content-Type: application/force-download; name=\"" . mydmsDecodeString($content->getOriginalFileName()) . "\"");
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($dms->contentDir . $content->getPath() ));
-	header("Content-Disposition: attachment; filename=\"" . $content->getOriginalFileName() . "\"");
+	$efilename = rawurlencode($content->getOriginalFileName());
+	header("Content-Disposition: attachment; filename=\"" . $efilename . "\"; filename*=UTF-8''".$efilename);
 	//header("Expires: 0");
 	header("Content-Type: " . $content->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");
@@ -106,7 +107,8 @@ if (isset($_GET["version"])) {
 	header("Content-Type: application/force-download; name=\"" . $file->getOriginalFileName() . "\"");
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($dms->contentDir . $file->getPath() ));
-	header("Content-Disposition: attachment; filename=\"" . $file->getOriginalFileName() . "\"");
+	$efilename = rawurlencode($file->getOriginalFileName());
+	header("Content-Disposition: attachment; filename=\"" . $efilename . "\"; filename*=UTF-8''".$efilename);
 	//header("Expires: 0");
 	header("Content-Type: " . $file->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");
@@ -134,7 +136,8 @@ if (isset($_GET["version"])) {
 	header("Content-Type: application/zip");
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($settings->_contentDir . $filename ));
-	header("Content-Disposition: attachment; filename=\"" .$filename . "\"");
+	$efilename = rawurlencode($filename);
+	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"; filename*=UTF-8''".$efilename);
 //	header("Expires: 0");
 	//header("Content-Type: " . $content->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");
@@ -160,7 +163,8 @@ if (isset($_GET["version"])) {
 	header("Content-Type: text/plain; name=\"" . $filename . "\"");
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($settings->_contentDir . $filename ));
-	header("Content-Disposition: attachment; filename=\"" .$filename . "\"");
+	$efilename = rawurlencode($filename);
+	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"; filename*=UTF-8''".$efilename);
 	header("Cache-Control: must-revalidate");
 	
 	readfile($settings->_contentDir .$filename );
@@ -184,7 +188,8 @@ if (isset($_GET["version"])) {
 	//header("Content-Type: application/force-download; name=\"" . $settings->_versioningFileName . "\"");
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($dms->contentDir.$document->getDir().$settings->_versioningFileName )."\"");
-	header("Content-Disposition: attachment; filename=\"". $settings->_versioningFileName . "\"");
+	$efilename = rawurlencode($settings->_versioningFileName);
+	header("Content-Disposition: attachment; filename=\"". $efilename . "\"");
 	//header("Expires: 0");
 	//header("Content-Type: " . $content->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");
@@ -210,7 +215,8 @@ if (isset($_GET["version"])) {
 	//header("Content-Type: application/force-download; name=\"" . $filename . "\"");
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . filesize($settings->_contentDir . $filename ));
-	header("Content-Disposition: attachment; filename=\"" .$filename . "\"");
+	$efilename = rawurlencode($filename);
+	header("Content-Disposition: attachment; filename=\"" .$efilename . "\"; filename*=UTF-8''".$efilename);
 	//header("Expires: 0");
 	//header("Content-Type: " . $content->getMimeType());
 	//header("Cache-Control: no-cache, must-revalidate");

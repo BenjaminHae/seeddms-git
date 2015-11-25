@@ -123,7 +123,7 @@ $expires = false;
 if (!isset($_POST['expires']) || $_POST["expires"] != "false") {
 	if($_POST["expdate"]) {
 		$tmp = explode('-', $_POST["expdate"]);
-		$expires = mktime(0,0,0, $tmp[1], $tmp[0], $tmp[2]);
+		$expires = mktime(0,0,0, $tmp[1], $tmp[2], $tmp[0]);
 	} else {
 		$expires = mktime(0,0,0, $_POST["expmonth"], $_POST["expday"], $_POST["expyear"]);
 	}
@@ -293,15 +293,10 @@ for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
 			}
 		}
 		if($settings->_enableFullSearch) {
-			if(!empty($settings->_luceneClassDir))
-				require_once($settings->_luceneClassDir.'/Lucene.php');
-			else
-				require_once('SeedDMS/Lucene.php');
-
-			$index = SeedDMS_Lucene_Indexer::open($settings->_luceneDir);
+			$index = $indexconf['Indexer']::open($settings->_luceneDir);
 			if($index) {
-				SeedDMS_Lucene_Indexer::init($settings->_stopWordsFile);
-				$index->addDocument(new SeedDMS_Lucene_IndexedDocument($dms, $document, isset($settings->_converters['fulltext']) ? $settings->_converters['fulltext'] : null, true));
+				$indexconf['Indexer']::init($settings->_stopWordsFile);
+				$index->addDocument(new $indexconf['IndexedDocument']($dms, $document, isset($settings->_converters['fulltext']) ? $settings->_converters['fulltext'] : null, true));
 			}
 		}
 
@@ -332,21 +327,6 @@ for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
 		// Send notification to subscribers of folder.
 		if($notifier) {
 			$notifyList = $folder->getNotifyList();
-			if($settings->_enableNotificationAppRev) {
-				/* Reviewers and approvers will be informed about the new document */
-				foreach($reviewers['i'] as $reviewerid) {
-					$notifyList['users'][] = $dms->getUser($reviewerid);
-				}
-				foreach($approvers['i'] as $approverid) {
-					$notifyList['users'][] = $dms->getUser($approverid);
-				}
-				foreach($reviewers['g'] as $reviewergrpid) {
-					$notifyList['groups'][] = $dms->getGroup($reviewergrpid);
-				}
-				foreach($approvers['g'] as $approvergrpid) {
-					$notifyList['groups'][] = $dms->getGroup($approvergrpid);
-				}
-			}
 
 			$subject = "new_document_email_subject";
 			$message = "new_document_email_body";
@@ -385,6 +365,51 @@ for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
 					}
 					foreach($ntransition->getGroups() as $tuser) {
 						$notifier->toGroup($user, $tuser->getGroup(), $subject, $message, $params);
+					}
+				}
+			}
+
+			if($settings->_enableNotificationAppRev) {
+				/* Reviewers and approvers will be informed about the new document */
+				if($reviewers['i'] || $reviewers['g']) {
+					$subject = "review_request_email_subject";
+					$message = "review_request_email_body";
+					$params = array();
+					$params['name'] = $document->getName();
+					$params['folder_path'] = $folder->getFolderPathPlain();
+					$params['version'] = $reqversion;
+					$params['comment'] = $comment;
+					$params['username'] = $user->getFullName();
+					$params['url'] = "http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'].$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
+					$params['sitename'] = $settings->_siteName;
+					$params['http_root'] = $settings->_httpRoot;
+
+					foreach($reviewers['i'] as $reviewerid) {
+						$notifier->toIndividual($user, $dms->getUser($reviewerid), $subject, $message, $params);
+					}
+					foreach($reviewers['g'] as $reviewergrpid) {
+						$notifier->toGroup($user, $dms->getGroup($reviewergrpid), $subject, $message, $params);
+					}
+				}
+
+				if($approvers['i'] || $approvers['g']) {
+					$subject = "approval_request_email_subject";
+					$message = "approval_request_email_body";
+					$params = array();
+					$params['name'] = $document->getName();
+					$params['folder_path'] = $folder->getFolderPathPlain();
+					$params['version'] = $reqversion;
+					$params['comment'] = $comment;
+					$params['username'] = $user->getFullName();
+					$params['url'] = "http".((isset($_SERVER['HTTPS']) && (strcmp($_SERVER['HTTPS'],'off')!=0)) ? "s" : "")."://".$_SERVER['HTTP_HOST'].$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
+					$params['sitename'] = $settings->_siteName;
+					$params['http_root'] = $settings->_httpRoot;
+
+					foreach($approvers['i'] as $approverid) {
+						$notifier->toIndividual($user, $dms->getUser($approverid), $subject, $message, $params);
+					}
+					foreach($approvers['g'] as $approvergrpid) {
+						$notifier->toGroup($user, $dms->getGroup($approvergrpid), $subject, $message, $params);
 					}
 				}
 			}

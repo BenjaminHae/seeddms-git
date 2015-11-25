@@ -28,7 +28,7 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		$this->theme = $theme;
 		$this->params = $params;
 		$this->imgpath = '../views/'.$theme.'/images/';
-		$this->extraheader = '';
+		$this->extraheader = array('js'=>'', 'css'=>'');
 		$this->footerjs = array();
 	}
 
@@ -53,12 +53,14 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		echo '<link href="../styles/'.$this->theme.'/datepicker/css/datepicker.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/chosen/css/chosen.css" rel="stylesheet">'."\n";
 		echo '<link href="../styles/'.$this->theme.'/jqtree/jqtree.css" rel="stylesheet">'."\n";
+		if($this->extraheader['css'])
+			echo $this->extraheader['css'];
 		echo '<link href="../styles/'.$this->theme.'/application.css" rel="stylesheet">'."\n";
 //		echo '<link href="../styles/'.$this->theme.'/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">'."\n";
 
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/jquery/jquery.min.js"></script>'."\n";
-		if($this->extraheader)
-			echo $this->extraheader;
+		if($this->extraheader['js'])
+			echo $this->extraheader['js'];
 		echo '<script type="text/javascript" src="../js/jquery.passwordstrength.js"></script>'."\n";
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/noty/jquery.noty.js"></script>'."\n";
 		echo '<script type="text/javascript" src="../styles/'.$this->theme.'/noty/layouts/topRight.js"></script>'."\n";
@@ -98,8 +100,8 @@ background-image: linear-gradient(to bottom, #882222, #111111);;
 		}
 	} /* }}} */
 
-	function htmlAddHeader($head) { /* {{{ */
-		$this->extraheader .= $head;
+	function htmlAddHeader($head, $type='js') { /* {{{ */
+		$this->extraheader[$type] .= $head;
 	} /* }}} */
 
 	function htmlEndPage() { /* {{{ */
@@ -243,7 +245,7 @@ $(document).ready(function () {
 		echo "   <a class=\"brand\" href=\"../out/out.ViewFolder.php?folderid=".$this->params['rootfolderid']."\">".(strlen($this->params['sitename'])>0 ? $this->params['sitename'] : "SeedDMS")."</a>\n";
 		if(isset($this->params['user']) && $this->params['user']) {
 			echo "   <div class=\"nav-collapse nav-col1\">\n";
-			echo "   <ul id=\"main-menu-admin\"class=\"nav pull-right\">\n";
+			echo "   <ul id=\"main-menu-admin\" class=\"nav pull-right\">\n";
 			echo "    <li class=\"dropdown\">\n";
 			echo "     <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".($this->params['session']->getSu() ? getMLText("switched_to") : getMLText("signed_in_as"))." '".htmlspecialchars($this->params['user']->getFullName())."' <i class=\"icon-caret-down\"></i></a>\n";
 			echo "     <ul class=\"dropdown-menu\" role=\"menu\">\n";
@@ -346,8 +348,6 @@ $(document).ready(function () {
 	function pageNavigation($pageTitle, $pageType=null, $extra=null) { /* {{{ */
 
 		if ($pageType!=null && strcasecmp($pageType, "noNav")) {
-			if($pageType == "view_folder" || $pageType == "view_document")
-				echo $pageTitle."\n";
 			echo "<div class=\"navbar\">\n";
 			echo " <div class=\"navbar-inner\">\n";
 			echo "  <div class=\"container\">\n";
@@ -378,6 +378,8 @@ $(document).ready(function () {
 			echo " 	</div>\n";
 			echo " </div>\n";
 			echo "</div>\n";
+			if($pageType == "view_folder" || $pageType == "view_document")
+				echo $pageTitle."\n";
 		} else {
 			echo "<legend>".$pageTitle."</legend>\n";
 		}
@@ -566,8 +568,9 @@ $(document).ready(function () {
 		echo "    <li class=\"dropdown\">\n";
 		echo "     <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".getMLText("misc")." <i class=\"icon-caret-down\"></i></a>\n";
 		echo "     <ul class=\"dropdown-menu\" role=\"menu\">\n";
-		echo "      <li id=\"first\"><a href=\"../out/out.Statistic.php\">".getMLText("folders_and_documents_statistic")."</a></li>\n";
-		echo "      <li id=\"first\"><a href=\"../out/out.Charts.php\">".getMLText("charts")."</a></li>\n";
+		echo "      <li><a href=\"../out/out.Statistic.php\">".getMLText("folders_and_documents_statistic")."</a></li>\n";
+		echo "      <li><a href=\"../out/out.Charts.php\">".getMLText("charts")."</a></li>\n";
+		echo "      <li><a href=\"../out/out.Timeline.php\">".getMLText("timeline")."</a></li>\n";
 		echo "      <li><a href=\"../out/out.ObjectCheck.php\">".getMLText("objectcheck")."</a></li>\n";
 		echo "      <li><a href=\"../out/out.Info.php\">".getMLText("version_info")."</a></li>\n";
 		echo "     </ul>\n";
@@ -879,7 +882,7 @@ $(document).ready(function () {
     <h3 id="docChooserLabel"><?php printMLText("choose_target_document") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until document tree is loaded …</p>
+		<p><?php printMLText('tree_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -911,7 +914,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="folderChooser<?php echo $formName ?>Label"><?php printMLText("choose_target_folder") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until document tree is loaded …</p>
+		<p><?php printMLText('tree_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -970,7 +973,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="categoryChooserLabel"><?php printMLText("choose_target_category") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until category list is loaded …</p>
+		<p><?php printMLText('categories_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -992,7 +995,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="keywordChooserLabel"><?php printMLText("use_default_keywords") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until keyword list is loaded …</p>
+		<p><?php printMLText('keywords_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -1003,30 +1006,49 @@ function folderSelected<?php echo $formName ?>(id, name) {
 	} /* }}} */
 
 	function printAttributeEditField($attrdef, $objvalue, $fieldname='attributes') { /* {{{ */
-		if($valueset = $attrdef->getValueSetAsArray()) {
-			echo "<select name=\"".$fieldname."[".$attrdef->getId()."]";
-			if($attrdef->getMultipleValues()) {
-				echo "[]\" multiple";
+		switch($attrdef->getType()) {
+		case SeedDMS_Core_AttributeDefinition::type_boolean:
+			echo "<input type=\"checkbox\" name=\"".$fieldname."[".$attrdef->getId()."]\" value=\"1\" ".($objvalue ? 'checked' : '')." />";
+			break;
+		case SeedDMS_Core_AttributeDefinition::type_date:
+?>
+        <span class="input-append date datepicker" style="display: inline;" data-date="<?php echo date('Y-m-d'); ?>" data-date-format="yyyy-mm-dd" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
+					<input class="span4" size="16" name="<?= $fieldname ?>[<?= $attrdef->getId() ?>]" type="text" value="<?php if($objvalue) echo $objvalue; else echo "" /*date('Y-m-d')*/; ?>">
+          <span class="add-on"><i class="icon-calendar"></i></span>
+				</span>
+<?php
+			break;
+		default:
+			if($valueset = $attrdef->getValueSetAsArray()) {
+				echo "<select name=\"".$fieldname."[".$attrdef->getId()."]";
+				if($attrdef->getMultipleValues()) {
+					echo "[]\" multiple";
+				} else {
+					echo "\"";
+				}
+				echo ">";
+				if(!$attrdef->getMultipleValues()) {
+					echo "<option value=\"\"></option>";
+				}
+				foreach($valueset as $value) {
+					if($value) {
+						echo "<option value=\"".htmlspecialchars($value)."\"";
+						if(is_array($objvalue) && in_array($value, $objvalue))
+							echo " selected";
+						elseif($value == $objvalue)
+							echo " selected";
+						echo ">".htmlspecialchars($value)."</option>";
+					}
+				}
+				echo "</select>";
 			} else {
-				echo "\"";
-			}
-			echo ">";
-			if(!$attrdef->getMultipleValues()) {
-				echo "<option value=\"\"></option>";
-			}
-			foreach($valueset as $value) {
-				if($value) {
-					echo "<option value=\"".htmlspecialchars($value)."\"";
-					if(is_array($objvalue) && in_array($value, $objvalue))
-						echo " selected";
-					elseif($value == $objvalue)
-						echo " selected";
-					echo ">".htmlspecialchars($value)."</option>";
+				if (strlen($objvalue) > 80) {
+					echo '<textarea class="input-xxlarge" name="'.$fieldname.'['.$attrdef->getId().']">'.htmlspecialchars($objvalue).'</textarea>';
+				} else {
+					echo "<input type=\"text\" name=\"".$fieldname."[".$attrdef->getId()."]\" value=\"".htmlspecialchars($objvalue)."\" />";
 				}
 			}
-			echo "</select>";
-		} else {
-			echo "<input type=\"text\" name=\"".$fieldname."[".$attrdef->getId()."]\" value=\"".htmlspecialchars($objvalue)."\" />";
+			break;
 		}
 	} /* }}} */
 
@@ -1043,7 +1065,7 @@ function folderSelected<?php echo $formName ?>(id, name) {
     <h3 id="dropfolderChooserLabel"><?php printMLText("choose_target_file") ?></h3>
   </div>
   <div class="modal-body">
-    <p>Please wait, until file list is loaded …</p>
+		<p><?php printMLText('files_loading') ?></p>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><?php printMLText("close") ?></button>
@@ -1196,7 +1218,8 @@ function clearFilename<?php print $formName ?>() {
 	<script language="JavaScript">
 var data = <?php echo json_encode($tree); ?>;
 $(function() {
-  $('#jqtree<?php echo $formid ?>').tree({
+	$('#jqtree<?php echo $formid ?>').tree({
+		saveState: true,
 		data: data,
 		openedIcon: '<i class="icon-minus-sign"></i>',
 		closedIcon: '<i class="icon-plus-sign"></i>',
@@ -1904,6 +1927,7 @@ mayscript>
 	 */
 	protected function printProtocol($latestContent, $type="") { /* {{{ */
 		$dms = $this->params['dms'];
+		$document = $latestContent->getDocument();
 ?>
 		<legend><?php printMLText($type.'_log'); ?></legend>
 		<table class="table condensed">
@@ -1957,13 +1981,13 @@ mayscript>
 			case "review":
 				if($rec['file']) {
 					echo "<br />";
-					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+					echo "<a href=\"../op/op.Download.php?documentid=".$document->getID()."&reviewlogid=".$rec['reviewLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 				}
 				break;
 			case "approval":
 				if($rec['file']) {
 					echo "<br />";
-					echo "<a href=\"../op/op.Download.php?documentid=".$documentid."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
+					echo "<a href=\"../op/op.Download.php?documentid=".$document->getID()."&approvelogid=".$rec['approveLogID']."\" class=\"btn btn-mini\"><i class=\"icon-download\"></i> ".getMLText('download')."</a>";
 				}
 				break;
 			}
@@ -1983,6 +2007,92 @@ mayscript>
 		}
 ?>
 				</table>
+<?php
+	} /* }}} */
+
+	/**
+	 * Show progressbar
+	 *
+	 * @param double $value value
+	 * @param double $max 100% value
+	 */
+	protected function getProgressBar($value, $max=100.0) { /* {{{ */
+		if($max > $value) {
+			$used = (int) ($value/$max*100.0+0.5);
+			$free = 100-$used;
+		} else {
+			$free = 0;
+			$used = 100;
+		}
+		$html = '
+		<div class="progress">
+			<div class="bar bar-danger" style="width: '.$used.'%;"></div>
+		  <div class="bar bar-success" style="width: '.$free.'%;"></div>
+		</div>';
+		return $html;
+	} /* }}} */
+
+	/**
+	 * Output a timeline for a document
+	 *
+	 * @param object $document document
+	 */
+	protected function printTimeline($timelineurl, $height=300, $start='', $end='', $skip=array()) { /* {{{ */
+		if(!$timelineurl)
+			return;
+?>
+	<script type="text/javascript">
+		var timeline;
+		var data;
+
+		// specify options
+		var options = {
+			'width':  '100%',
+			'height': '100%',
+<?php
+		if($start) {
+			$tmp = explode('-', $start);
+			echo "\t\t\t'min': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),\n";
+		}
+		if($end) {
+			$tmp = explode('-', $end);
+			echo "'\t\t\tmax': new Date(".$tmp[0].", ".($tmp[1]-1).", ".$tmp[2]."),\n";
+		}
+?>
+			'editable': false,
+			'selectable': true,
+			'style': 'box',
+			'locale': '<?= $this->params['session']->getLanguage() ?>'
+		};
+
+		function onselect() {
+			var sel = timeline.getSelection();
+			if (sel.length) {
+				if (sel[0].row != undefined) {
+					var row = sel[0].row;
+					console.log(timeline.getItem(sel[0].row));
+					item = timeline.getItem(sel[0].row);
+					$('div.ajax').trigger('update', {documentid: item.docid, version: item.version, statusid: item.statusid, statuslogid: item.statuslogid, fileid: item.fileid});
+				}
+			}
+		}
+		$(document).ready(function () {
+		// Instantiate our timeline object.
+		timeline = new links.Timeline(document.getElementById('timeline'), options);
+		links.events.addListener(timeline, 'select', onselect);
+		$.getJSON(
+			'<?= $timelineurl ?>', 
+			function(data) {
+				$.each( data, function( key, val ) {
+					val.start = new Date(val.start);
+				});
+				timeline.draw(data);
+			}
+		);
+		});
+
+	</script>
+	<div id="timeline" style="height: <?= $height ?>px;"></div>
 <?php
 	} /* }}} */
 }

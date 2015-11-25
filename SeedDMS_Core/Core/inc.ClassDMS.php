@@ -194,6 +194,17 @@ class SeedDMS_Core_DMS {
 	} /* }}} */
 
 	/**
+	 * Checks if date conforms to a given format
+	 *
+	 * @param string $date date to be checked
+	 * @return boolean true if date is in propper format, otherwise false
+	 */
+	static function checkDate($date, $format='Y-m-d H:i:s') { /* {{{ */
+		$d = DateTime::createFromFormat($format, $date);
+		return $d && $d->format($format) == $date;
+	} /* }}} */
+
+	/**
 	 * Filter objects out which are not accessible in a given mode by a user.
 	 *
 	 * @param array $objArr list of objects (either documents or folders)
@@ -269,7 +280,7 @@ class SeedDMS_Core_DMS {
 		$this->convertFileTypes = array();
 		$this->version = '@package_version@';
 		if($this->version[0] == '@')
-			$this->version = '4.3.19';
+			$this->version = '4.3.21';
 	} /* }}} */
 
 	/**
@@ -835,16 +846,16 @@ class SeedDMS_Core_DMS {
 								} else
 									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentAttributes` WHERE `tblDocumentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentAttributes`.`value`='".$attribute."' AND `tblDocumentAttributes`.`document` = `tblDocuments`.`id`)";
 							} else
-								$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentAttributes` WHERE `tblDocumentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentAttributes`.`value` like '%".$attribute."%') AND `tblDocumentAttributes`.`document` = `tblDocuments`.`id`";
+								$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentAttributes` WHERE `tblDocumentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentAttributes`.`value` like '%".$attribute."%' AND `tblDocumentAttributes`.`document` = `tblDocuments`.`id`)";
 						} elseif($attrdef->getObjType() == SeedDMS_Core_AttributeDefinition::objtype_documentcontent) {
 							if($attrdef->getValueSet()) {
 								if($attrdef->getMultipleValues()) {
 									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentContentAttributes` WHERE `tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND (`tblDocumentContentAttributes`.`value` like '%".$valueset[0].implode("%' OR `tblDocumentContentAttributes`.`value` like '%".$valueset[0], $attribute)."%') AND `tblDocumentContentAttributes`.`document` = `tblDocumentContent`.`id`)";
 								} else {
-									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentContentAttributes` WHERE `tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentContentAttributes`.`value`='".$attribute."' AND `tblDocumentContentAttributes`.content = `tblDocumentContent`.id";
+									$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentContentAttributes` WHERE `tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentContentAttributes`.`value`='".$attribute."' AND `tblDocumentContentAttributes`.content = `tblDocumentContent`.id)";
 								}
 							} else
-								$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentContentAttributes` WHERE `tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentContentAttributes`.`value` like '%".$attribute."%' AND `tblDocumentContentAttributes`.content = `tblDocumentContent`.id";
+								$searchAttributes[] = "EXISTS (SELECT NULL FROM `tblDocumentContentAttributes` WHERE `tblDocumentContentAttributes`.`attrdef`=".$attrdefid." AND `tblDocumentContentAttributes`.`value` like '%".$attribute."%' AND `tblDocumentContentAttributes`.content = `tblDocumentContent`.id)";
 						}
 					}
 				}
@@ -1587,7 +1598,7 @@ class SeedDMS_Core_DMS {
 	 */
 	function createPasswordRequest($user) { /* {{{ */
 		$hash = md5(uniqid(time()));
-		$queryStr = "INSERT INTO tblUserPasswordRequest (userID, hash, `date`) VALUES (" . $user->getId() . ", " . $this->db->qstr($hash) .", CURRENT_TIMESTAMP)";
+		$queryStr = "INSERT INTO tblUserPasswordRequest (userID, hash, `date`) VALUES (" . $user->getId() . ", " . $this->db->qstr($hash) .", ".$this->db->getCurrentDatetime().")";
 		$resArr = $this->db->getResult($queryStr);
 		if (is_bool($resArr) && !$resArr) return false;
 		return $hash;
@@ -2153,7 +2164,7 @@ class SeedDMS_Core_DMS {
 	 * documents or used space per user, recent activity, etc.
 	 *
 	 * @param string $type type of statistic
-	 * @param array statistical data
+	 * @return array statistical data
 	 */
 	function getStatisticalData($type='') { /* {{{ */
 		switch($type) {
@@ -2219,6 +2230,37 @@ class SeedDMS_Core_DMS {
 			default:
 				return array();
 		}
+	} /* }}} */
+
+	/**
+	 * Returns changes with a period of time
+	 *
+	 * This method returns a list of all changes happened in the database
+	 * within a given period of time. It currently just checks for
+	 * entries in the database tables tblDocumentContent, tblDocumentFiles,
+	 * and tblDocumentStatusLog
+	 *
+	 * @param string $start start date
+	 * @param string $end end date
+	 * @return array list of changes
+	 */
+	function getTimeline($startts='', $endts='') { /* {{{ */
+		if(!$startts)
+			$startts = mktime(0, 0, 0);
+		if(!$endts)
+			$startts = mktime(24, 0, 0);
+		$timeline = array();
+
+		$queryStr = "SELECT document FROM tblDocumentContent WHERE date > ".$startts." AND date < ".$endts;
+		$resArr = $this->db->getResultArray($queryStr);
+		if ($resArr === false)
+			return false;
+		foreach($resArr as $rec) {
+			$document = $this->getDocument($rec['document']);
+			$timeline = array_merge($timeline, $document->getTimeline());
+		}
+		return $timeline;
+
 	} /* }}} */
 
 	/**

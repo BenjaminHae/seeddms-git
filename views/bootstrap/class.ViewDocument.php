@@ -71,6 +71,45 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		}
 	} /* }}} */
 
+	function timelinedata() { /* {{{ */
+		$dms = $this->params['dms'];
+		$user = $this->params['user'];
+		$document = $this->params['document'];
+
+		$jsondata = array();
+		if($user->isAdmin()) {
+			$data = $document->getTimeline();
+
+			foreach($data as $i=>$item) {
+				switch($item['type']) {
+				case 'add_version':
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version']));
+					break;
+				case 'add_file':
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName())));
+					break;
+				case 'status_change':
+					$msg = getMLText('timeline_'.$item['type'], array('document'=>htmlspecialchars($item['document']->getName()), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
+					break;
+				default:
+					$msg = '???';
+				}
+				$data[$i]['msg'] = $msg;
+			}
+
+			foreach($data as $item) {
+				if($item['type'] == 'status_change')
+					$classname = $item['type']."_".$item['status'];
+				else
+					$classname = $item['type'];
+				$d = makeTsFromLongDate($item['date']);
+				$jsondata[] = array('start'=>date('c', $d)/*$item['date']*/, 'content'=>$item['msg'], 'className'=>$classname);
+			}
+		}
+		header('Content-Type: application/json');
+		echo json_encode($jsondata);
+	} /* }}} */
+
 	function show() { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
@@ -87,6 +126,10 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		$currenttab = $this->params['currenttab'];
 
 		$versions = $document->getContent();
+
+		$this->htmlAddHeader('<link href="../styles/'.$this->theme.'/timeline/timeline.css" rel="stylesheet">'."\n", 'css');
+		$this->htmlAddHeader('<script type="text/javascript" src="../styles/'.$this->theme.'/timeline/timeline-min.js"></script>'."\n", 'js');
+		$this->htmlAddHeader('<script type="text/javascript" src="../styles/'.$this->theme.'/timeline/timeline-locales.js"></script>'."\n", 'js');
 
 		$this->htmlStartPage(getMLText("document_title", array("documentname" => htmlspecialchars($document->getName()))));
 		$this->globalNavigation($folder);
@@ -334,7 +377,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		print "</td>\n";
 
 		print "<td><ul class=\"actions unstyled\">\n";
-		print "<li>".$latestContent->getOriginalFileName() ."</li>\n";
+		print "<li class=\"wordbreak\">".$latestContent->getOriginalFileName() ."</li>\n";
 		print "<li>".getMLText('version').": ".$latestContent->getVersion()."</li>\n";
 
 		if ($file_exists)
@@ -871,7 +914,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 				print "<li>".getMLText("uploaded_by")." <a href=\"mailto:".$updatingUser->getEmail()."\">".htmlspecialchars($updatingUser->getFullName())."</a></li>";
 				print "<li>".getLongReadableDate($version->getDate())."</li>";
 				print "</ul>\n";
-				print "<ul class=\"documentDetail\">\n";
+				print "<ul class=\"actions unstyled\">\n";
 				$attributes = $version->getAttributes();
 				if($attributes) {
 					foreach($attributes as $attribute) {
@@ -1107,6 +1150,31 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 ?>
 		  </div>
 		</div>
+<?php
+		if($user->isAdmin()) {
+			$timeline = $document->getTimeline();
+			if($timeline) {
+				$this->contentHeading(getMLText("timeline"));
+				foreach($timeline as &$item) {
+					switch($item['type']) {
+					case 'add_version':
+						$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName(), 'version'=> $item['version']));
+						break;
+					case 'add_file':
+						$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName()));
+						break;
+					case 'status_change':
+						$msg = getMLText('timeline_'.$item['type'], array('document'=>$item['document']->getName(), 'version'=> $item['version'], 'status'=> getOverallStatusText($item['status'])));
+						break;
+					default:
+						$msg = '???';
+					}
+					$item['msg'] = $msg;
+				}
+				$this->printTimeline('out.ViewDocument.php?action=timelinedata&documentid='.$document->getID(), 300, '', date('Y-m-d'));
+			}
+		}
+?>
 		  </div>
 		</div>
 <?php

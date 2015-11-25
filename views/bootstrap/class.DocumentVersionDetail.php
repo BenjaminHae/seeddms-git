@@ -303,6 +303,22 @@ class SeedDMS_View_DocumentVersionDetail extends SeedDMS_Bootstrap_Style {
 		$this->contentContainerEnd();
 
 		if($user->isAdmin()) {
+			$this->contentHeading(getMLText("status"));
+			$this->contentContainerStart();
+			$statuslog = $version->getStatusLog();
+			echo "<table class=\"table table-condensed\"><thead>";
+			echo "<th>".getMLText('date')."</th><th>".getMLText('status')."</th><th>".getMLText('user')."</th><th>".getMLText('comment')."</th></tr>\n";
+			echo "</thead><tbody>";
+			foreach($statuslog as $entry) {
+				if($suser = $dms->getUser($entry['userID']))
+					$fullname = $suser->getFullName();
+				else
+					$fullname = "--";
+				echo "<tr><td>".$entry['date']."</td><td>".getOverallStatusText($entry['status'])."</td><td>".$fullname."</td><td>".$entry['comment']."</td></tr>\n";
+			}
+			print "</tbody>\n</table>\n";
+			$this->contentContainerEnd();
+
 ?>
 			<div class="row-fluid">
 <?php

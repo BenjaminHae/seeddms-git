@@ -12,11 +12,11 @@
   <email>uwe@steinmann.cx</email>
   <active>yes</active>
  </lead>
- <date>2015-06-26</date>
- <time>16:45:59</time>
+ <date>2015-11-09</date>
+ <time>19:49:20</time>
  <version>
-  <release>4.3.19</release>
-  <api>4.3.19</api>
+  <release>4.3.22</release>
+  <api>4.3.22</api>
  </version>
  <stability>
   <release>stable</release>
@@ -24,9 +24,8 @@
  </stability>
  <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
  <notes>
-- add optional paramter $noclean to clearAccessList(), setDefaultAccess(), setInheritAccess()
-- clearAccessList() will clean up the notifier list
-- new method cleanNotifyList()
+- fix sql statement to reset password
+- pass some more information for timeline
  </notes>
  <contents>
   <dir baseinstalldir="SeedDMS" name="/">
@@ -848,6 +847,66 @@ clean workflow log when a document version was deleted
    <notes>
 - add optional paramter $msg to SeedDMS_Core_DocumentContent::verifyStatus()
 - add method SeedDMS_Core_DMS::getDuplicateDocumentContent()
+   </notes>
+  </release>
+  <release>
+   <date>2015-06-26</date>
+   <time>16:45:59</time>
+   <version>
+    <release>4.3.19</release>
+    <api>4.3.19</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
+   <notes>
+- add optional paramter $noclean to clearAccessList(), setDefaultAccess(), setInheritAccess()
+- clearAccessList() will clean up the notifier list
+- new method cleanNotifyList()
+   </notes>
+  </release>
+  <release>
+   <date>2015-06-26</date>
+   <time>16:45:59</time>
+   <version>
+    <release>4.3.20</release>
+    <api>4.3.20</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
+   <notes>
+- add method SeedDMS_Core_DMS::checkDate()
+- add method SeedDMS_Core_Document::setDate()
+- add method SeedDMS_Core_Folder::setDate()
+- date can be passed to SeedDMS_Core_DocumentContent::setStatus()
+- add method SeedDMS_Core_DocumentContent::rewriteStatusLog()
+- add method SeedDMS_Core_DocumentContent::rewriteReviewLog()
+- add method SeedDMS_Core_DocumentContent::rewriteApprovalLog()
+- access rights for guest are also taken into account if set in an acl. Previously guest could gain read rights even if the access was probibited
+by a group or user right
+   </notes>
+  </release>
+  <release>
+   <date>2015-09-28</date>
+   <time>07:53:19</time>
+   <version>
+    <release>4.3.21</release>
+    <api>4.3.21</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://opensource.org/licenses/gpl-license">GPL License</license>
+   <notes>
+- add method SeedDMS_Core_Database::getCurrentTimestamp()
+- add method SeedDMS_Core_Database::getCurrentDatetime()
+- user getCurrentTimestamp() and getCurrentDatetime() whenever possible
    </notes>
   </release>
  </changelog>

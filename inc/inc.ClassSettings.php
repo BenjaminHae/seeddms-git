@@ -87,12 +87,14 @@ class Settings { /* {{{ */
 	var $_stopWordsFile = null;
 	// enable/disable lucene fulltext search
 	var $_enableFullSearch = true;
+	// fulltext search engine
+	var $_fullSearchEngine = 'lucene';
 	// contentOffsetDirTo
 	var $_contentOffsetDir = "1048576";
 	// Maximum number of sub-directories per parent directory
 	var $_maxDirID = 32700;
 	// default language (name of a subfolder in folder "languages")
-	var $_language = "English";
+	var $_language = "en_GB";
 	// users are notified about document-changes that took place within the last $_updateNotifyTime seconds
 	var $_updateNotifyTime = 86400;
 	// files with one of the following endings can be viewed online
@@ -179,6 +181,8 @@ class Settings { /* {{{ */
 	var $_adminIP = "";
 	// Max Execution Time
 	var $_maxExecutionTime = null;
+	// command timeout
+	var $_cmdTimeout = 5;
 	// Preview image width in lists
 	var $_previewWidthList = 40;
 	// Preview image width on document details page
@@ -187,6 +191,8 @@ class Settings { /* {{{ */
 	var $_showMissingTranslations = false;
 	// Extra Path to additional software, will be added to include path
 	var $_extraPath = null;
+	// do not check version of database
+	var $_doNotCheckDBVersion = false;
 	// DB-Driver used by adodb (see adodb-readme)
 	var $_dbDriver = "mysql";
 	// DB-Server
@@ -343,6 +349,7 @@ class Settings { /* {{{ */
 		$this->_enableLanguageSelector = Settings::boolVal($tab["enableLanguageSelector"]);
 		$this->_enableThemeSelector = Settings::boolVal($tab["enableThemeSelector"]);
 		$this->_enableFullSearch = Settings::boolVal($tab["enableFullSearch"]);
+		$this->_fullSearchEngine = strval($tab["fullSearchEngine"]);
 		$this->_stopWordsFile = strval($tab["stopWordsFile"]);
 		$this->_sortUsersInList = strval($tab["sortUsersInList"]);
 		$this->_sortFoldersDefault = strval($tab["sortFoldersDefault"]);
@@ -436,6 +443,7 @@ class Settings { /* {{{ */
 		$this->_dbDatabase = strval($tab["dbDatabase"]);
 		$this->_dbUser = strval($tab["dbUser"]);
 		$this->_dbPass = strval($tab["dbPass"]);
+		$this->_doNotCheckDBVersion = Settings::boolVal($tab["doNotCheckDBVersion"]);
 
 		// XML Path: /configuration/system/smtp
 		$node = $xml->xpath('/configuration/system/smtp');
@@ -505,6 +513,7 @@ class Settings { /* {{{ */
 		$this->_contentOffsetDir = strval($tab["contentOffsetDir"]);
 		$this->_maxDirID = intval($tab["maxDirID"]);
 		$this->_updateNotifyTime = intval($tab["updateNotifyTime"]);
+		$this->_cmdTimeout = intval($tab["cmdTimeout"]);
 		if (isset($tab["maxExecutionTime"]))
 			$this->_maxExecutionTime = intval($tab["maxExecutionTime"]);
 		else
@@ -613,6 +622,7 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "enableLanguageSelector", $this->_enableLanguageSelector);
     $this->setXMLAttributValue($node, "enableThemeSelector", $this->_enableThemeSelector);
     $this->setXMLAttributValue($node, "enableFullSearch", $this->_enableFullSearch);
+    $this->setXMLAttributValue($node, "fullSearchEngine", $this->_fullSearchEngine);
     $this->setXMLAttributValue($node, "expandFolderTree", $this->_expandFolderTree);
     $this->setXMLAttributValue($node, "stopWordsFile", $this->_stopWordsFile);
     $this->setXMLAttributValue($node, "sortUsersInList", $this->_sortUsersInList);
@@ -712,6 +722,7 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "dbDatabase", $this->_dbDatabase);
     $this->setXMLAttributValue($node, "dbUser", $this->_dbUser);
     $this->setXMLAttributValue($node, "dbPass", $this->_dbPass);
+    $this->setXMLAttributValue($node, "doNotCheckVersion", $this->_doNotCheckDBVersion);
 
     // XML Path: /configuration/system/smtp
     $node = $this->getXMLNode($xml, '/configuration/system', 'smtp');
@@ -761,6 +772,7 @@ class Settings { /* {{{ */
     $this->setXMLAttributValue($node, "maxDirID", $this->_maxDirID);
     $this->setXMLAttributValue($node, "updateNotifyTime", $this->_updateNotifyTime);
     $this->setXMLAttributValue($node, "maxExecutionTime", $this->_maxExecutionTime);
+    $this->setXMLAttributValue($node, "cmdTimeout", $this->_cmdTimeout);
 
     // XML Path: /configuration/advanced/converters
     foreach($this->_converters['fulltext'] as $mimeType => $cmd)

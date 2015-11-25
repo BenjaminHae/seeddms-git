@@ -1,4 +1,4 @@
-VERSION=4.3.19
+VERSION=4.3.22
 SRC=CHANGELOG inc conf utils index.php languages views op out README.md README.Notification README.Ubuntu drop-tables-innodb.sql styles js TODO LICENSE Makefile webdav install restapi
 # webapp
 
@@ -14,6 +14,7 @@ pear:
 	(cd SeedDMS_Core/; pear package)
 	(cd SeedDMS_Lucene/; pear package)
 	(cd SeedDMS_Preview/; pear package)
+	(cd SeedDMS_SQLiteFTS/; pear package)
 
 webdav:
 	mkdir -p tmp/seeddms-webdav-$(VERSION)

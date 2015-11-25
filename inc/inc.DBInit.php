@@ -28,7 +28,7 @@ $db->connect() or die ("Could not connect to db-server \"" . $settings->_dbHostn
 
 $dms = new SeedDMS_Core_DMS($db, $settings->_contentDir.$settings->_contentOffsetDir);
 
-if(!$dms->checkVersion()) {
+if(!$settings->_doNotCheckDBVersion && !$dms->checkVersion()) {
 	echo "Database update needed.";
 	exit;
 }

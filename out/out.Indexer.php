@@ -35,25 +35,23 @@ if(!$settings->_enableFullSearch) {
 	UI::exitError(getMLText("admin_tools"),getMLText("fulltextsearch_disabled"));
 }
 
-if(!empty($settings->_luceneClassDir))
-	require_once($settings->_luceneClassDir.'/Lucene.php');
-else
-	require_once('SeedDMS/Lucene.php');
-
 if(isset($_GET['create']) && $_GET['create'] == 1) {
 	if(isset($_GET['confirm']) && $_GET['confirm'] == 1) {
-		$index = SeedDMS_Lucene_Indexer::create($settings->_luceneDir);
-		SeedDMS_Lucene_Indexer::init($settings->_stopWordsFile);
+		$index = $indexconf['Indexer']::create($settings->_luceneDir);
+		if(!$index) {
+			UI::exitError(getMLText("admin_tools"),getMLText("no_fulltextindex"));
+		}
+		$indexconf['Indexer']::init($settings->_stopWordsFile);
 	} else {
 		header('Location: out.CreateIndex.php');
 		exit;
 	}
 } else {
-	$index = SeedDMS_Lucene_Indexer::open($settings->_luceneDir);
+	$index = $indexconf['Indexer']::open($settings->_luceneDir);
 	if(!$index) {
 		UI::exitError(getMLText("admin_tools"),getMLText("no_fulltextindex"));
 	}
-	SeedDMS_Lucene_Indexer::init($settings->_stopWordsFile);
+	$indexconf['Indexer']::init($settings->_stopWordsFile);
 }
 
 if (!isset($_GET["folderid"]) || !is_numeric($_GET["folderid"]) || intval($_GET["folderid"])<1) {
@@ -65,7 +63,7 @@ else {
 $folder = $dms->getFolder($folderid);
 
 $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
-$view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user, 'index'=>$index, 'recreate'=>(isset($_GET['create']) && $_GET['create']==1), 'folder'=>$folder, 'converters'=>$settings->_converters['fulltext']));
+$view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user, 'index'=>$index, 'indexconf'=>$indexconf, 'recreate'=>(isset($_GET['create']) && $_GET['create']==1), 'folder'=>$folder, 'converters'=>$settings->_converters['fulltext'], 'timeout'=>$settings->_cmdTimeout));
 if($view) {
 	$view->show();
 	exit;

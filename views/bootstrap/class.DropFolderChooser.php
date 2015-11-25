@@ -37,8 +37,12 @@ class SeedDMS_View_DropFolderChooser extends SeedDMS_Bootstrap_Style {
 		$dropfolderfile = $this->params['dropfolderfile'];
 		$form = $this->params['form'];
 		$dropfolderdir = $this->params['dropfolderdir'];
+		$cachedir = $this->params['cachedir'];
+		$previewwidth = $this->params['previewWidthList'];
 
-		$this->htmlStartPage(getMLText("choose_target_file"));
+		$previewer = new SeedDMS_Preview_Previewer($cachedir, $previewwidth);
+
+//		$this->htmlStartPage(getMLText("choose_target_file"));
 //		$this->globalBanner();
 //		$this->pageNavigation(getMLText("choose_target_file"));
 ?>
@@ -47,7 +51,7 @@ class SeedDMS_View_DropFolderChooser extends SeedDMS_Bootstrap_Style {
 var targetName = document.<?php echo $form?>.dropfolderfile<?php print $form ?>;
 </script>
 <?php
-		$this->contentContainerStart();
+//		$this->contentContainerStart();
 
 		$dir = $dropfolderdir.'/'.$user->getLogin();
 		/* Check if we are still looking in the configured directory and
@@ -56,21 +60,32 @@ var targetName = document.<?php echo $form?>.dropfolderfile<?php print $form ?>;
 		if(dirname($dir) == $dropfolderdir) {
 			if(is_dir($dir)) {
 				$d = dir($dir);
-				echo "<table>\n";
+				echo "<table class=\"table table-condensed\">\n";
+				echo "<thead>\n";
+				echo "<tr><th></th><th>".getMLText('name')."</th><th align=\"right\">".getMLText('file_size')."</th><th>".getMLText('date')."</th></tr>\n";
+				echo "</thead>\n";
+				echo "<tbody>\n";
+				$finfo = finfo_open(FILEINFO_MIME_TYPE);
 				while (false !== ($entry = $d->read())) {
 					if($entry != '..' && $entry != '.') {
 						if(!is_dir($entry)) {
-							echo "<tr><td><span style=\"cursor: pointer;\" onClick=\"fileSelected('".$entry."');\">".$entry."</span></td><td align=\"right\">".SeedDMS_Core_File::format_filesize(filesize($dir.'/'.$entry))."</td>";
-              echo "<td><a target=\"_blank\" href=\"../op/op.ViewOnline.php?dropfile=".$entry."\"><i class=\"icon-star\"></i>" . getMLText("view_online") . "</a></td></tr>\n";
+							$mimetype = finfo_file($finfo, $dir.'/'.$entry);
+							$previewer->createRawPreview($dir.'/'.$entry, 'dropfolder/', $mimetype);
+							echo "<tr><td style=\"min-width: ".$previewwidth."px;\">";
+							if($previewer->hasRawPreview($dir.'/'.$entry, 'dropfolder/')) {
+								echo "<img class=\"mimeicon\" width=\"".$previewwidth."\"src=\"../op/op.DropFolderPreview.php?filename=".$entry."&width=".$previewwidth."\" title=\"".htmlspecialchars($mimetype)."\">";
+							}
+							echo "</td><td><span style=\"cursor: pointer;\" onClick=\"fileSelected('".$entry."');\">".$entry."</span></td><td align=\"right\">".SeedDMS_Core_File::format_filesize(filesize($dir.'/'.$entry))."</td><td>".date('Y-m-d H:i:s', filectime($dir.'/'.$entry))."</td></tr>\n";
 						}
 					}
 				}
+				echo "</tbody>\n";
 				echo "</table>\n";
 			}
 		}
 
-		$this->contentContainerEnd();
-		echo "</body>\n</html>\n";
+//		$this->contentContainerEnd();
+//		echo "</body>\n</html>\n";
 //		$this->htmlEndPage();
 	} /* }}} */
 }

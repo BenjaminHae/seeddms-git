@@ -54,21 +54,19 @@ $parent=$folder->getParent();
  * The callback must return true other the removal will be canceled.
  */
 if($settings->_enableFullSearch) {
-	if(!empty($settings->_luceneClassDir))
-		require_once($settings->_luceneClassDir.'/Lucene.php');
-	else
-		require_once('SeedDMS/Lucene.php');
-
-	$index = SeedDMS_Lucene_Indexer::open($settings->_luceneDir);
-	function removeFromIndex($index, $document) {
-		if($hits = $index->find('document_id:'.$document->getId())) {
-			$hit = $hits[0];
+	function removeFromIndex($arr, $document) {
+		$index = $arr[0];
+		$indexconf = $arr[1];
+		$lucenesearch = new $indexconf['Search']($index);
+		if($hit = $lucenesearch->getDocument($document->getID())) {
 			$index->delete($hit->id);
 			$index->commit();
 		}
 		return true;
 	}
-	$dms->setCallback('onPreRemoveDocument', 'removeFromIndex', $index);
+	$index = $indexconf['Indexer']::open($settings->_luceneDir);
+	if($index)
+		$dms->setCallback('onPreRemoveDocument', 'removeFromIndex', array($index, $indexconf));
 }
 
 $nl =	$folder->getNotifyList();

@@ -162,13 +162,13 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
         <label class="checkbox inline">
 				  <input type="checkbox" name="creationdate" value="true" <?php if($creationdate) echo "checked"; ?>/><?php printMLText("between");?>
         </label><br />
-        <span class="input-append date" style="display: inline;" id="createstartdate" data-date="<?php echo date('d-m-Y'); ?>" data-date-format="dd-mm-yyyy" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
-          <input class="span4" size="16" name="createstart" type="text" value="<?php if($startdate) printf("%02d-%02d-%04d", $startdate['day'], $startdate['month'], $startdate['year']); else echo date('d-m-Y'); ?>">
+        <span class="input-append date" style="display: inline;" id="createstartdate" data-date="<?php echo date('Y-m-d'); ?>" data-date-format="yyyy-mm-dd" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
+          <input class="span4" size="16" name="createstart" type="text" value="<?php if($startdate) printf("%04d-%02d-%02d", $startdate['year'], $startdate['month'], $startdate['day']); else echo date('Y-m-d'); ?>">
           <span class="add-on"><i class="icon-calendar"></i></span>
         </span>&nbsp;
 				<?php printMLText("and"); ?>
-        <span class="input-append date" style="display: inline;" id="createenddate" data-date="<?php echo date('d-m-Y'); ?>" data-date-format="dd-mm-yyyy" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
-          <input class="span4" size="16" name="createend" type="text" value="<?php if($stopdate) printf("%02d-%02d-%04d", $stopdate['day'], $stopdate['month'], $stopdate['year']); else echo date('d-m-Y'); ?>">
+        <span class="input-append date" style="display: inline;" id="createenddate" data-date="<?php echo date('Y-m-d'); ?>" data-date-format="yyyy-mm-dd" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
+          <input class="span4" size="16" name="createend" type="text" value="<?php if($stopdate) printf("%04d-%02d-%02d", $stopdate['year'], $stopdate['month'], $stopdate['day']); else echo date('Y-m-d'); ?>">
           <span class="add-on"><i class="icon-calendar"></i></span>
         </span>
 </td>
@@ -271,13 +271,13 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
         <label class="checkbox inline">
 				  <input type="checkbox" name="expirationdate" value="true" <?php if($expirationdate) echo "checked"; ?>/><?php printMLText("between");?>
         </label><br />
-        <span class="input-append date" style="display: inline;" id="expirationstartdate" data-date="<?php echo date('d-m-Y'); ?>" data-date-format="dd-mm-yyyy" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
-          <input class="span4" size="16" name="expirationstart" type="text" value="<?php if($expstartdate) printf("%02d-%02d-%04d", $expstartdate['day'], $expstartdate['month'], $expstartdate['year']); else echo date('d-m-Y'); ?>">
+        <span class="input-append date" style="display: inline;" id="expirationstartdate" data-date="<?php echo date('Y-m-d'); ?>" data-date-format="yyyy-mm-dd" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
+          <input class="span4" size="16" name="expirationstart" type="text" value="<?php if($expstartdate) printf("%04d-%02d-%02d", $expstartdate['year'], $expstartdate['month'], $expstartdate['day']); else echo date('Y-m-d'); ?>">
           <span class="add-on"><i class="icon-calendar"></i></span>
         </span>&nbsp;
 				<?php printMLText("and"); ?>
-        <span class="input-append date" style="display: inline;" id="expirationenddate" data-date="<?php echo date('d-m-Y'); ?>" data-date-format="dd-mm-yyyy" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
-          <input class="span4" size="16" name="expirationend" type="text" value="<?php if($expstopdate) printf("%02d-%02d-%04d", $expstopdate['day'], $expstopdate['month'], $expstopdate['year']); else echo date('d-m-Y'); ?>">
+        <span class="input-append date" style="display: inline;" id="expirationenddate" data-date="<?php echo date('Y-m-d'); ?>" data-date-format="yyyy-mm-dd" data-date-language="<?php echo str_replace('_', '-', $this->params['session']->getLanguage()); ?>">
+          <input class="span4" size="16" name="expirationend" type="text" value="<?php if($expstopdate) printf("%04d-%02d-%02d", $expstopdate['year'], $expstopdate['month'], $expstopdate['day']); else echo date('Y-m-d'); ?>">
           <span class="add-on"><i class="icon-calendar"></i></span>
         </span>
 </td>
@@ -355,7 +355,7 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 	  	echo "<div class=\"tab-pane ".(($fullsearch == true) ? 'active' : '')."\" id=\"fulltext\">\n";
 	$this->contentContainerStart();
 ?>
-<form action="../op/op.Search.php" name="form2" onsubmit="return checkForm();">
+<form action="../op/op.Search.php" name="form2" onsubmit="return checkForm();" style="min-height: 330px;">
 <input type="hidden" name="fullsearch" value="1" />
 <table class="table-condensed">
 <tr>
@@ -418,9 +418,10 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 <?php
 		echo "</div>\n";
 		echo "<div class=\"span8\">\n";
-// Database search Result {{{
+// Search Result {{{
 		$foldercount = $doccount = 0;
 		if($entries) {
+			/*
 			foreach ($entries as $entry) {
 				if(get_class($entry) == 'SeedDMS_Core_Document') {
 					$doccount++;
@@ -428,6 +429,7 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 					$foldercount++;
 				}
 			}
+			 */
 			print "<div class=\"alert\">".getMLText("search_report", array("doccount" => $totaldocs, "foldercount" => $totalfolders, 'searchtime'=>$searchTime))."</div>";
 			$this->pageList($pageNumber, $totalpages, "../op/op.Search.php", $urlparams);
 //			$this->contentContainerStart();
@@ -602,7 +604,7 @@ class SeedDMS_View_Search extends SeedDMS_Bootstrap_Style {
 //			$this->contentContainerEnd();
 			$this->pageList($pageNumber, $totalpages, "../op/op.Search.php", $_GET);
 		} else {
-			$numResults = $doccount + $foldercount;
+			$numResults = $totaldocs + $totalfolders;
 			if ($numResults == 0) {
 				print "<div class=\"alert alert-error\">".getMLText("search_no_results")."</div>";
 			}

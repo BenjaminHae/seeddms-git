@@ -137,6 +137,30 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	} /* }}} */
 
 	/**
+	 * Set creation date of the document
+	 *
+	 * @param integer $date timestamp of creation date. If false then set it
+	 * to the current timestamp
+	 * @return boolean true on success
+	 */
+	function setDate($date) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		if(!$date)
+			$date = time();
+		else {
+			if(!is_numeric($date))
+				return false;
+		}
+
+		$queryStr = "UPDATE tblFolders SET date = " . (int) $date . " WHERE id = ". $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+		$this->_date = $date;
+		return true;
+	} /* }}} */
+
+	/**
 	 * Returns the parent
 	 *
 	 * @return object parent folder or false if there is no parent folder
@@ -442,7 +466,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		//inheritAccess = true, defaultAccess = M_READ
 		$queryStr = "INSERT INTO tblFolders (name, parent, folderList, comment, date, owner, inheritAccess, defaultAccess, sequence) ".
-					"VALUES (".$db->qstr($name).", ".$this->_id.", ".$db->qstr($pathPrefix).", ".$db->qstr($comment).", ".time().", ".$owner->getID().", 1, ".M_READ.", ". $sequence.")";
+					"VALUES (".$db->qstr($name).", ".$this->_id.", ".$db->qstr($pathPrefix).", ".$db->qstr($comment).", ".$db->getCurrentTimestamp().", ".$owner->getID().", 1, ".M_READ.", ". $sequence.")";
 		if (!$db->getResult($queryStr)) {
 			$db->rollbackTransaction();
 			return false;
@@ -736,7 +760,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		$db->startTransaction();
 
 		$queryStr = "INSERT INTO tblDocuments (name, comment, date, expires, owner, folder, folderList, inheritAccess, defaultAccess, locked, keywords, sequence) VALUES ".
-					"(".$db->qstr($name).", ".$db->qstr($comment).", " . time().", ".(int) $expires.", ".$owner->getID().", ".$this->_id.",".$db->qstr($pathPrefix).", 1, ".M_READ.", -1, ".$db->qstr($keywords).", " . $sequence . ")";
+					"(".$db->qstr($name).", ".$db->qstr($comment).", ".$db->getCurrentTimestamp().", ".(int) $expires.", ".$owner->getID().", ".$this->_id.",".$db->qstr($pathPrefix).", 1, ".M_READ.", -1, ".$db->qstr($keywords).", " . $sequence . ")";
 		if (!$db->getResult($queryStr)) {
 			$db->rollbackTransaction();
 			return false;
@@ -1008,41 +1032,48 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		if(!$user)
 			return M_NONE;
 
-		/* Admins have full access */
+		/* Administrators have unrestricted access */
 		if ($user->isAdmin()) return M_ALL;
 
-		/* User has full access if he/she is the owner of the document */
+		/* The owner of the document has unrestricted access */
 		if ($user->getID() == $this->_ownerID) return M_ALL;
 
-		/* Guest has read access by default, if guest login is allowed at all */
-		if ($user->isGuest()) {
-			$mode = $this->getDefaultAccess();
-			if ($mode >= M_READ) return M_READ;
-			else return M_NONE;
-		}
-
-		/* check ACLs */
+		/* Check ACLs */
 		$accessList = $this->getAccessList();
 		if (!$accessList) return false;
 
 		foreach ($accessList["users"] as $userAccess) {
 			if ($userAccess->getUserID() == $user->getID()) {
-				return $userAccess->getMode();
+				$mode = $userAccess->getMode();
+				if ($user->isGuest()) {
+					if ($mode >= M_READ) $mode = M_READ;
+				}
+				return $mode;
 			}
 		}
+
 		/* Get the highest right defined by a group */
-		$result = 0;
-		foreach ($accessList["groups"] as $groupAccess) {
-			if ($user->isMemberOfGroup($groupAccess->getGroup())) {
-				if ($groupAccess->getMode() > $result)
-					$result = $groupAccess->getMode();
-//					return $groupAccess->getMode();
+		if($accessList['groups']) {
+			$mode = 0;
+			foreach ($accessList["groups"] as $groupAccess) {
+				if ($user->isMemberOfGroup($groupAccess->getGroup())) {
+					if ($groupAccess->getMode() > $mode)
+						$mode = $groupAccess->getMode();
+				}
+			}
+			if($mode) {
+				if ($user->isGuest()) {
+					if ($mode >= M_READ) $mode = M_READ;
+				}
+				return $mode;
 			}
 		}
-		if($result)
-			return $result;
-		$result = $this->getDefaultAccess();
-		return $result;
+
+		$mode = $this->getDefaultAccess();
+		if ($user->isGuest()) {
+			if ($mode >= M_READ) $mode = M_READ;
+		}
+		return $mode;
 	} /* }}} */
 
 	/**

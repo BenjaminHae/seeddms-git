@@ -67,6 +67,7 @@ if ($action == "saveSettings")
   $settings->_enableEmail =getBoolValue("enableEmail");
   $settings->_enableUsersView = getBoolValue("enableUsersView");
   $settings->_enableFullSearch = getBoolValue("enableFullSearch");
+	$settings->_fullSearchEngine = $_POST["fullSearchEngine"];
   $settings->_enableClipboard = getBoolValue("enableClipboard");
   $settings->_enableDropUpload = getBoolValue("enableDropUpload");
   $settings->_enableFolderTree = getBoolValue("enableFolderTree");
@@ -162,6 +163,7 @@ if ($action == "saveSettings")
   $settings->_maxDirID = intval($_POST["maxDirID"]);
   $settings->_updateNotifyTime = intval($_POST["updateNotifyTime"]);
   $settings->_maxExecutionTime = intval($_POST["maxExecutionTime"]);
+  $settings->_cmdTimeout = (intval($_POST["cmdTimeout"]) > 0) ?intval($_POST["cmdTimeout"]) : 1;
 
   // SETTINGS - ADVANCED - INDEX CMD
   $settings->_converters['fulltext'] = $_POST["converters"];

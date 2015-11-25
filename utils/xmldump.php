@@ -14,7 +14,12 @@ function usage() { /* {{{ */
 	echo "  -n, --nocontent: don't dump file contents.\n";
 	echo "  --config: set alternative config file.\n";
 	echo "  --folder: set start folder.\n";
-	echo "  --maxsize: maximum size of files to be include in output.\n";
+	echo "  --skip-root: do not export the root folder itself.\n";
+	echo "  --sections <sections>: comma seperated list of sections to export.\n";
+	echo "  --maxsize: maximum size of files to be included in output\n";
+	echo "    (defaults to 100000)\n";
+	echo "  --contentdir: directory where all document versions are stored\n";
+	echo "    which are larger than maxsize.\n";
 } /* }}} */
 
 function wrapWithCData($text) { /* {{{ */
@@ -26,7 +31,7 @@ function wrapWithCData($text) { /* {{{ */
 
 $version = "0.0.1";
 $shortoptions = "hvn";
-$longoptions = array('help', 'version', 'nodata', 'config:', 'folder:', 'maxsize:');
+$longoptions = array('help', 'version', 'nodata', 'skip-root', 'config:', 'folder:', 'maxsize:', 'contentdir:', 'sections:');
 if(false === ($options = getopt($shortoptions, $longoptions))) {
 	usage();
 	exit(0);
@@ -61,9 +66,28 @@ if(isset($options['config'])) {
 
 /* Set maximum size of files included in xml file */
 if(isset($options['maxsize'])) {
-	$maxsize = intval($maxsize);
+	$maxsize = intval($options['maxsize']);
 } else {
 	$maxsize = 100000;
+}
+
+/* Set directory for file largen than maxsize */
+if(isset($options['contentdir'])) {
+	if(file_exists($options['contentdir'])) {
+		$contentdir = $options['contentdir'];
+		if(substr($contentdir, -1, 1) != DIRECTORY_SEPARATOR)
+			$contentdir .= DIRECTORY_SEPARATOR;
+	} else {
+		echo "Directory ".$options['contentdir']." does not exists\n";
+		exit(1);
+	}
+} else {
+	$contentdir = '';
+}
+
+$sections = array();
+if(isset($options['sections'])) {
+	$sections = explode(',', $options['sections']);
 }
 
 if(isset($settings->_extraPath))
@@ -77,54 +101,132 @@ if(isset($options['folder'])) {
 	$folderid = $settings->_rootFolderID;
 }
 
-function tree($folder, $parent=null, $indent='') { /* {{{ */
-	global $index, $dms;
-	echo $indent."<folder id=\"".$folder->getId()."\"";
-	if($parent)
-		echo " parent=\"".$parent->getID()."\"";
-	echo ">\n";
-	echo $indent." <attr name=\"name\">".wrapWithCData($folder->getName())."</attr>\n";
-	echo $indent." <attr name=\"date\">".date('c', $folder->getDate())."</attr>\n";
-	echo $indent." <attr name=\"defaultaccess\">".$folder->getDefaultAccess()."</attr>\n";
-	echo $indent." <attr name=\"inheritaccess\">".$folder->inheritsAccess()."</attr>\n";
-	echo $indent." <attr name=\"sequence\">".$folder->getSequence()."</attr>\n";
-	if($folder->getComment())
+$skiproot = false;
+if(isset($options['skip-root'])) {
+	$skiproot = true;
+}
+
+$statistic = array(
+	'documents'=>0,
+	'folders'=>0,
+	'users'=>0,
+	'groups'=>0,
+	'attributedefinitions'=>0,
+	'keywordcategories'=>0,
+	'documentcategories'=>0,
+);
+
+function dumplog($version, $type, $logs, $indent) { /* {{{ */
+	global $dms, $contentdir, $maxsize;
+
+	$document = $version->getDocument();
+	switch($type) {
+	case 'approval':
+		$type2 = 'approve';
+		break;
+	default:
+		$type2 = $type;
+	}
+	echo $indent."   <".$type."s>\n";
+	$curid = 0;
+	foreach($logs as $a) {
+		if($a[$type2.'ID'] != $curid) {
+			if($curid != 0) {
+				echo $indent."    </".$type.">\n";
+			}
+			echo $indent."    <".$type." id=\"".$a[$type2.'ID']."\">\n";
+			echo $indent."     <attr name=\"type\">".$a['type']."</attr>\n";
+			echo $indent."     <attr name=\"required\">".$a['required']."</attr>\n";
+		}
+		echo $indent."     <".$type."log id=\"".$a[$type2.'LogID']."\">\n";
+		echo $indent."      <attr name=\"user\">".$a['userID']."</attr>\n";
+		echo $indent."      <attr name=\"status\">".$a['status']."</attr>\n";
+		echo $indent."      <attr name=\"comment\">".wrapWithCData($a['comment'])."</attr>\n";
+		echo $indent."      <attr name=\"date\" format=\"Y-m-d H:i:s\">".$a['date']."</attr>\n";
+		if(!empty($a['file'])) {
+			$filename = $dms->contentDir . $document->getDir().'r'.(int) $a[$type2.'LogID'];
+			if(file_exists($filename)) {
+				echo $indent."     <data length=\"".filesize($filename)."\"";
+				if(filesize($filename) < $maxsize) {
+					echo ">\n";
+					echo chunk_split(base64_encode(file_get_contents($filename)), 76, "\n");
+					echo $indent."     </data>\n";
+				} else {
+					echo " fileref=\"".$filename."\" />\n";
+					if($contentdir) {
+						copy($filename, $contentdir.$document->getID()."-R-".$a[$type2.'LogID']);
+					} else {
+						echo "Warning: ".$type." log file (size=".filesize($filename).") will be missing from output\n";
+					}
+				}
+			}
+		}
+		echo $indent."     </".$type."log>\n";
+		$curid = $a[$type2.'ID'];
+	}
+	if($curid != 0)
+		echo $indent."    </".$type.">\n";
+	echo $indent."   </".$type."s>\n";
+} /* }}} */
+
+function tree($folder, $parent=null, $indent='', $skipcurrent=false) { /* {{{ */
+	global $sections, $statistic, $index, $dms, $maxsize, $contentdir;
+
+	if(!$sections || in_array('folders', $sections)) {
+	if(!$skipcurrent) {
+		echo $indent."<folder id=\"".$folder->getId()."\"";
+		if($parent)
+			echo " parent=\"".$parent->getID()."\"";
+		echo ">\n";
+		echo $indent." <attr name=\"name\">".wrapWithCData($folder->getName())."</attr>\n";
+		echo $indent." <attr name=\"date\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $folder->getDate())."</attr>\n";
+		echo $indent." <attr name=\"defaultaccess\">".$folder->getDefaultAccess()."</attr>\n";
+		echo $indent." <attr name=\"inheritaccess\">".$folder->inheritsAccess()."</attr>\n";
+		echo $indent." <attr name=\"sequence\">".$folder->getSequence()."</attr>\n";
 		echo $indent." <attr name=\"comment\">".wrapWithCData($folder->getComment())."</attr>\n";
-	echo $indent." <attr name=\"owner\">".$folder->getOwner()->getId()."</attr>\n";
-	if($attributes = $folder->getAttributes()) {
-		foreach($attributes as $attribute) {
-			$attrdef = $attribute->getAttributeDefinition();
-			echo $indent." <attr type=\"user\" attrdef=\"".$attrdef->getID()."\">".$attribute->getValue()."</attr>\n";
+		echo $indent." <attr name=\"owner\">".$folder->getOwner()->getId()."</attr>\n";
+		if($attributes = $folder->getAttributes()) {
+			foreach($attributes as $attribute) {
+				$attrdef = $attribute->getAttributeDefinition();
+				echo $indent." <attr type=\"user\" attrdef=\"".$attrdef->getID()."\">".$attribute->getValue()."</attr>\n";
+			}
 		}
-	}
-	if($folder->inheritsAccess()) {
-		echo $indent." <acls type=\"inherited\" />\n";
+		if($folder->inheritsAccess()) {
+			echo $indent." <acls type=\"inherited\" />\n";
+		} else {
+			echo $indent." <acls>\n";
+			$accesslist = $folder->getAccessList();
+			foreach($accesslist['users'] as $acl) {
+				echo $indent."  <acl type=\"user\"";
+				$user = $acl->getUser();
+				echo " user=\"".$user->getID()."\"";
+				echo " mode=\"".$acl->getMode()."\"";
+				echo "/>\n";
+			}
+			foreach($accesslist['groups'] as $acl) {
+				echo $indent."  <acl type=\"group\"";
+				$group = $acl->getGroup();
+				echo $indent." group=\"".$group->getID()."\"";
+				echo $indent." mode=\"".$acl->getMode()."\"";
+				echo "/>\n";
+			}
+			echo $indent." </acls>\n";
+		}
+		echo $indent."</folder>\n";
+		$statistic['folders']++;
+		$parentfolder = $folder;
 	} else {
-		echo $indent." <acls>\n";
-		$accesslist = $folder->getAccessList();
-		foreach($accesslist['users'] as $acl) {
-			echo $indent."  <acl type=\"user\"";
-			$user = $acl->getUser();
-			echo " user=\"".$user->getID()."\"";
-			echo " mode=\"".$acl->getMode()."\"";
-			echo "/>\n";
-		}
-		foreach($accesslist['groups'] as $acl) {
-			echo $indent."  <acl type=\"group\"";
-			$group = $acl->getGroup();
-			echo $indent." group=\"".$group->getID()."\"";
-			echo $indent." mode=\"".$acl->getMode()."\"";
-			echo "/>\n";
-		}
-		echo $indent." </acls>\n";
+		$parentfolder = null;
 	}
-	echo $indent."</folder>\n";
 	$subfolders = $folder->getSubFolders();
 	if($subfolders) {
 		foreach($subfolders as $subfolder) {
-			tree($subfolder, $folder, $indent);
+			tree($subfolder, $parentfolder, $indent);
 		}
 	}
+	}
+
+	if(!$sections || in_array('documents', $sections)) {
 	$documents = $folder->getDocuments();
 	if($documents) {
 		foreach($documents as $document) {
@@ -134,9 +236,9 @@ function tree($folder, $parent=null, $indent='') { /* {{{ */
 				echo " locked=\"true\"";
 			echo ">\n";
 			echo $indent." <attr name=\"name\">".wrapWithCData($document->getName())."</attr>\n";
-			echo $indent." <attr name=\"date\">".date('c', $document->getDate())."</attr>\n";
+			echo $indent." <attr name=\"date\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $document->getDate())."</attr>\n";
 			if($document->getExpires())
-				echo $indent." <attr name=\"expires\">".date('c', $document->getExpires())."</attr>\n";
+				echo $indent." <attr name=\"expires\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $document->getExpires())."</attr>\n";
 			echo $indent." <attr name=\"owner\">".$owner->getId()."</attr>\n";
 			if($document->getKeywords())
 				echo $indent." <attr name=\"keywords\">".wrapWithCData($document->getKeywords())."</attr>\n";
@@ -147,8 +249,7 @@ function tree($folder, $parent=null, $indent='') { /* {{{ */
 				$user = $document->getLockingUser();
 				echo $indent." <attr name=\"lockedby\">".$user->getId()."</attr>\n";
 			}
-			if($document->getComment())
-				echo $indent." <attr name=\"comment\">".wrapWithCData($document->getComment())."</attr>\n";
+			echo $indent." <attr name=\"comment\">".wrapWithCData($document->getComment())."</attr>\n";
 			if($attributes = $document->getAttributes()) {
 				foreach($attributes as $attribute) {
 					$attrdef = $attribute->getAttributeDefinition();
@@ -158,36 +259,30 @@ function tree($folder, $parent=null, $indent='') { /* {{{ */
 
 			/* Check if acl is not inherited */
 			if(!$document->inheritsAccess()) {
-				$acls = $document->getAccessList();
-				if($acls['groups'] || $acls['users']) {
-					echo $indent." <acls>\n";
-					if($acls['users']) {
-						foreach($acls['users'] as $acluser) {
-							$user = $acluser->getUser();
-							echo $indent."  <acl type=\"user\">\n";
-							echo $indent."   <attr name=\"user\">".$user->getId()."</attr>\n";
-							echo $indent."   <attr name=\"mode\">".$acluser->getMode()."</attr>\n";
-							echo $indent."  </acl>\n";
-						}
-					}
-					if($acls['groups']) {
-						foreach($acls['groups'] as $aclgroup) {
-							$group = $aclgroup->getGroup();
-							echo $indent."  <acl type=\"group\">\n";
-							echo $indent."   <attr name=\"group\">".$group->getId()."</attr>\n";
-							echo $indent."   <attr name=\"mode\">".$acluser->getMode()."</attr>\n";
-							echo $indent."  </acl>\n";
-						}
-					}
-					echo $indent." </acls>\n";
+				echo $indent." <acls>\n";
+				$accesslist = $document->getAccessList();
+				foreach($accesslist['users'] as $acl) {
+					echo $indent."  <acl type=\"user\"";
+					$user = $acl->getUser();
+					echo " user=\"".$user->getID()."\"";
+					echo " mode=\"".$acl->getMode()."\"";
+					echo "/>\n";
 				}
+				foreach($accesslist['groups'] as $acl) {
+					echo $indent."  <acl type=\"group\"";
+					$group = $acl->getGroup();
+					echo $indent." group=\"".$group->getID()."\"";
+					echo $indent." mode=\"".$acl->getMode()."\"";
+					echo "/>\n";
+				}
+				echo $indent." </acls>\n";
 			}
 
 			$cats = $document->getCategories();
 			if($cats) {
 				echo $indent." <categories>\n";
 				foreach($cats as $cat) {
-					echo $indent."  <category>".$cat->getId()."</category>\n";
+					echo $indent."  <category id=\"".$cat->getId()."\"/>\n";
 				}
 				echo $indent." </categories>\n";
 			}
@@ -196,12 +291,12 @@ function tree($folder, $parent=null, $indent='') { /* {{{ */
 			if($versions) {
 				echo $indent." <versions>\n";
 				foreach($versions as $version) {
-					$approvalStatus = $version->getApprovalStatus();
-					$reviewStatus = $version->getReviewStatus();
+					$approvalStatus = $version->getApprovalStatus(30);
+					$reviewStatus = $version->getReviewStatus(30);
 					$owner = $version->getUser();
-					echo $indent."  <version id=\"".$version->getVersion()."\">\n";
+					echo $indent."  <version version=\"".$version->getVersion()."\">\n";
 					echo $indent."   <attr name=\"mimetype\">".$version->getMimeType()."</attr>\n";
-					echo $indent."   <attr name=\"date\">".date('c', $version->getDate())."</attr>\n";
+					echo $indent."   <attr name=\"date\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $version->getDate())."</attr>\n";
 					echo $indent."   <attr name=\"filetype\">".$version->getFileType()."</attr>\n";
 					echo $indent."   <attr name=\"comment\">".wrapWithCData($version->getComment())."</attr>\n";
 					echo $indent."   <attr name=\"owner\">".$owner->getId()."</attr>\n";
@@ -212,42 +307,40 @@ function tree($folder, $parent=null, $indent='') { /* {{{ */
 							echo $indent."   <attr type=\"user\" attrdef=\"".$attrdef->getID()."\">".$attribute->getValue()."</attr>\n";
 						}
 					}
-					if($approvalStatus) {
-						echo $indent."   <approvals>\n";
-						foreach($approvalStatus as $a) {
-							echo $indent."    <approval id=\"".$a['approveID']."\">\n";
-							echo $indent."     <attr name=\"type\">".$a['type']."</attr>\n";
-							echo $indent."     <attr name=\"required\">".$a['required']."</attr>\n";
-							echo $indent."     <attr name=\"status\">".$a['status']."</attr>\n";
-							echo $indent."     <attr name=\"comment\">".wrapWithCData($a['comment'])."</attr>\n";
-							echo $indent."     <attr name=\"user\">".$a['userID']."</attr>\n";
-							echo $indent."     <attr name=\"date\">".$a['date']."</attr>\n";
-							echo $indent."    </approval>\n";
+					if($statuslog = $version->getStatusLog()) {
+						echo $indent."   <status id=\"".$statuslog[0]['statusID']."\">\n";
+						foreach($statuslog as $entry) {
+							echo $indent."    <statuslog>\n";
+							echo $indent."     <attr name=\"status\">".$entry['status']."</attr>\n";
+							echo $indent."     <attr name=\"comment\">".wrapWithCData($entry['comment'])."</attr>\n";
+							echo $indent."     <attr name=\"date\" format=\"Y-m-d H:i:s\">".$entry['date']."</attr>\n";
+							echo $indent."     <attr name=\"user\">".$entry['userID']."</attr>\n";
+							echo $indent."    </statuslog>\n";
 						}
-						echo $indent."   </approvals>\n";
+						echo $indent."   </status>\n";
+					}
+					if($approvalStatus) {
+						dumplog($version, 'approval', $approvalStatus, $indent);
 					}
 					if($reviewStatus) {
-						echo $indent."   <reviews>\n";
-						foreach($reviewStatus as $a) {
-							echo $indent."    <review id=\"".$a['reviewID']."\">\n";
-							echo $indent."     <attr name=\"type\">".$a['type']."</attr>\n";
-							echo $indent."     <attr name=\"required\">".$a['required']."</attr>\n";
-							echo $indent."     <attr name=\"status\">".$a['status']."</attr>\n";
-							echo $indent."     <attr name=\"comment\">".wrapWithCData($a['comment'])."</attr>\n";
-							echo $indent."     <attr name=\"user\">".$a['userID']."</attr>\n";
-							echo $indent."     <attr name=\"date\">".$a['date']."</attr>\n";
-							echo $indent."    </review>\n";
-						}
-						echo $indent."   </reviews>\n";
+						dumplog($version, 'review', $reviewStatus, $indent);
 					}
 					if($outputContent){
 						if(file_exists($dms->contentDir . $version->getPath())) {
-							echo $indent."   <data length=\"".filesize($dms->contentDir . $version->getPath())."\">\n";
-							if(filesize($dms->contentDir . $version->getPath()) < 1000000) {
+						echo $indent."   <data length=\"".filesize($dms->contentDir . $version->getPath())."\"";
+						if(filesize($dms->contentDir . $version->getPath()) < $maxsize) {
+							echo ">\n";
 								echo chunk_split(base64_encode(file_get_contents($dms->contentDir . $version->getPath())), 76, "\n");
-							}
 							echo $indent."   </data>\n";
 						} else {
+							echo " fileref=\"".$document->getID()."-".$version->getVersion().$version->getFileType()."\" />\n";
+							if($contentdir) {
+								copy($dms->contentDir . $version->getPath(), $contentdir.$document->getID()."-".$version->getVersion().$version->getFileType());
+							} else {
+								echo "Warning: version content (size=".filesize($dms->contentDir . $version->getPath()).") will be missing from output\n";
+							}
+						}
+					} else {
 							echo $indent."   <!-- ".$dms->contentDir . $version->getPath()." not found -->\n";
 						}
 					}
@@ -264,16 +357,28 @@ function tree($folder, $parent=null, $indent='') { /* {{{ */
 					echo $indent."  <file id=\"".$file->getId()."\">\n";
 					echo $indent."   <attr name=\"name\">".wrapWithCData($file->getName())."</attr>\n";
 					echo $indent."   <attr name=\"mimetype\">".$file->getMimeType()."</attr>\n";
-					echo $indent."   <attr name=\"date\">".date('c', $file->getDate())."</attr>\n";
+					echo $indent."   <attr name=\"date\" format=\"Y-m-d H:i:s\">".date('Y-m-d H:i:s', $file->getDate())."</attr>\n";
 					echo $indent."   <attr name=\"filetype\">".wrapWithCData($file->getFileType())."</attr>\n";
 					echo $indent."   <attr name=\"owner\">".$owner->getId()."</attr>\n";
 					echo $indent."   <attr name=\"comment\">".wrapWithCData($file->getComment())."</attr>\n";
 					echo $indent."   <attr name=\"orgfilename\">".wrapWithCData($file->getOriginalFileName())."</attr>\n";
-					echo $indent."   <data length=\"".filesize($dms->contentDir . $file->getPath())."\">\n";
-					if(filesize($dms->contentDir . $file->getPath()) < 1000000) {
-						echo chunk_split(base64_encode(file_get_contents($dms->contentDir . $file->getPath())), 76, "\n");
+					if(file_exists($dms->contentDir . $file->getPath())) {
+						echo $indent."   <data length=\"".filesize($dms->contentDir . $file->getPath())."\"";
+						if(filesize($dms->contentDir . $file->getPath()) < $maxsize) {
+							echo ">\n";
+							echo chunk_split(base64_encode(file_get_contents($dms->contentDir . $file->getPath())), 76, "\n");
+							echo $indent."   </data>\n";
+						} else {
+							echo " fileref=\"".$document->getID()."-A-".$file->getID().$file->getFileType()."\" />\n";
+							if($contentdir) {
+								copy($dms->contentDir . $version->getPath(), $contentdir.$document->getID()."-A-".$file->getID().$file->getFileType());
+							} else {
+								echo "Warning: file content (size=".filesize($dms->contentDir . $file->getPath()).") will be missing from output\n";
+							}
+						}
+					} else {
+						echo $indent."   <!-- ".$dms->contentDir . $version->getID()." not found -->\n";
 					}
-					echo $indent."   </data>\n";
 					echo $indent."  </file>\n";
 				}
 				echo $indent." </files>\n";
@@ -298,24 +403,22 @@ function tree($folder, $parent=null, $indent='') { /* {{{ */
 					echo $indent." <notifications>\n";
 					if($notifications['users']) {
 						foreach($notifications['users'] as $user) {
-							echo $indent."  <notification type=\"user\">\n";
-							echo $indent."   <attr name=\"user\">".$user->getId()."</attr>\n";
-							echo $indent."  </notification>\n";
+							echo $indent."  <user id=\"".$user->getID()."\" />\n";
 						}
 					}
 					if($notifications['groups']) {
 						foreach($notifications['groups'] as $group) {
-							echo $indent."  <notification type=\"group\">\n";
-							echo $indent."   <attr name=\"group\">".$group->getId()."</attr>\n";
-							echo $indent."  </notification>\n";
+							echo $indent."  <group id=\"".$group->getID()."\" />\n";
 						}
 					}
-					echo $indent." </notification>\n";
+					echo $indent." </notifications>\n";
 				}
 			}
 
 			echo $indent."</document>\n";
+			$statistic['documents']++;
 		}
+	}
 	}
 } /* }}} */
 
@@ -323,7 +426,7 @@ $db = new SeedDMS_Core_DatabaseAccess($settings->_dbDriver, $settings->_dbHostna
 $db->connect() or die ("Could not connect to db-server \"" . $settings->_dbHostname . "\"");
 
 $dms = new SeedDMS_Core_DMS($db, $settings->_contentDir.$settings->_contentOffsetDir);
-if(!$dms->checkVersion()) {
+if(!$settings->_doNotCheckDBVersion && !$dms->checkVersion()) {
 	echo "Database update needed.";
 	exit;
 }
@@ -331,7 +434,10 @@ if(!$dms->checkVersion()) {
 $dms->setRootFolderID($settings->_rootFolderID);
 
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-echo "<dms>\n";
+echo "<dms dbversion=\"".implode('.', array_slice($dms->getDBVersion(), 1, 3))."\" date=\"".date('Y-m-d H:i:s')."\">\n";
+
+/* Dump users {{{ */
+if(!$sections || in_array('users', $sections)) {
 $users = $dms->getAllUsers();
 if($users) {
 	echo "<users>\n";
@@ -354,11 +460,36 @@ if($users) {
 			echo "   <data>".base64_encode($image['image'])."</data>\n";
 			echo "  </image>\n";
 		}
+		if($mreviewers = $user->getMandatoryReviewers()) {
+			echo "  <mandatory_reviewers>\n";
+			foreach($mreviewers as $mreviewer) {
+				if((int) $mreviewer['reviewerUserID'])
+					echo "   <user id=\"".$mreviewer['reviewerUserID']."\"></user>\n";
+				elseif((int) $mreviewer['reviewerGroupID'])
+					echo "   <group id=\"".$mreviewer['reviewerGroupID']."\"></group>\n";
+			}
+			echo "  </mandatory_reviewers>\n";
+		}
+		if($mapprovers = $user->getMandatoryApprovers()) {
+			echo "  <mandatory_approvers>\n";
+			foreach($mapprovers as $mapprover) {
+				if((int) $mapprover['approverUserID'])
+					echo "   <user id=\"".$mapprover['approverUserID']."\"></user>\n";
+				elseif((int) $mapprover['approverGroupID'])
+					echo "   <group id=\"".$mapprover['approverGroupID']."\"></group>\n";
+			}
+			echo "  </mandatory_approvers>\n";
+		}
 		echo " </user>\n";
+		$statistic['users']++;
 	}
 	echo "</users>\n";
 }
+}
+/* }}} */
 
+/* Dump groups {{{ */
+if(!$sections || in_array('groups', $sections)) {
 $groups = $dms->getAllGroups();
 if($groups) {
 	echo "<groups>\n";
@@ -370,15 +501,20 @@ if($groups) {
 		if($users) {
 			echo "  <users>\n";
 			foreach ($users as $user) {
-				echo "   <user>".$user->getId()."</user>\n";
+				echo "   <user user=\"".$user->getId()."\"/>\n";
 			}
 			echo "  </users>\n";
 		}
 		echo " </group>\n";
+		$statistic['groups']++;
 	}
 	echo "</groups>\n";
 }
+}
+/* }}} */
 
+/* Dump keywordcategories {{{ */
+if(!$sections || in_array('keywordcategories', $sections)) {
 $categories = $dms->getAllKeywordCategories();
 if($categories) {
 	echo "<keywordcategories>\n";
@@ -397,10 +533,15 @@ if($categories) {
 			echo "  </keywords>\n";
 		}
 		echo " </keywordcategory>\n";
+		$statistic['keywordcategories']++;
 	}
 	echo "</keywordcategories>\n";
 }
+}
+/* }}} */
 
+/* Dump documentcategories {{{ */
+if(!$sections || in_array('documentcategories', $sections)) {
 $categories = $dms->getDocumentCategories();
 if($categories) {
 	echo "<documentcategories>\n";
@@ -408,10 +549,15 @@ if($categories) {
 		echo " <documentcategory id=\"".$category->getId()."\">\n";
 		echo "  <attr name=\"name\">".wrapWithCData($category->getName())."</attr>\n";
 		echo " </documentcategory>\n";
+		$statistic['documentcategories']++;
 	}
 	echo "</documentcategories>\n";
 }
+}
+/* }}} */
 
+/* Dump attributedefinition {{{ */
+if(!$sections || in_array('attributedefinition', $sections)) {
 $attrdefs = $dms->getAllAttributeDefinitions();
 if($attrdefs) {
 	echo "<attrіbutedefinitions>\n";
@@ -438,15 +584,29 @@ if($attrdefs) {
 		echo "  <attr name=\"type\">".$attrdef->getType()."</attr>\n";
 		echo "  <attr name=\"minvalues\">".$attrdef->getMinValues()."</attr>\n";
 		echo "  <attr name=\"maxvalues\">".$attrdef->getMaxValues()."</attr>\n";
+		echo "  <attr name=\"regex\">".wrapWithCData($attrdef->getRegex())."</attr>\n";
 		echo " </attributedefinition>\n";
+		$statistic['attributedefinitions']++;
 	}
 	echo "</attrіbutedefinitions>\n";
 }
+}
+/* }}} */
 
+/* Dump folders and documents {{{ */
 $folder = $dms->getFolder($folderid);
 if($folder) {
-	tree($folder);
+	tree($folder, null, '', $skiproot);
 }
+/* }}} */
+
+/* Dump statistics {{{ */
+echo "<statistics>\n";
+echo " <command><![CDATA[".implode(" ", $argv)."]]></command>\n";
+foreach($statistic as $type=>$count)
+	echo " <".$type.">".$count."</".$type.">\n";
+echo "</statistics>\n";
+/* }}} */
 
 echo "</dms>\n";
 ?>

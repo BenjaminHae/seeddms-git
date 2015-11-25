@@ -76,27 +76,10 @@ class SeedDMS_View_UserList extends SeedDMS_Bootstrap_Style {
 			echo "<td>";
 			echo SeedDMS_Core_File::format_filesize($currUser->getUsedDiskSpace());
 			if($quota) {
-				$qt = $currUser->getQuota();
-				if($qt == 0)
-					$qt = $quota;
-				if($qt > $currUser->getUsedDiskSpace()) {
-					$used = (int) ($currUser->getUsedDiskSpace()/$qt*100.0+0.5);
-					$free = 100-$used;
-				} else {
-					$free = 0;
-					$used = 100;
-				}
 				echo " / ";
-				if($currUser->getQuota() != 0)
-					echo SeedDMS_Core_File::format_filesize($currUser->getQuota())."<br />";
-				else
-					echo SeedDMS_Core_File::format_filesize($quota)."<br />";
-?>
-		<div class="progress">
-			<div class="bar bar-danger" style="width: <?php echo $used; ?>%;"></div>
-		  <div class="bar bar-success" style="width: <?php echo $free; ?>%;"></div>
-		</div>
-<?php
+				$qt = $currUser->getQuota() ? $currUser->getQuota() : $quota;
+				echo SeedDMS_Core_File::format_filesize($qt)."<br />";
+				echo $this->getProgressBar($currUser->getUsedDiskSpace(), $qt);
 			}
 			echo "</td>";
 			echo "<td>";

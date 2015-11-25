@@ -1,4 +1,36 @@
 --------------------------------------------------------------------------------
+                     Changes in version 4.3.22
+--------------------------------------------------------------------------------
+- fix lots of HTTP-Headers in op.Ajax.php (Closes: #233)
+- Timeline will be updated by ajax call, clicking on an item in the timeline
+  will output some document information
+- Timeline now ends at end of the last day. Previously this day wasn't included
+- new attribute type 'date'
+- all dates are now in format 'yyyy-mm-dd'
+- fix fatal error when requesting new password
+- send emails to reviewers/approvers if new document or version was uploaded
+
+--------------------------------------------------------------------------------
+                     Changes in version 4.3.21
+--------------------------------------------------------------------------------
+- fix sql statement when searching for attributes (SeedDMS_Core, Closes: 227)
+- show preview images file list of drop folder
+- add timeline
+- fix document and page count in fulltext search
+
+--------------------------------------------------------------------------------
+                     Changes in version 4.3.20
+--------------------------------------------------------------------------------
+- fix setting expire date when editing a document (Closes: #225)
+- MyDocumets: list only documents to approve which have passed review
+- show preview image in Review/Approval summary
+- timeout for external commands for creating fulltext index can be set
+- add translations for korean, croation, ukrainian
+- file can be submitted with approval/review
+- alternative full text search engine without dependency on Zend
+- much faster user manager
+
+--------------------------------------------------------------------------------
                      Changes in version 4.3.19
 --------------------------------------------------------------------------------
 - end date in search form actually ends at the end of the day

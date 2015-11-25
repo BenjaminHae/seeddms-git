@@ -57,13 +57,13 @@ $name     = $_POST["name"];
 $comment  = $_POST["comment"];
 if(isset($_POST["from"])) {
 	$tmp = explode('-', $_POST["from"]);
-	$from = mktime(0,0,0, $tmp[1], $tmp[0], $tmp[2]);
+	$from = mktime(0,0,0, $tmp[1], $tmp[2], $tmp[0]);
 } else {
 	$from = mktime(0,0,0, intval($_POST["frommonth"]), intval($_POST["fromday"]), intval($_POST["fromyear"]));
 }
 if(isset($_POST["to"])) {
 	$tmp = explode('-', $_POST["to"]);
-	$to = mktime(23,59,59, $tmp[1], $tmp[0], $tmp[2]);
+	$to = mktime(23,59,59, $tmp[1], $tmp[2], $tmp[0]);
 } else {
 	$to = mktime(23,59,59, intval($_POST["tomonth"]), intval($_POST["today"]), intval($_POST["toyear"]));
 }

@@ -291,6 +291,8 @@ if ($_POST["approvalStatus"]==-1){
 	}
 }
 
+add_log_line("?documentid=".$_POST['documentid']."&version=".$_POST['version']."&approvalType=".$_POST['approvalType']."&approvalStatus=".$_POST['approvalStatus']);
+
 header("Location:../out/out.ViewDocument.php?documentid=".$documentid."&currenttab=revapp");
 
 ?>
