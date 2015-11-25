@@ -396,11 +396,12 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 	}
 	
 	private function gitCommandAbs($sub){
+        return true;
 		return "git --git-dir=".$this->shell_encode_escape($this->_path.$sub."/.git")." --work-tree=".$this->shell_encode_escape($this->_path.$sub)." ";
 	}
 	
 	function gitAdd($path){
-		$this->log("git add: ".shell_exec($this->gitCommand($path)."add ".$this->shell_encode_escape($path).self::_PIPE));
+		//$this->log("git add: ".shell_exec($this->gitCommand($path)."add ".$this->shell_encode_escape($path).self::_PIPE));
 		$this->setGitChanged(true);
 	}
 	
@@ -410,7 +411,7 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 		}
 		else
 			$res = "-r ";
-		$this->log(shell_exec($this->gitCommand($path)."rm ".$rec.$this->shell_encode_escape($path).self::_PIPE));
+		$this->log(shell_exec("rm ".$rec.$this->shell_encode_escape($path).self::_PIPE));
 		$this->setGitChanged(true);
 	}
 	
@@ -423,13 +424,13 @@ class SeedDMS_Core_Git_Export { /* {{{ */
 				$this->log("committing ".$path);
 				$this->log($gc);
 			}
-			$this->log(shell_exec($gc."commit -m ".$this->shell_encode_escape($commitMessage).self::_PIPE));
+			//$this->log(shell_exec($gc."commit -m ".$this->shell_encode_escape($commitMessage).self::_PIPE));
 		}
 		$this->setGitChanged(false);
 	}
 	
 	function gitAbort(){
-		$this->log(shell_exec($this->gitCommand()."rm -r --cached ".$this->shell_encode_escape($this->_path."/.").self::_PIPE));
+		$this->log(shell_exec("rm -r --cached ".$this->shell_encode_escape($this->_path."/.").self::_PIPE));
 		$this->_gitCommitMessage = date("Y-m-d\r\n");
 		$this->setGitChanged(false);
 	}
