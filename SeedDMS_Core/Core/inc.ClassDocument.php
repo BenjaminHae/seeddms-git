@@ -205,21 +205,6 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		$this->_dms->getGit()->renameDocument($this, $oldname, $newName);
 		return true;
 	} /* }}} */
-	
-	/*
-	 * Set the date of the document
-	 *
-	 * @param $newName timestamp new date of document
-	 */
-	function setDate($newDate) { /* {{{ */
-		$db = $this->_dms->getDB();
-
-		$queryStr = "UPDATE tblDocuments SET date = ".$newDate." WHERE id = ". $this->_id;
-		if (!$db->getResult($queryStr))
-			return false;
-		$this->_date = $newDate;
-		return true;
-	} /* }}} */
 
 	/*
 	 * Return the comment of the document

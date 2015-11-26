@@ -75,7 +75,9 @@ var targetName = document.<?php echo $form?>.dropfolderfile<?php print $form ?>;
 							if($previewer->hasRawPreview($dir.'/'.$entry, 'dropfolder/')) {
 								echo "<img class=\"mimeicon\" width=\"".$previewwidth."\"src=\"../op/op.DropFolderPreview.php?filename=".$entry."&width=".$previewwidth."\" title=\"".htmlspecialchars($mimetype)."\">";
 							}
-							echo "</td><td><span style=\"cursor: pointer;\" onClick=\"fileSelected('".$entry."');\">".$entry."</span></td><td align=\"right\">".SeedDMS_Core_File::format_filesize(filesize($dir.'/'.$entry))."</td><td>".date('Y-m-d H:i:s', filectime($dir.'/'.$entry))."</td></tr>\n";
+							echo "</td><td><span style=\"cursor: pointer;\" onClick=\"fileSelected('".$entry."');\">".$entry."</span></td><td align=\"right\">".SeedDMS_Core_File::format_filesize(filesize($dir.'/'.$entry))."</td><td>".date('Y-m-d H:i:s', filectime($dir.'/'.$entry))."</td>";
+                            echo "<td><a target=\"_blank\" href=\"../op/op.ViewOnline.php?dropfile=".$entry."\"><i class=\"icon-star\"></i>" . getMLText("view_online") . "</a></td>";
+                            echo "</tr>\n";
 						}
 					}
 				}
